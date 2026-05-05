@@ -1,42 +1,51 @@
 -- ==================== PROJECTS ====================
 INSERT INTO project (name, description, deadline) VALUES
-                                                      ('Website Redesign', 'Total redesign af virksomhedens hjemmeside med ny branding', '2026-08-15'),
-                                                      ('Mobil App Udvikling', 'Udvikling af en ny mobilapp til både iOS og Android', '2026-10-01'),
+                                                      ('Website Redesign', 'Total redesign af virksomhedens hjemmeside med ny branding og moderne design', '2026-08-15'),
+                                                      ('Mobil App Udvikling', 'Udvikling af en native mobilapp til både iOS og Android', '2026-10-01'),
                                                       ('ERP System Implementering', 'Implementering af nyt økonomi- og lagerstyringssystem', '2026-12-20'),
-                                                      ('Markedsføringskampagne', 'Sommer kampagne 2026 med fokus på sociale medier', '2026-07-10');
+                                                      ('Markedsføringskampagne 2026', 'Stor sommerkampagne med fokus på sociale medier og influencers', '2026-07-10');
 
 
 -- ==================== SUB PROJECTS ====================
-INSERT INTO sub_project (name, description, estimatedTime, project_id) VALUES
+INSERT INTO sub_project (name, description, project_id) VALUES
 -- Project 1: Website Redesign
-('Design fase', 'Wireframes, mockups og design af hele sitet', '2026-06-15', 1),
-('Frontend udvikling', 'Udvikling af det visuelle lag (React)', '2026-07-10', 1),
-('Backend udvikling', 'API og database integration', '2026-07-25', 1),
+('Design fase', 'Wireframes, mockups og design af hele sitet', 1),
+('Frontend udvikling', 'Udvikling af det visuelle lag med React og Tailwind', 1),
+('Backend udvikling', 'API udvikling og database integration', 1),
+('Test & QA', 'Test af funktionalitet og brugervenlighed', 1),
 
 -- Project 2: Mobil App
-('UI/UX Design', 'Design af brugergrænsefladen', '2026-06-20', 2),
-('iOS Udvikling', 'Udvikling til iPhone og iPad', '2026-08-15', 2),
-('Android Udvikling', 'Udvikling til Android enheder', '2026-08-20', 2),
+('UI/UX Design', 'Design af brugergrænseflade og brugerrejser', 2),
+('iOS Udvikling', 'Udvikling af iOS versionen (Swift)', 2),
+('Android Udvikling', 'Udvikling af Android versionen (Kotlin)', 2),
 
 -- Project 3: ERP System
-('Analyse & Krav', 'Indsamling af krav fra afdelingerne', '2026-06-10', 3),
-('Konfiguration', 'Opsætning og tilpasning af systemet', '2026-09-01', 3);
+('Analyse & Kravspecifikation', 'Indsamling og dokumentation af krav', 3),
+('Systemkonfiguration', 'Opsætning og tilpasning af ERP-systemet', 3),
+('Data migration', 'Overførsel af data fra gammelt system', 3);
 
 
 -- ==================== TASKS ====================
 INSERT INTO task (name, description, estimatedTime, sub_project_id) VALUES
--- Sub project 1.1 (Design fase)
-('Lav wireframes', 'Lav low-fidelity wireframes af alle hoved sider', '2026-05-20', 1),
-('Design style guide', 'Farver, typografi og komponent bibliotek', '2026-05-25', 1),
+-- Website - Design fase
+('Lav wireframes', 'Low-fidelity wireframes af alle hoved sider', '35:00:00', 1),
+('Design style guide', 'Farver, typografi og komponentbibliotek', '28:00:00', 1),
+('High-fidelity mockups', 'Detaljerede designs i Figma', '50:00:00', 1),
 
--- Sub project 1.2 (Frontend)
-('Opsæt React projekt', 'Initialisér projektet med Vite + React', '2026-06-05', 2),
-('Lav responsivt navbar', 'Navigation der virker på mobil og desktop', '2026-06-12', 2),
+-- Website - Frontend
+('Opsæt React projekt', 'Initialisér med Vite, React og Tailwind', '18:00:00', 2),
+('Lav responsivt navbar', 'Navigation til både mobil og desktop', '12:00:00', 2),
+('Implementer homepage', 'Forside med hero section og features', '45:00:00', 2),
 
--- Sub project 2.1 (UI/UX Design)
-('Lav user flows', 'Tegn komplette brugerrejser', '2026-06-10', 4),
-('High-fidelity mockups', 'Detaljerede designs i Figma', '2026-06-18', 4),
+-- Website - Backend
+('Opsæt backend struktur', 'Node.js/Express eller Laravel setup', '30:00:00', 3),
+('Lav REST API endpoints', 'Bruger- og indholdsrelaterede endpoints', '55:00:00', 3),
 
--- Sub project 3.1 (Analyse)
-('Interview med økonomiafdeling', 'Møder og kravsindsamling', '2026-05-15', 7),
-('Dokumentér krav', 'Skriv kravsspecifikation', '2026-05-22', 7);
+-- Mobil App - UI/UX
+('Lav user flows', 'Komplette brugerrejser i Figma', '22:00:00', 5),
+('High-fidelity designs', 'Detaljerede skærmbilleder', '65:00:00', 5),
+
+-- ERP - Analyse
+('Interview med økonomiafdeling', 'Møder og kravsindsamling', '25:00:00', 8),
+('Dokumentér krav', 'Skriv detaljeret kravsspecifikation', '40:00:00', 8),
+('Analyse af nuværende system', 'Kortlægning af nuværende processer', '30:00:00', 8);
