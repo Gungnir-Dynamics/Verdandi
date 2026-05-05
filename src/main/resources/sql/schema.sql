@@ -25,7 +25,7 @@ create table task(
                      task_id int auto_increment,
                      name varchar(100),
                      description varchar(1500),
-                     estimatedTime time,
+                     estimatedTime int,
                      sub_project_id int not null,
                      primary key (task_id),
                      foreign key (sub_project_id) references sub_project (sub_project_id) on delete cascade

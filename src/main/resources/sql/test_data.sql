@@ -28,24 +28,27 @@ INSERT INTO sub_project (name, description, project_id) VALUES
 -- ==================== TASKS ====================
 INSERT INTO task (name, description, estimatedTime, sub_project_id) VALUES
 -- Website - Design fase
-('Lav wireframes', 'Low-fidelity wireframes af alle hoved sider', '35:00:00', 1),
-('Design style guide', 'Farver, typografi og komponentbibliotek', '28:00:00', 1),
-('High-fidelity mockups', 'Detaljerede designs i Figma', '50:00:00', 1),
+('Lav wireframes', 'Low-fidelity wireframes af alle hoved sider', 35, 1),
+('Design style guide', 'Farver, typografi og komponentbibliotek', 25, 1),
+('High-fidelity mockups', 'Detaljerede designs i Figma', 48, 1),
 
 -- Website - Frontend
-('Opsæt React projekt', 'Initialisér med Vite, React og Tailwind', '18:00:00', 2),
-('Lav responsivt navbar', 'Navigation til både mobil og desktop', '12:00:00', 2),
-('Implementer homepage', 'Forside med hero section og features', '45:00:00', 2),
+('Opsæt React projekt', 'Initialisér med Vite, React og Tailwind', 16, 2),
+('Lav responsivt navbar', 'Navigation til både mobil og desktop', 14, 2),
+('Implementer homepage', 'Forside med hero section og features', 42, 2),
+('Implementer about-side', 'About us og team side', 28, 2),
 
 -- Website - Backend
-('Opsæt backend struktur', 'Node.js/Express eller Laravel setup', '30:00:00', 3),
-('Lav REST API endpoints', 'Bruger- og indholdsrelaterede endpoints', '55:00:00', 3),
+('Opsæt backend struktur', 'Node.js/Express eller Laravel setup', 30, 3),
+('Lav REST API endpoints', 'Bruger- og indholdsrelaterede endpoints', 55, 3),
+('Database design & opsætning', 'ER-diagram og tabeloprettelse', 38, 3),
 
 -- Mobil App - UI/UX
-('Lav user flows', 'Komplette brugerrejser i Figma', '22:00:00', 5),
-('High-fidelity designs', 'Detaljerede skærmbilleder', '65:00:00', 5),
+('Lav user flows', 'Komplette brugerrejser i Figma', 22, 5),
+('High-fidelity designs', 'Detaljerede skærmbilleder til appen', 60, 5),
 
 -- ERP - Analyse
-('Interview med økonomiafdeling', 'Møder og kravsindsamling', '25:00:00', 8),
-('Dokumentér krav', 'Skriv detaljeret kravsspecifikation', '40:00:00', 8),
-('Analyse af nuværende system', 'Kortlægning af nuværende processer', '30:00:00', 8);
+('Interview med økonomiafdeling', 'Møder og kravsindsamling', 20, 8),
+('Dokumentér krav', 'Skriv detaljeret kravsspecifikation', 35, 8),
+('Analyse af nuværende system', 'Kortlægning af nuværende processer', 30, 8),
+('Data migration plan', 'Plan for overførsel af data', 25, 10);
