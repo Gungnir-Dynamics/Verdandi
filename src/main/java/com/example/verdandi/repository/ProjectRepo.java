@@ -14,7 +14,7 @@ import java.util.List;
     private final JdbcTemplate jdbcTemplate;
 
     public ProjectRepo (JdbcTemplate jdbcTemplate){
-        this.jdbcTemplate=jdbcTemplate;
+        this.jdbcTemplate = jdbcTemplate;
     }
 
 
