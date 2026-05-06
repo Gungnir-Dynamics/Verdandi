@@ -29,7 +29,7 @@ public class Project {
     }
 
 
-// GETTERS
+    // GETTERS
     public LocalDate getCreationDate() {
         return creationDate;
     }
