@@ -18,7 +18,7 @@ public class ProjectController {
         this.projectService = projectService;
     }
 
-    @GetMapping("/my_projects")
+    @GetMapping("/project")
     public String getMyProjects(Model model){
         model.addAttribute("myProjects", projectService.getProjects());
         return "projects";
