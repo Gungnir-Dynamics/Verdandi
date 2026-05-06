@@ -18,7 +18,7 @@ public class TaskController {
 
     @GetMapping()
     public String showTasks (@PathVariable int subprojectId,
-                             @PathVariable String projectId,
+                             @PathVariable int projectId,
                              Model model){
         model.addAttribute("tasks", taskService.getTasksBySubproject(subprojectId));
         return "tasks";
