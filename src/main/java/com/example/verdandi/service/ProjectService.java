@@ -14,8 +14,15 @@ public class ProjectService {
         this.projectRepo = projectRepo;
     }
 
-    public List<Project>getProjects(){
-        return projectRepo.getProjects();
+    public List<Project> getMultipleProjects(){
+        return projectRepo.getMultipleProjects();
     }
 
+    public Project getSingleProject(int projectId){
+        return projectRepo.getSingleProject(projectId);
+    }
+
+    public void saveProject(Project project){
+        projectRepo.createProject(project);
+    }
 }

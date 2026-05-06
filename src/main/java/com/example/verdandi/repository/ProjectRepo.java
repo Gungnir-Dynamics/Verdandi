@@ -34,7 +34,7 @@ import java.util.List;
 
     };
 
-    public List<Project> getProjects (){
+    public List<Project> getMultipleProjects(){
         String sql = """
                 SELECT *
                 From Project
@@ -43,6 +43,22 @@ import java.util.List;
 
         return jdbcTemplate.query(sql, rowMapper);
     }
+
+    public Project getSingleProject(int projectId){
+        String sql = """
+                SELECT *
+                FROM Project
+                WHERE Project.project_id = ?;
+                """;
+        return jdbcTemplate.queryForObject(sql, rowMapper, projectId);
+    }
+
+    public void createProject(Project project){
+        String sql = "INSERT INTO Project (name, description, deadline) values (?, ?, ?)";
+        jdbcTemplate.update(sql, project.getName(), project.getDescription(), project.getDeadline());
+    }
+
+
 
 
 }

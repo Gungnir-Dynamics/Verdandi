@@ -10,7 +10,6 @@ import org.springframework.test.context.jdbc.Sql;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
 
 @SpringBootTest
@@ -23,7 +22,7 @@ class ProjectRepoTest {
 
     @Test
     void getProjects() {
-        List<Project> all = projectRepo.getProjects();
+        List<Project> all = projectRepo.getMultipleProjects();
 
         assertThat(all).isNotNull();
         assertThat(all.size()).isEqualTo(4);

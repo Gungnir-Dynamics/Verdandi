@@ -10,7 +10,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -38,7 +37,7 @@ class ProjectControllerTest {
         project2.setId(2);
         project2.setName("Mobil App Udvikling");
 
-        when(projectService.getProjects()).thenReturn(List.of(project1, project2));
+        when(projectService.getMultipleProjects()).thenReturn(List.of(project1, project2));
 
 
         mockMvc.perform(get("/project"))
