@@ -44,5 +44,4 @@ public class SubProjectRepo {
         return jdbcTemplate.queryForObject(sql, rowMapper, id);
 
     }
-
 }
