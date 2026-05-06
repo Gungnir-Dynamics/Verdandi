@@ -6,6 +6,13 @@ public class Task {
     private String description;
     private int estimatedTime;
 
+    public Task(int id, String name, String description, int estimatedTime) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.estimatedTime = estimatedTime;
+    }
+
     public Task(){
 
     }
