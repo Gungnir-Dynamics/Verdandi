@@ -21,6 +21,7 @@ public class SubProjectRepo {
         subProject.setId(rs.getInt("sub_project_id"));
         subProject.setName(rs.getString("name"));
         subProject.setDescription(rs.getString("description"));
+        subProject.setProjectId(rs.getInt("project_id"));
 
         return subProject;
 
@@ -29,10 +30,19 @@ public class SubProjectRepo {
     public List<SubProject> getSubProjects (){
         String sql = """
                SELECT *
-                From sub_project
-                """;
+               From sub_project
+               """;
 
             return jdbcTemplate.query(sql, rowMapper);
+    }
+
+    public SubProject findSubProjectById(int id) {
+        String sql = """ 
+                SELECT sub_project_id
+                FROM sub_project
+                """;
+        return jdbcTemplate.queryForObject(sql, rowMapper, id);
+
     }
 
 }

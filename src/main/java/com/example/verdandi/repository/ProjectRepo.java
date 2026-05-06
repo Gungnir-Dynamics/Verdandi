@@ -34,13 +34,12 @@ import java.util.List;
 
     };
 
-    public List<Project> getProjects (){
+    public List<Project> getProjects() {
         String sql = """
                 SELECT *
                 From Project
                
                 """;
-
         return jdbcTemplate.query(sql, rowMapper);
     }
 

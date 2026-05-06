@@ -52,7 +52,7 @@
 <body>
 <div>
     <h1>Mine Underprojekter</h1>
-    <p><a href="/project" class="btn btn-info">← Tilbage til Projekter</a></p>
+    <p><a th:href="@{/projects/my_projects}" class="btn btn-info">← Tilbage til Projekter</a></p>
 
     <table th:if="${mySubProjects != null and !mySubProjects.isEmpty()}">
         <thead>

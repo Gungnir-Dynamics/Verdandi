@@ -19,4 +19,6 @@ public class SubProjectService {
     public List<SubProject>getSubProjects(){
         return subProjectRepo.getSubProjects();
     }
+
+    public SubProject getSubProjectById(int id) {return subProjectRepo.findSubProjectById(id);}
 }
