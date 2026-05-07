@@ -20,7 +20,6 @@ public class SubProjectService {
         return subProjectRepo.getSubProjects(projectId);
 //        } catch (DataAccessException ex) {
 //            throw new DataOperationException("Failed to retrieve subprojects", ex);
-        }
     }
-
 }
+
