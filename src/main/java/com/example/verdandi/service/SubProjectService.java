@@ -4,6 +4,7 @@ package com.example.verdandi.service;
 import com.example.verdandi.model.SubProject;
 import com.example.verdandi.repository.ProjectRepo;
 import com.example.verdandi.repository.SubProjectRepo;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,8 +18,18 @@ public class SubProjectService {
     }
 
     public List<SubProject>getSubProjects(){
-        return subProjectRepo.getSubProjects();
+        try {
+            return subProjectRepo.getSubProjects();
+        } catch (DataAccessException ex) {
+            throw new DataOperationException("Failed to retrieve subprojects", ex);
+        }
     }
 
-    public SubProject getSubProjectById(int id) {return subProjectRepo.findSubProjectById(id);}
+    public SubProject getSubProjectById(int id) {
+        try {
+            return subProjectRepo.findSubProjectById(id);
+        } catch (DataAccessException ex) {
+            throw new DataOperationException("Failed to retrieve id for subproject", ex);
+        }
+    }
 }
