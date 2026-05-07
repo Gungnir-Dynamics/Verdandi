@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Tasks</title>
+</head>
+<body>
+<div>
+    <h1>Mine Projekter</h1>
+    <p><a href="/">← Tilbage</a></p>
+
+    <table th:if="${tasks != null and !tasks.isEmpty()}">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Tasknavn</th>
+            <th>Beskrivelse</th>
+            <th>Estimated time</th>
+            <th>Handling</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="task : ${tasks}">
+            <td th:text="${task.id}"></td>
+            <td th:text="${task.name}"></td>
+            <td th:text="${task.description}"></td>
+            <td th:text="${task.estimatedTime}"></td>
+            <td>
+                <a th:href="@{/project/details/{id}(id=${task.id})}">Se mere</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <!-- Hvis der ikke er nogen projekter -->
+    <div th:if="${tasks == null or tasks.isEmpty()}">
+        <h3>Du har ingen tasks endnu</h3>
+        <p>Opret din første task for at komme i gang.</p>
+    </div>
+</div>
+
+</body>
+</html>
