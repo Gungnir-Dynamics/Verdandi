@@ -26,7 +26,7 @@ public class SubProjectService {
         }
     }
 
-    public void validateSubprojectBelongsToProject(int projectId, int subprojectId) {
+    public void validateSubProjectBelongsToProject(int projectId, int subprojectId) {
         if (!subProjectRepo.subprojectBelongsToProject(projectId, subprojectId)) {
             throw new ResourceNotFoundException(
                     "Subproject " + subprojectId + " does not belong to project " + projectId

@@ -28,7 +28,7 @@ public class TaskService {
         }
     }
 
-    private void validateProjectHierarchy(int projectId, int subprojectId, int taskId) {
+    private void validateTaskBelongsToSubProject(int projectId, int subprojectId, int taskId) {
         subProjectService.validateSubprojectBelongsToProject(projectId,subprojectId);
 
         if (!taskRepo.taskBelongsToSubproject(subprojectId, taskId)) {
