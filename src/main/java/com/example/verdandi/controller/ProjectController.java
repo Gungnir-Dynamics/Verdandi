@@ -20,7 +20,7 @@ public class ProjectController {
         this.projectService = projectService;
     }
 
-    @GetMapping("/my_projects")
+    @GetMapping("")
     public String getMyProjects(Model model){
         List<Project> getProjects = projectService.getProjects();
         model.addAttribute("myProjects", getProjects);
