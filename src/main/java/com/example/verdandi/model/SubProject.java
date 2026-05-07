@@ -16,10 +16,11 @@ public class SubProject {
 
     }
 
-    public SubProject(){
+    public SubProject() {
 
     }
-// GETTERS
+
+    // GETTERS
     public int getId() {
         return id;
     }
@@ -33,7 +34,8 @@ public class SubProject {
     }
 
     public int getProjectId() {
-        return projectId;}
+        return projectId;
+    }
 
     // SETTERS
     public void setId(int id) {
@@ -48,5 +50,7 @@ public class SubProject {
         this.description = description;
     }
 
-    public void setProjectId(int projectId) {this.projectId = projectId;}
+    public void setProjectId(int projectId) {
+        this.projectId = projectId;
+    }
 }
