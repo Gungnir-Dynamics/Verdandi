@@ -17,7 +17,6 @@ import java.util.List;
         this.jdbcTemplate = jdbcTemplate;
     }
 
-
     public final RowMapper<Project> rowMapper = (rs, rowNum) ->{
       Project project = new Project();
       project.setId(rs.getInt("project_id"));
@@ -34,15 +33,12 @@ import java.util.List;
 
     };
 
-    public List<Project> getProjects (){
+    public List<Project> getProjects() {
         String sql = """
                 SELECT *
                 From Project
                
                 """;
-
         return jdbcTemplate.query(sql, rowMapper);
     }
-
-
 }

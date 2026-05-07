@@ -12,7 +12,7 @@ public class SubProjectRepo {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public SubProjectRepo (JdbcTemplate jdbcTemplate){
+    public SubProjectRepo(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -21,18 +21,19 @@ public class SubProjectRepo {
         subProject.setId(rs.getInt("sub_project_id"));
         subProject.setName(rs.getString("name"));
         subProject.setDescription(rs.getString("description"));
+        subProject.setProjectId(rs.getInt("project_id"));
 
         return subProject;
 
     };
 
-    public List<SubProject> getSubProjects (){
+    public List<SubProject> getSubProjects(int projectId) {
         String sql = """
-               SELECT *
+                SELECT *
                 From sub_project
+                where project_id = ?
                 """;
 
-            return jdbcTemplate.query(sql, rowMapper);
+        return jdbcTemplate.query(sql, rowMapper, projectId);
     }
-
 }

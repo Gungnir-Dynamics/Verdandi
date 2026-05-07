@@ -1,25 +1,33 @@
 package com.example.verdandi.controller;
 
 
+import com.example.verdandi.model.SubProject;
 import com.example.verdandi.service.SubProjectService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-@Controller
-@RequestMapping
-public class SubProjectController {
-    private SubProjectService subProjectService;
+import java.util.List;
 
-    public SubProjectController (SubProjectService subProjectService){
+@Controller
+@RequestMapping("/projects/{projectId}/subprojects")
+public class SubProjectController {
+    private final SubProjectService subProjectService;
+
+    public SubProjectController(SubProjectService subProjectService) {
         this.subProjectService = subProjectService;
     }
 
-    @GetMapping("/my_subprojects")
-    public String getMySubProjects(Model model){
-        model.addAttribute("mySubProjects", subProjectService.getSubProjects());
+    @GetMapping("")
+    public String getMySubProjects(@PathVariable int projectId,
+                                   Model model) {
+
+        List<SubProject> getSubProjects = subProjectService.getSubProjects(projectId);
+        model.addAttribute("mySubProjects", getSubProjects);
         return "sub_projects";
     }
+
 
 }
