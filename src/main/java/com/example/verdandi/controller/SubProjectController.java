@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.List;
 
 @Controller
-@RequestMapping
+@RequestMapping("project/{projectId}/subproject)
 public class SubProjectController {
     private final SubProjectService subProjectService;
 
