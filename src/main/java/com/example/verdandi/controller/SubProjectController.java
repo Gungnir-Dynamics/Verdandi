@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.List;
 
 @Controller
-@RequestMapping("project/{projectId}/subproject)
+@RequestMapping("/projects/{projectId}/subprojects")
 public class SubProjectController {
     private final SubProjectService subProjectService;
 
@@ -20,9 +20,12 @@ public class SubProjectController {
         this.subProjectService = subProjectService;
     }
 
-    @GetMapping("/my_subprojects")
-    public String getMySubProjects(Model model) {
-        List<SubProject> getSubProjects = subProjectService.getSubProjects();
+    @GetMapping("")
+    public String getMySubProjects(
+            @PathVariable int projectId,
+            Model model) {
+
+        List<SubProject> getSubProjects = subProjectService.getSubProjects(projectId);
         model.addAttribute("mySubProjects", getSubProjects);
         return "sub_projects";
     }

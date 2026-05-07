@@ -27,13 +27,14 @@ public class SubProjectRepo {
 
     };
 
-    public List<SubProject> getSubProjects (){
+    public List<SubProject> getSubProjects (int projectId){
         String sql = """
                SELECT *
                From sub_project
+               where project_id = ?
                """;
 
-            return jdbcTemplate.query(sql, rowMapper);
+            return jdbcTemplate.query(sql, rowMapper, projectId);
     }
 
     public SubProject findSubProjectById(int id) {

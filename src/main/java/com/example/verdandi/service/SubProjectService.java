@@ -17,19 +17,19 @@ public class SubProjectService {
         this.subProjectRepo = subProjectRepo;
     }
 
-    public List<SubProject>getSubProjects(){
-        try {
-            return subProjectRepo.getSubProjects();
-        } catch (DataAccessException ex) {
-            throw new DataOperationException("Failed to retrieve subprojects", ex);
-        }
+    public List<SubProject>getSubProjects(int projectId){
+//        try {
+            return subProjectRepo.getSubProjects(projectId);
+//        } catch (DataAccessException ex) {
+//            throw new DataOperationException("Failed to retrieve subprojects", ex);
+//        }
     }
 
     public SubProject getSubProjectById(int id) {
-        try {
+//        try {
             return subProjectRepo.findSubProjectById(id);
-        } catch (DataAccessException ex) {
-            throw new DataOperationException("Failed to retrieve id for subproject", ex);
-        }
+//        } catch (DataAccessException ex) {
+//            throw new DataOperationException("Failed to retrieve id for subproject", ex);
+//        }
     }
 }
