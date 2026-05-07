@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/")
+@RequestMapping("/projects")
 public class ProjectController {
     private ProjectService projectService;
 
@@ -18,7 +18,7 @@ public class ProjectController {
         this.projectService = projectService;
     }
 
-    @GetMapping("/project")
+    @GetMapping("")
     public String getMyProjects(Model model){
         model.addAttribute("myProjects", projectService.getProjects());
         return "projects";
