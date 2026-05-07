@@ -46,6 +46,7 @@ class TaskControllerTest {
                 .thenThrow(new DatabaseOperationException("DB error", null));
         mockMvc.perform(get("/projects/{projectId}/subprojects/{subprojectId}/tasks",
                         projectId, subprojectId))
-                .andExpect(status().isInternalServerError());
+                .andExpect(status().isInternalServerError())
+                .andExpect(view().name("error/500"));
     }
 }

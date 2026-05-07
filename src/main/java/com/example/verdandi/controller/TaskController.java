@@ -16,7 +16,7 @@ public class TaskController {
         this.taskService = taskService;
     }
 
-    @GetMapping()
+    @GetMapping("")
     public String showTasks (@PathVariable int subprojectId,
                              @PathVariable int projectId,
                              Model model){
