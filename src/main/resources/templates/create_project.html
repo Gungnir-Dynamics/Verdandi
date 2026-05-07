@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="da" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Opret Nyt Projekt - Verdandi</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f8f9fa;
+        }
+        h1 {
+            color: #2c3e50;
+        }
+        .form-container {
+            max-width: 700px;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-top: 20px;
+        }
+        label {
+            display: block;
+            margin: 15px 0 5px;
+            font-weight: bold;
+            color: #34495e;
+        }
+        input[type="text"], input[type="date"], textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        .btn {
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+        }
+        .btn-primary {
+            background-color: #3498db;
+            color: white;
+        }
+        .btn-secondary {
+            background-color: #95a5a6;
+            color: white;
+        }
+        .buttons {
+            margin-top: 25px;
+            display: flex;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+<div>
+    <h1>Opret Nyt Projekt</h1>
+    <p><a href="/project" class="btn btn-secondary">← Tilbage til projekter</a></p>
+
+    <div class="form-container">
+        <form th:action="@{/create_project}" method="post">
+
+            <label for="name">Projektnavn *</label>
+            <input type="text" id="name" name="name" th:value="${project.name}" required />
+
+            <label for="description">Beskrivelse</label>
+            <textarea id="description" name="description" th:text="${project.description}"></textarea>
+
+            <label for="deadline">Deadline</label>
+            <input type="date" id="deadline" name="deadline"
+                   th:value="${project.deadline != null ? project.deadline : ''}" />
+
+            <div class="buttons">
+                <button type="submit" class="btn btn-primary">Opret Projekt</button>
+                <a href="/project" class="btn btn-secondary">Annuller</a>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

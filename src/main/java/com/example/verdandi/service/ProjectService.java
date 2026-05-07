@@ -19,12 +19,24 @@ public class ProjectService {
         this.subProjectRepo = subProjectRepo;
     }
 
-    public List<Project>getProjects(){
-        try {
-            return projectRepo.getProjects();
-        } catch (DataAccessException ex) {
-            throw new DatabaseOperationException("Failed to retrieve data for project", ex); {
-            }
-        }
+    public List<Project> getMultipleProjects(){
+        return projectRepo.getMultipleProjects();
+    }
+
+    public Project getSingleProject(int projectId){
+        return projectRepo.getSingleProject(projectId);
+    }
+
+    public void saveProject(Project project){
+        projectRepo.createProject(project);
+    }
+}
+//     public List<Project>getProjects(){
+//         try {
+//             return projectRepo.getProjects();
+//         } catch (DataAccessException ex) {
+//             throw new DatabaseOperationException("Failed to retrieve data for project", ex); {
+//             }
+//         }
     }
 }

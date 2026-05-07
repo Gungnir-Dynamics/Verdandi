@@ -11,9 +11,11 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
@@ -40,7 +42,7 @@ class ProjectControllerTest {
         project2.setId(2);
         project2.setName("Mobil App Udvikling");
 
-        when(projectService.getProjects()).thenReturn(List.of(project1, project2));
+        when(projectService.getMultipleProjects()).thenReturn(List.of(project1, project2));
 
 
         mockMvc.perform(get("/projects"))
@@ -50,6 +52,27 @@ class ProjectControllerTest {
                 .andExpect(model().attribute("myProjects", List.of(project1, project2)));
     }
 
+    @Test
+    void createNewProject() throws Exception {
 
+        mockMvc.perform(get("/create_project"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("/create_project"))
+                .andExpect(model().attributeExists("project"));
 
+    }
+
+    @Test
+    void saveProject() throws Exception {
+
+        mockMvc.perform(post("/create_project")
+                        .param("name", "Nyt Stort Projekt")
+                        .param("description", "En rigtig god beskrivelse")
+                        .param("deadline", "2026-12-31"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/project"));
+               // .andExpect(flash().attributeExists("successMessage"));
+
+        verify(projectService).saveProject(any(Project.class));
+    }
 }
