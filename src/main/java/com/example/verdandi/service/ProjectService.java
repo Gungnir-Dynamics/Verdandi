@@ -2,6 +2,7 @@ package com.example.verdandi.service;
 
 import com.example.verdandi.model.Project;
 import com.example.verdandi.repository.ProjectRepo;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,7 +16,12 @@ public class ProjectService {
     }
 
     public List<Project>getProjects(){
-        return projectRepo.getProjects();
+        try {
+            return projectRepo.getProjects();
+        } catch (DataAccessException ex) {
+            throw new DatabaseOperationException("Failed to retrieve data for project", ex); {
+            }
+        }
     }
 
 }
