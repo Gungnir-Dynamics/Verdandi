@@ -30,10 +30,5 @@ public class SubProjectController {
         return "sub_projects";
     }
 
-    @GetMapping("/subproject/{id}")
-    public String getSubProject(@PathVariable int id, Model model) {
-        SubProject subProject = subProjectService.getSubProjectById(id);
-        model.addAttribute("subProject", subProject);
-        return "sub_projects";
-    }
+
 }

@@ -25,11 +25,4 @@ public class SubProjectService {
 //        }
     }
 
-    public SubProject getSubProjectById(int id) {
-//        try {
-            return subProjectRepo.findSubProjectById(id);
-//        } catch (DataAccessException ex) {
-//            throw new DataOperationException("Failed to retrieve id for subproject", ex);
-//        }
-    }
 }

@@ -36,13 +36,4 @@ public class SubProjectRepo {
 
             return jdbcTemplate.query(sql, rowMapper, projectId);
     }
-
-    public SubProject findSubProjectById(int id) {
-        String sql = """ 
-                SELECT sub_project_id
-                FROM sub_project
-                """;
-        return jdbcTemplate.queryForObject(sql, rowMapper, id);
-
-    }
 }

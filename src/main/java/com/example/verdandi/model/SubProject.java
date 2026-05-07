@@ -32,7 +32,8 @@ public class SubProject {
         return description;
     }
 
-    public int getProjectId() {return projectId;}
+    public int getProjectId() {
+        return projectId;}
 
     // SETTERS
     public void setId(int id) {
