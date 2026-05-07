@@ -10,17 +10,18 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-@Controller
-@RequestMapping("/")
-public class ProjectController {
-    private ProjectService projectService;
+import java.util.List;
 
+@Controller
+@RequestMapping("/projects")
+public class ProjectController {
+    private final ProjectService projectService;
 
     public ProjectController(ProjectService projectService){
         this.projectService = projectService;
     }
 
-    @GetMapping("/project")
+    @GetMapping("")
     public String getMyProjects(Model model){
         model.addAttribute("myProjects", projectService.getMultipleProjects());
         return "projects";

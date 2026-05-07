@@ -5,6 +5,7 @@ import com.example.verdandi.service.ProjectService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import org.springframework.stereotype.Controller;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -17,7 +18,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest
+
+@WebMvcTest(ProjectController.class)
 class ProjectControllerTest {
 
     @MockitoBean
@@ -29,7 +31,7 @@ class ProjectControllerTest {
 
 
     @Test
-    void getMyProjects() throws Exception {
+    void getMyProjects_FindProjects() throws Exception {
 
         Project project1 = new Project();
         project1.setId(1);
@@ -43,7 +45,7 @@ class ProjectControllerTest {
         when(projectService.getMultipleProjects()).thenReturn(List.of(project1, project2));
 
 
-        mockMvc.perform(get("/project"))
+        mockMvc.perform(get("/projects"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("projects"))
                 .andExpect(model().attributeExists("myProjects"))

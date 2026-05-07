@@ -17,7 +17,6 @@ import java.util.List;
         this.jdbcTemplate = jdbcTemplate;
     }
 
-
     public final RowMapper<Project> rowMapper = (rs, rowNum) ->{
       Project project = new Project();
       project.setId(rs.getInt("project_id"));
@@ -40,7 +39,6 @@ import java.util.List;
                 From Project
                
                 """;
-
         return jdbcTemplate.query(sql, rowMapper);
     }
 
