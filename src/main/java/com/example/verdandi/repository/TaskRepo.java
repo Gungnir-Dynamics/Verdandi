@@ -34,4 +34,15 @@ public class TaskRepo {
         return jdbcTemplate.query(sql, rowMapper, subprojectId);
     }
 
+    public boolean taskBelongsToSubproject(int subProjectId, int taskId) {
+        String sql = """
+                    SELECT COUNT(*)
+                    FROM task
+                    WHERE task_id = ? AND sub_project_id = ?
+                """;
+
+        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, subProjectId, taskId);
+        return count != null && count > 0;
+    }
+
 }
