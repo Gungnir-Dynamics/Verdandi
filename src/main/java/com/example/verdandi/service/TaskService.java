@@ -21,7 +21,7 @@ public class TaskService {
 
     public List<Task> getTasksBySubproject(int projectId, int subprojectId){
         try {
-            subProjectService.validateSubprojectBelongsToProject(projectId, subprojectId);
+            subProjectService.validateSubProjectBelongsToProject(projectId, subprojectId);
             return taskRepo.getTasks(subprojectId);
         } catch (DataAccessException ex) {
             throw new DatabaseOperationException("Failed to retrieve tasks.", ex);
@@ -29,7 +29,7 @@ public class TaskService {
     }
 
     private void validateTaskBelongsToSubProject(int projectId, int subprojectId, int taskId) {
-        subProjectService.validateSubprojectBelongsToProject(projectId,subprojectId);
+        subProjectService.validateSubProjectBelongsToProject(projectId,subprojectId);
 
         if (!taskRepo.taskBelongsToSubproject(subprojectId, taskId)) {
             throw new ResourceNotFoundException(

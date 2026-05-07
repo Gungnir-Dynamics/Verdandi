@@ -23,8 +23,8 @@ import java.util.List;
       project.setName(rs.getString("name"));
       project.setDescription(rs.getString("description"));
 
-        if (rs.getDate("createdDate") != null) {
-            project.setCreationDate(rs.getDate("createdDate").toLocalDate());
+        if (rs.getDate("created_date") != null) {
+            project.setCreationDate(rs.getDate("created_date").toLocalDate());
         }
         if (rs.getDate("deadline") != null) {
             project.setDeadline(rs.getDate("deadline").toLocalDate());

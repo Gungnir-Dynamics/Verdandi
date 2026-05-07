@@ -4,13 +4,13 @@ public class Task {
     private int id;
     private String name;
     private String description;
-    private int estimatedTime;
+    private int estimatedHours;
 
-    public Task(int id, String name, String description, int estimatedTime) {
+    public Task(int id, String name, String description, int estimatedHours) {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.estimatedTime = estimatedTime;
+        this.estimatedHours = estimatedHours;
     }
 
     public Task(){
@@ -41,11 +41,11 @@ public class Task {
         this.description = description;
     }
 
-    public int getEstimatedTime() {
-        return estimatedTime;
+    public int getEstimatedHours() {
+        return estimatedHours;
     }
 
-    public void setEstimatedTime(int estimatedTime) {
-        this.estimatedTime = estimatedTime;
+    public void setEstimatedTime(int estimatedHours) {
+        this.estimatedHours = estimatedHours;
     }
 }

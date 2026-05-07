@@ -20,7 +20,7 @@ public class TaskRepo {
         task.setId(rs.getInt("task_id"));
         task.setName(rs.getString("name"));
         task.setDescription(rs.getString("description"));
-        task.setEstimatedTime(rs.getInt("estimated_time"));
+        task.setEstimatedTime(rs.getInt("estimated_hours"));
 
         return task;
     };
