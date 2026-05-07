@@ -45,7 +45,7 @@ public class Task {
         return estimatedHours;
     }
 
-    public void setEstimatedTime(int estimatedHours) {
+    public void setEstimatedHours(int estimatedHours) {
         this.estimatedHours = estimatedHours;
     }
 }

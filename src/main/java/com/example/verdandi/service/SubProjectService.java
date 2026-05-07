@@ -13,12 +13,15 @@ import java.util.List;
 @Service
 public class SubProjectService {
     private final SubProjectRepo subProjectRepo;
+    private final ProjectService projectService;
 
-    public SubProjectService(SubProjectRepo subProjectRepo) {
+    public SubProjectService(SubProjectRepo subProjectRepo, ProjectService projectService) {
         this.subProjectRepo = subProjectRepo;
+        this.projectService = projectService;
     }
 
     public List<SubProject> getSubProjects(int projectId) {
+        projectService.validateProjectExists(projectId);
         try {
             return subProjectRepo.getSubProjects(projectId);
         } catch (DataAccessException ex) {
@@ -27,11 +30,17 @@ public class SubProjectService {
     }
 
     public void validateSubProjectBelongsToProject(int projectId, int subprojectId) {
-        if (!subProjectRepo.subprojectBelongsToProject(projectId, subprojectId)) {
-            throw new ResourceNotFoundException(
-                    "Subproject " + subprojectId + " does not belong to project " + projectId
-            );
+        projectService.validateProjectExists(projectId);
+        try {
+            if (!subProjectRepo.subprojectBelongsToProject(projectId, subprojectId)) {
+                throw new ResourceNotFoundException(
+                        "Subproject " + subprojectId + " does not belong to project " + projectId
+                );
+            }
+        } catch (DataAccessException ex) {
+            throw new DatabaseOperationException("Failed to retrieve subprojects", ex);
         }
+
     }
 }
 

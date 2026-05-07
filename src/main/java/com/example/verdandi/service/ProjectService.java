@@ -1,6 +1,7 @@
 package com.example.verdandi.service;
 
 import com.example.verdandi.exception.DatabaseOperationException;
+import com.example.verdandi.exception.ResourceNotFoundException;
 import com.example.verdandi.model.Project;
 import com.example.verdandi.repository.ProjectRepo;
 import org.springframework.dao.DataAccessException;
@@ -16,6 +17,18 @@ public class ProjectService {
         this.projectRepo = projectRepo;
     }
 
+    public void validateProjectExists(int projectId) {
+        try {
+            if (!projectRepo.projectExists(projectId)) {
+                throw new ResourceNotFoundException(
+                        "project " + projectId + " does not exist"
+                );
+            }
+        } catch (DataAccessException ex) {
+            throw new DatabaseOperationException("Failed to retrieve data for project", ex);
+        }
+    }
+
     public List<Project> getMultipleProjects() {
         try {
             return projectRepo.getMultipleProjects();
@@ -25,7 +38,12 @@ public class ProjectService {
     }
 
     public Project getSingleProject(int projectId) {
-        return projectRepo.getSingleProject(projectId);
+        try {
+            return projectRepo.getSingleProject(projectId);
+        } catch (DataAccessException ex) {
+            throw new DatabaseOperationException("Failed to retrieve data for project", ex);
+        }
+
     }
 
     public void saveProject(Project project) {

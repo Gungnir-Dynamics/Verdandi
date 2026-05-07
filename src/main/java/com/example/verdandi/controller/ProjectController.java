@@ -27,6 +27,8 @@ public class ProjectController {
         return "projects";
     }
 
+    //ændre url til create
+    //Manglende validering fx (tomt navn, for lang tekst, deadline før creationDate, negative tal)
     @GetMapping("/create_project")
     public String createNewProject(Model model){
         model.addAttribute("project", new Project());

@@ -33,6 +33,17 @@ import java.util.List;
 
     };
 
+    public boolean projectExists(int projectId) {
+        String sql = """
+                    SELECT COUNT(*)
+                    FROM project
+                    WHERE project_id = ?
+                """;
+
+        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, projectId);
+        return count != null && count > 0;
+    }
+
     public List<Project> getMultipleProjects(){
         String sql = """
                 SELECT *

@@ -14,27 +14,31 @@ public class TaskService {
     private final TaskRepo taskRepo;
     private final SubProjectService subProjectService;
 
-    public TaskService(TaskRepo taskRepo, SubProjectService subProjectService){
+    public TaskService(TaskRepo taskRepo, SubProjectService subProjectService) {
         this.taskRepo = taskRepo;
         this.subProjectService = subProjectService;
     }
 
-    public List<Task> getTasksBySubproject(int projectId, int subprojectId){
+    public List<Task> getTasksBySubproject(int projectId, int subprojectId) {
+        subProjectService.validateSubProjectBelongsToProject(projectId, subprojectId);
         try {
-            subProjectService.validateSubProjectBelongsToProject(projectId, subprojectId);
             return taskRepo.getTasks(subprojectId);
         } catch (DataAccessException ex) {
             throw new DatabaseOperationException("Failed to retrieve tasks.", ex);
         }
     }
 
-    private void validateTaskBelongsToSubProject(int projectId, int subprojectId, int taskId) {
-        subProjectService.validateSubProjectBelongsToProject(projectId,subprojectId);
+    public void validateTaskBelongsToSubProject(int projectId, int subprojectId, int taskId) {
+        subProjectService.validateSubProjectBelongsToProject(projectId, subprojectId);
 
-        if (!taskRepo.taskBelongsToSubproject(subprojectId, taskId)) {
-            throw new ResourceNotFoundException(
-                    "task " + taskId + " does not belong to project " + subprojectId
-            );
+        try {
+            if (!taskRepo.taskBelongsToSubproject(subprojectId, taskId)) {
+                throw new ResourceNotFoundException(
+                        "task " + taskId + " does not belong to subproject " + subprojectId
+                );
+            }
+        } catch (DataAccessException ex) {
+            throw new DatabaseOperationException("Failed to retrieve tasks.", ex);
         }
     }
 

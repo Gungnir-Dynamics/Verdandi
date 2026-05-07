@@ -20,14 +20,14 @@ public class TaskRepo {
         task.setId(rs.getInt("task_id"));
         task.setName(rs.getString("name"));
         task.setDescription(rs.getString("description"));
-        task.setEstimatedTime(rs.getInt("estimated_hours"));
+        task.setEstimatedHours(rs.getInt("estimated_hours"));
 
         return task;
     };
 
     public List<Task> getTasks(int subprojectId) {
         String sql = """
-                SELECT task_id, name, description, estimated_time
+                SELECT task_id, name, description, estimated_hours
                 FROM task
                 WHERE sub_project_id = ?
                 """;
@@ -41,7 +41,7 @@ public class TaskRepo {
                     WHERE task_id = ? AND sub_project_id = ?
                 """;
 
-        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, subProjectId, taskId);
+        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, taskId, subProjectId);
         return count != null && count > 0;
     }
 
