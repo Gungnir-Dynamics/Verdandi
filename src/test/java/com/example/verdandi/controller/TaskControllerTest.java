@@ -29,7 +29,7 @@ class TaskControllerTest {
         int projectId = 1;
         int subprojectId = 1;
         Task task = new Task(1, "Fix bug", "Description", 60);
-        when(taskService.getTasksBySubproject(subprojectId))
+        when(taskService.getTasksBySubproject(projectId, subprojectId))
                 .thenReturn(List.of(task));
         mockMvc.perform(get("/projects/{projectId}/subprojects/{subprojectId}/tasks",
                         projectId, subprojectId))
@@ -42,7 +42,7 @@ class TaskControllerTest {
     void showTasks_serviceThrows_returns500() throws Exception {
         int projectId = 1;
         int subprojectId = 1;
-        when(taskService.getTasksBySubproject(subprojectId))
+        when(taskService.getTasksBySubproject(projectId, subprojectId))
                 .thenThrow(new DatabaseOperationException("DB error", null));
         mockMvc.perform(get("/projects/{projectId}/subprojects/{subprojectId}/tasks",
                         projectId, subprojectId))
