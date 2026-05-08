@@ -20,7 +20,7 @@ public class TaskController {
     public String showTasks (@PathVariable int subprojectId,
                              @PathVariable int projectId,
                              Model model){
-        model.addAttribute("tasks", taskService.getTasksBySubproject(subprojectId));
+        model.addAttribute("tasks", taskService.getTasksBySubproject(projectId, subprojectId));
         return "tasks";
     }
 }

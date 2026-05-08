@@ -36,4 +36,15 @@ public class SubProjectRepo {
 
         return jdbcTemplate.query(sql, rowMapper, projectId);
     }
+
+    public boolean subprojectBelongsToProject(int projectId, int subprojectId) {
+        String sql = """
+                    SELECT COUNT(*)
+                    FROM sub_project
+                    WHERE sub_project_id = ? AND project_id = ?
+                """;
+
+        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, subprojectId, projectId);
+        return count != null && count > 0;
+    }
 }

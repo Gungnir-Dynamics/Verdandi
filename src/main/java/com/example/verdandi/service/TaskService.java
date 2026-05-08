@@ -1,6 +1,7 @@
 package com.example.verdandi.service;
 
 import com.example.verdandi.exception.DatabaseOperationException;
+import com.example.verdandi.exception.ResourceNotFoundException;
 import com.example.verdandi.model.Task;
 import com.example.verdandi.repository.TaskRepo;
 import org.springframework.dao.DataAccessException;
@@ -11,16 +12,34 @@ import java.util.List;
 @Service
 public class TaskService {
     private final TaskRepo taskRepo;
+    private final SubProjectService subProjectService;
 
-    public TaskService(TaskRepo taskRepo){
+    public TaskService(TaskRepo taskRepo, SubProjectService subProjectService) {
         this.taskRepo = taskRepo;
+        this.subProjectService = subProjectService;
     }
 
-    public List<Task> getTasksBySubproject(int subprojectId){
+    public List<Task> getTasksBySubproject(int projectId, int subprojectId) {
+        subProjectService.validateSubProjectBelongsToProject(projectId, subprojectId);
         try {
             return taskRepo.getTasks(subprojectId);
         } catch (DataAccessException ex) {
             throw new DatabaseOperationException("Failed to retrieve tasks.", ex);
         }
     }
+
+    public void validateTaskBelongsToSubProject(int projectId, int subprojectId, int taskId) {
+        subProjectService.validateSubProjectBelongsToProject(projectId, subprojectId);
+
+        try {
+            if (!taskRepo.taskBelongsToSubproject(subprojectId, taskId)) {
+                throw new ResourceNotFoundException(
+                        "task " + taskId + " does not belong to subproject " + subprojectId
+                );
+            }
+        } catch (DataAccessException ex) {
+            throw new DatabaseOperationException("Failed to retrieve tasks.", ex);
+        }
+    }
+
 }

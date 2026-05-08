@@ -26,7 +26,7 @@ INSERT INTO sub_project (name, description, project_id) VALUES
 
 
 -- ==================== TASKS ====================
-INSERT INTO task (name, description, estimated_time, sub_project_id) VALUES
+INSERT INTO task (name, description, estimated_hours, sub_project_id) VALUES
 -- Website - Design fase
 ('Lav wireframes', 'Low-fidelity wireframes af alle hoved sider', 35, 1),
 ('Design style guide', 'Farver, typografi og komponentbibliotek', 25, 1),

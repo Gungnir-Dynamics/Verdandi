@@ -9,16 +9,16 @@ public class Project {
     private int id;
     private String name;
     private String description;
-    private int time;
+    private int estimatedHours;
     private LocalDate deadline;
     private LocalDate creationDate;
 
 // CONSTRUCTORS
     public Project(LocalDate creationDate, LocalDate deadline,
-                   int time, String description, String name, int id) {
+                   int estimatedHours, String description, String name, int id) {
         this.creationDate = creationDate;
         this.deadline = deadline;
-        this.time = time;
+        this.estimatedHours = estimatedHours;
         this.description = description;
         this.name = name;
         this.id = id;
@@ -38,8 +38,8 @@ public class Project {
         return deadline;
     }
 
-    public int getTime() {
-        return time;
+    public int getEstimatedHours() {
+        return estimatedHours;
     }
 
     public String getDescription() {
@@ -68,8 +68,8 @@ public class Project {
         this.description = description;
     }
 
-    public void setTime(int time) {
-        this.time = time;
+    public void setEstimatedHours(int estimatedHours) {
+        this.estimatedHours = estimatedHours;
     }
 
     public void setDeadline(LocalDate deadline) {

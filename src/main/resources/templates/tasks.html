@@ -24,7 +24,7 @@
             <td th:text="${task.id}"></td>
             <td th:text="${task.name}"></td>
             <td th:text="${task.description}"></td>
-            <td th:text="${task.estimatedTime}"></td>
+            <td th:text="${task.estimatedHours}"></td>
             <td>
                 <a th:href="@{/project/details/{id}(id=${task.id})}">Se mere</a>
             </td>
