@@ -41,6 +41,10 @@ public class ProjectService {
         projectRepo.createProject(project);
     }
 
+    public void deleteProject(int projectId){
+        projectRepo.deleteProject(projectId);
+    }
+
     private void validateProject(Project project) {
 
         if (project.getName() == null || project.getName().trim().isEmpty()) {

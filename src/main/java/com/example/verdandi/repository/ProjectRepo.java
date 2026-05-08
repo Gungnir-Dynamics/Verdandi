@@ -33,16 +33,7 @@ import java.util.List;
 
     };
 
-    public boolean projectExists(int projectId) {
-        String sql = """
-                    SELECT COUNT(*)
-                    FROM project
-                    WHERE project_id = ?
-                """;
 
-        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, projectId);
-        return count != null && count > 0;
-    }
 
     public List<Project> getMultipleProjects(){
         String sql = """
@@ -67,7 +58,21 @@ import java.util.List;
         jdbcTemplate.update(sql, project.getName(), project.getDescription(), project.getDeadline());
     }
 
+    public void deleteProject(int projectId){
+        String sql = "DELETE FROM project WHERE id = ?";
+        jdbcTemplate.update(sql, projectId);
+    }
 
 
+    public boolean projectExists(int projectId) {
+        String sql = """
+                    SELECT COUNT(*)
+                    FROM project
+                    WHERE project_id = ?
+                """;
+
+        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, projectId);
+        return count != null && count > 0;
+    }
 
 }

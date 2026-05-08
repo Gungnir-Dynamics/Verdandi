@@ -30,9 +30,6 @@ class ProjectRepoTest {
         assertThat(all.size()).isEqualTo(4);
         assertThat(all.get(0).getName()).isEqualTo("Website Redesign");
 
-
-
-
     }
 
     @Test
