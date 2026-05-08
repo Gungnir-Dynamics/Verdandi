@@ -1,4 +1,4 @@
-drop all objects;
+-- drop all objects;
 
 create table project (
                          project_id int auto_increment,
