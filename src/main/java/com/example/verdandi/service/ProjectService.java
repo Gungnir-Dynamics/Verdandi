@@ -77,5 +77,4 @@ public class ProjectService {
             throw new DatabaseOperationException("Failed to retrieve data for project", ex);
         }
     }
-
 }

@@ -43,7 +43,7 @@ public class SubProjectService {
 
     }
     public void saveSubProject(SubProject subProject) {
-        validateSubProjectBelongsToProject(subProject.getProjectId(), subProject.getId());
+        projectService.validateProjectExists(subProject.getProjectId());
         try {
             subProjectRepo.createSubProject(subProject);
 

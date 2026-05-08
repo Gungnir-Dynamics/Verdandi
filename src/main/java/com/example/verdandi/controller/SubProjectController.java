@@ -29,7 +29,7 @@ public class SubProjectController {
         return "sub_projects";
     }
 
-    @GetMapping("/Create")
+    @GetMapping("/create")
     public String createNewSubProject(@PathVariable int projectId, Model model) {
         SubProject subProject = new SubProject();
         subProject.setProjectId(projectId);
@@ -39,12 +39,12 @@ public class SubProjectController {
 
         return "create_sub_project";
     }
-    @PostMapping("/Create")
+    @PostMapping("/create")
     public String saveProject(@PathVariable int projectId, @ModelAttribute SubProject subProject) {
         subProject.setProjectId(projectId);
         subProjectService.saveSubProject(subProject);
 
-        return "redirect:/project/" + projectId + "subprojects";
+        return "redirect:/projects/" + projectId + "/subprojects";
     }
 
 }
