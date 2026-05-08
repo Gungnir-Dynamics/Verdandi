@@ -1,5 +1,6 @@
 package com.example.verdandi.repository;
 
+import com.example.verdandi.model.Project;
 import com.example.verdandi.model.SubProject;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -47,4 +48,20 @@ public class SubProjectRepo {
         Integer count = jdbcTemplate.queryForObject(sql, Integer.class, subprojectId, projectId);
         return count != null && count > 0;
     }
+
+    public void createSubProject(SubProject subProject) {
+        String sql = """
+                
+                INSERT INTO sub_project (name, description, project_id)
+                VALUES (?, ?, ?)
+                """;
+
+        jdbcTemplate.update(
+                sql,
+                subProject.getName(),
+                subProject.getDescription(),
+                subProject.getProjectId()
+        );
+    }
+
 }

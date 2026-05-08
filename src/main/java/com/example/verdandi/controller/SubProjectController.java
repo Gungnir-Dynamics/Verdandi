@@ -5,9 +5,7 @@ import com.example.verdandi.model.SubProject;
 import com.example.verdandi.service.SubProjectService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -31,5 +29,22 @@ public class SubProjectController {
         return "sub_projects";
     }
 
+    @GetMapping("/Create")
+    public String createNewSubProject(@PathVariable int projectId, Model model) {
+        SubProject subProject = new SubProject();
+        subProject.setProjectId(projectId);
+
+        model.addAttribute("subProject", subProject);
+        model.addAttribute("projectId", projectId);
+
+        return "create_sub_project";
+    }
+    @PostMapping("/Create")
+    public String saveProject(@PathVariable int projectId, @ModelAttribute SubProject subProject) {
+        subProject.setProjectId(projectId);
+        subProjectService.saveSubProject(subProject);
+
+        return "redirect:/project/" + projectId + "subprojects";
+    }
 
 }

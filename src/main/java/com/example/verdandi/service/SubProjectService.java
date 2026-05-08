@@ -42,5 +42,15 @@ public class SubProjectService {
         }
 
     }
+    public void saveSubProject(SubProject subProject) {
+        validateSubProjectBelongsToProject(subProject.getProjectId(), subProject.getId());
+        try {
+            subProjectRepo.createSubProject(subProject);
+
+        } catch (DataAccessException ex) {
+
+            throw new DatabaseOperationException("Failed to create subproject", ex);
+        }
+    }
 }
 
