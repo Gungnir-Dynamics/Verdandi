@@ -24,7 +24,7 @@ public class TaskRepoTest {
     private TaskRepo taskRepo;
 
     @Test
-    void getProjects() {
+    void getTasks_returnsCorrectRows() {
         List<Task> all = taskRepo.getTasks(1);
 
         assertThat(all).isNotNull();
