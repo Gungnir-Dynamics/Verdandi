@@ -48,7 +48,7 @@ public class ProjectController {
         } catch (IllegalArgumentException e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
             redirectAttributes.addFlashAttribute("project", project);
-            return "redirect:/create";
+            return "redirect:/projects/create";
         }
     }
 
