@@ -7,6 +7,7 @@ import com.example.verdandi.repository.ProjectRepo;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -27,6 +28,12 @@ public class ProjectService {
         } catch (DataAccessException ex) {
             throw new DatabaseOperationException("Failed to retrieve data for project", ex);
         }
+    }
+
+    public void validateProjectDeadlineNotBeforeToday(Project project){
+            if (project.getDeadline() != null && project.getDeadline().isBefore(LocalDate.now())) {
+                throw new IllegalArgumentException("Deadline må ikke være før dagens dato");
+            }
     }
 
     public List<Project> getMultipleProjects() {
