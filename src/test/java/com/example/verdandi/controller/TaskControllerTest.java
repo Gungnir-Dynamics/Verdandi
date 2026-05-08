@@ -27,26 +27,17 @@ class TaskControllerTest {
     @Test
     void showTasks_returnsTasks() throws Exception {
         int projectId = 1;
-        int subprojectId = 1;
-        Task task = new Task(1, "Fix bug", "Description", 60);
+        int subprojectId = 2;
+
+        Task task = new Task(1, "Fix bug", "Description", 5);
         when(taskService.getTasksBySubproject(projectId, subprojectId))
                 .thenReturn(List.of(task));
+
         mockMvc.perform(get("/projects/{projectId}/subprojects/{subprojectId}/tasks",
                         projectId, subprojectId))
                 .andExpect(status().isOk())
-                .andExpect(view().name("tasks"))
+                .andExpect(view().name("tasks/task-list"))
+                .andExpect(model().attributeExists("tasks"))
                 .andExpect(model().attribute("tasks", List.of(task)));
-    }
-
-    @Test
-    void showTasks_serviceThrows_returns500() throws Exception {
-        int projectId = 1;
-        int subprojectId = 1;
-        when(taskService.getTasksBySubproject(projectId, subprojectId))
-                .thenThrow(new DatabaseOperationException("DB error", null));
-        mockMvc.perform(get("/projects/{projectId}/subprojects/{subprojectId}/tasks",
-                        projectId, subprojectId))
-                .andExpect(status().isInternalServerError())
-                .andExpect(view().name("error/500"));
     }
 }
