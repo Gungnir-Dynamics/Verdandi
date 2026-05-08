@@ -56,7 +56,7 @@ class ProjectControllerTest {
     @Test
     void createNewProject() throws Exception {
 
-        mockMvc.perform(get("/create_project"))
+        mockMvc.perform(get("/projects/create_project"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("/create_project"))
                 .andExpect(model().attributeExists("project"));
@@ -66,12 +66,12 @@ class ProjectControllerTest {
     @Test
     void saveProject() throws Exception {
 
-        mockMvc.perform(post("/create_project")
+        mockMvc.perform(post("/projects/create_project")
                         .param("name", "Nyt Stort Projekt")
                         .param("description", "En rigtig god beskrivelse")
                         .param("deadline", "2026-12-31"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/project"));
+                .andExpect(redirectedUrl("/projects"));
                // .andExpect(flash().attributeExists("successMessage"));
 
         verify(projectService).saveProject(any(Project.class));
