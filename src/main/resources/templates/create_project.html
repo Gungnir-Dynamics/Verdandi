@@ -10,9 +10,7 @@
             margin: 20px;
             background-color: #f8f9fa;
         }
-        h1 {
-            color: #2c3e50;
-        }
+        h1 { color: #2c3e50; }
         .form-container {
             max-width: 700px;
             background: white;
@@ -34,10 +32,8 @@
             border-radius: 4px;
             box-sizing: border-box;
         }
-        textarea {
-            min-height: 120px;
-            resize: vertical;
-        }
+        textarea { min-height: 120px; resize: vertical; }
+
         .btn {
             padding: 10px 20px;
             text-decoration: none;
@@ -46,28 +42,26 @@
             cursor: pointer;
             border: none;
         }
-        .btn-primary {
-            background-color: #3498db;
-            color: white;
-        }
-        .btn-secondary {
-            background-color: #95a5a6;
-            color: white;
-        }
-        .buttons {
-            margin-top: 25px;
-            display: flex;
-            gap: 10px;
-        }
+        .btn-primary { background-color: #3498db; color: white; }
+        .btn-secondary { background-color: #95a5a6; color: white; }
+        .buttons { margin-top: 25px; display: flex; gap: 10px; }
+
+        .error { color: #e74c3c; background: #f8d7da; padding: 10px; border-radius: 4px; }
+        .success { color: #155724; background: #d4edda; padding: 10px; border-radius: 4px; }
     </style>
 </head>
 <body>
 <div>
     <h1>Opret Nyt Projekt</h1>
-    <p><a href="/project" class="btn btn-secondary">← Tilbage til projekter</a></p>
+    <p><a href="/projects" class="btn btn-secondary">← Tilbage til projekter</a></p>
+
+    <!-- Fejlbesked -->
+    <div th:if="${errorMessage}" class="error">
+        <span th:text="${errorMessage}"></span>
+    </div>
 
     <div class="form-container">
-        <form th:action="@{/create_project}" method="post">
+        <form th:action="@{/projects/create}" method="post">
 
             <label for="name">Projektnavn *</label>
             <input type="text" id="name" name="name" th:value="${project.name}" required />
@@ -81,7 +75,7 @@
 
             <div class="buttons">
                 <button type="submit" class="btn btn-primary">Opret Projekt</button>
-                <a href="/project" class="btn btn-secondary">Annuller</a>
+                <a href="/projects" class="btn btn-secondary">Annuller</a>
             </div>
         </form>
     </div>

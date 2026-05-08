@@ -16,6 +16,7 @@ import java.util.List;
 @Controller
 @RequestMapping("/projects")
 public class ProjectController {
+
     private final ProjectService projectService;
 
     public ProjectController(ProjectService projectService){
@@ -30,13 +31,13 @@ public class ProjectController {
 
     //ændre url til create
     //Manglende validering fx (tomt navn, for lang tekst, deadline før creationDate, negative tal)
-    @GetMapping("/create_project")
+    @GetMapping("/create")
     public String createNewProject(Model model){
         model.addAttribute("project", new Project());
         return "/create_project";
     }
 
-    @PostMapping("/create_project")
+    @PostMapping("/create")
     public String saveProject(@ModelAttribute Project project, RedirectAttributes redirectAttributes){
 
         try {
@@ -46,7 +47,7 @@ public class ProjectController {
 
         } catch (IllegalArgumentException e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
-            return "redirect:/create_project";
+            return "redirect:/create";
         }
     }
 
