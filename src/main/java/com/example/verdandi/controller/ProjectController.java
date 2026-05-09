@@ -49,11 +49,15 @@ public class ProjectController {
         }
     }
 
-    @PostMapping
+//    @GetMapping
+//    public String editProject(){
+//
+//    }
+
+    @PostMapping("{projectId}/delete")
     public String deleteProject (@PathVariable int projectId){
         projectService.deleteProject(projectId);
-        return "redirect:/products";
-
+        return "redirect:/projects";
     }
 
 

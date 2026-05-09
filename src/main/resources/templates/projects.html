@@ -3,25 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mine Projekter - Verdandi</title>
+    <title>Projekt Administration - Verdandi</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
             background-color: #f8f9fa;
         }
-        h1 {
-            color: #2c3e50;
+        h1 { color: #2c3e50; }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
         }
+        .btn {
+            padding: 10px 18px;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+        }
+        .btn-primary { background-color: #3498db; color: white; }
+        .btn-danger { background-color: #e74c3c; color: white; }
+        .btn-primary:hover { background-color: #2980b9; }
+        .btn-danger:hover { background-color: #c0392b; }
+
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
             background: white;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
         th, td {
-            padding: 12px;
+            padding: 14px;
             text-align: left;
             border-bottom: 1px solid #ddd;
         }
@@ -32,27 +49,31 @@
         tr:hover {
             background-color: #f1f1f1;
         }
-        .btn {
-            padding: 8px 12px;
-            text-decoration: none;
-            border-radius: 4px;
-            font-size: 14px;
-        }
-        .btn-info {
-            background-color: #3498db;
-            color: white;
+        .actions {
+            display: flex;
+            gap: 8px;
         }
         .no-projects {
             text-align: center;
-            padding: 40px;
-            color: #7f8c8d;
+            padding: 60px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
+        .success { color: green; background: #d4edda; padding: 10px; border-radius: 4px; }
+        .error { color: red; background: #f8d7da; padding: 10px; border-radius: 4px; }
     </style>
 </head>
 <body>
 <div>
-    <h1>Mine Projekter</h1>
-    <p><a href="/" class="btn btn-info">← Tilbage</a></p>
+    <div class="header">
+        <h1>Projekt Administration</h1>
+        <a href="/projects/create" class="btn btn-primary">+ Opret Nyt Projekt</a>
+    </div>
+
+    <!-- Success / Error besked -->
+    <div th:if="${successMessage}" class="success" th:text="${successMessage}"></div>
+    <div th:if="${errorMessage}" class="error" th:text="${errorMessage}"></div>
 
     <table th:if="${myProjects != null and !myProjects.isEmpty()}">
         <thead>
@@ -62,7 +83,7 @@
             <th>Beskrivelse</th>
             <th>Oprettet</th>
             <th>Deadline</th>
-            <th>Handling</th>
+            <th style="width: 180px;">Handling</th>
         </tr>
         </thead>
         <tbody>
@@ -73,16 +94,29 @@
             <td th:text="${project.creationDate}"></td>
             <td th:text="${project.deadline}"></td>
             <td>
-                <a th:href="@{/projects/details/{id}(id=${project.id})}" class="btn btn-info">Se mere</a>
+                <div class="actions">
+                    <a th:href="@{/projects/{id}(id=${project.id})}" class="btn btn-primary" style="padding: 6px 12px; font-size: 14px;">
+                        Se mere
+                    </a>
+                    <!-- Delete form -->
+                    <form th:action="@{/projects/{id}/delete(id=${project.id})}" method="post"
+                          onsubmit="return confirm('Er du sikker på du vil slette dette projekt?')">
+                        <button type="submit" class="btn btn-danger" style="padding: 6px 12px; font-size: 14px;">
+                            Slet
+                        </button>
+                    </form>
+                </div>
             </td>
         </tr>
         </tbody>
     </table>
 
-    <!-- Hvis der ikke er nogen projekter -->
+    <!-- Hvis ingen projekter -->
     <div class="no-projects" th:if="${myProjects == null or myProjects.isEmpty()}">
         <h3>Du har ingen projekter endnu</h3>
-        <p>Opret dit første projekt for at komme i gang.</p>
+        <a href="/projects/create" class="btn btn-primary" style="font-size: 18px; padding: 14px 28px;">
+            + Opret Dit Første Projekt
+        </a>
     </div>
 </div>
 </body>

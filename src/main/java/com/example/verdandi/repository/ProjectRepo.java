@@ -59,7 +59,7 @@ import java.util.List;
     }
 
     public void deleteProject(int projectId){
-        String sql = "DELETE FROM project WHERE id = ?";
+        String sql = "DELETE FROM project WHERE project_id = ?";
         jdbcTemplate.update(sql, projectId);
     }
 
