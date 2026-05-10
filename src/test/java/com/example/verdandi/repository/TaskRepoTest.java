@@ -1,6 +1,5 @@
 package com.example.verdandi.repository;
 
-import com.example.verdandi.model.Project;
 import com.example.verdandi.model.Task;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,5 +64,24 @@ public class TaskRepoTest {
         assertThat(mostRecentTask.getName()).isEqualTo("Test Task");
         assertThat(mostRecentTask.getDescription()).isEqualTo("This is a test task");
         assertThat(mostRecentTask.getEstimatedHours()).isEqualTo(5);
+    }
+
+    @Test
+    void updateTask_updatesRowInDatabase() {
+        Task original = taskRepo.getSingleTask(1);
+        assertThat(original.getName()).isEqualTo("Lav wireframes");
+
+        Task updated = new Task();
+        updated.setName("Updated name");
+        updated.setDescription("Updated description");
+        updated.setEstimatedHours(99);
+
+        taskRepo.updateTask(1, updated);
+
+        Task afterUpdate = taskRepo.getSingleTask(1);
+
+        assertThat(afterUpdate.getName()).isEqualTo("Updated name");
+        assertThat(afterUpdate.getDescription()).isEqualTo("Updated description");
+        assertThat(afterUpdate.getEstimatedHours()).isEqualTo(99);
     }
 }
