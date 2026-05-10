@@ -102,6 +102,19 @@ class ProjectControllerTest {
                 .andExpect(flash().attribute("errorMessage", "Deadline can not be before today's date"));
     }
 
+    // NY TEST
+    @Test
+    void saveProject_WithInvalidDeadline_ShouldReturnError() throws Exception {
+
+        mockMvc.perform(post("/projects/create")
+                        .param("name", "Test Project")
+                        .param("deadline", "2020-01-01"))
+                .andDo(result -> {
+                    System.out.println("Status: " + result.getResponse().getStatus());
+                    System.out.println("Exception: " + result.getResolvedException());
+                })
+                .andExpect(status().is3xxRedirection());
+    }
 
 
     @Test

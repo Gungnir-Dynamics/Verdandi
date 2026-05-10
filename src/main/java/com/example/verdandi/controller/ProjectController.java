@@ -5,6 +5,7 @@ import com.example.verdandi.model.Project;
 import com.example.verdandi.service.ProjectService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -31,8 +32,13 @@ public class ProjectController {
     }
 
     @PostMapping("/create")
-    public String saveProject(@ModelAttribute Project project,  RedirectAttributes redirectAttributes){
-
+    public String saveProject(@ModelAttribute Project project, BindingResult bindingResult, RedirectAttributes redirectAttributes){
+//
+//        if (bindingResult.hasErrors()) {
+//            redirectAttributes.addFlashAttribute("errorMessage", "Ugyldig datoformat eller manglende felter");
+//            redirectAttributes.addFlashAttribute("project", project);
+//            return "redirect:/projects/create";
+//        }
         try {
             projectService.saveProject(project);
 
