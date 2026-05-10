@@ -1,18 +1,22 @@
 package com.example.verdandi.controller;
 
 import com.example.verdandi.model.SubProject;
+
+import com.example.verdandi.service.ProjectService;
 import com.example.verdandi.service.SubProjectService;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.web.servlet.MockMvc;
 
+import org.springframework.test.web.servlet.MockMvc;
 import java.util.List;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+
 
 @WebMvcTest(SubProjectController.class)
 class SubProjectControllerTest {
@@ -20,8 +24,11 @@ class SubProjectControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @MockBean
+    @MockitoBean
     private SubProjectService subProjectService;
+
+    @MockitoBean
+    private ProjectService projectService;
 
     @Test
     void getMySubProjects() throws Exception {
