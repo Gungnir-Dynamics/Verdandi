@@ -16,26 +16,60 @@ import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TE
 @SpringBootTest
 @ActiveProfiles
 @Sql(scripts = "classpath:h2init.sql", executionPhase = BEFORE_TEST_METHOD)
-    class SubProjectRepoTest {
+class SubProjectRepoTest {
 
-        @Autowired
-        private SubProjectRepo subProjectRepo;
+    @Autowired
+    private SubProjectRepo subProjectRepo;
 
-        @Test
-        void createSubProject() {
+    @Test
+    void createSubProject() {
 
-            SubProject subProject = new SubProject();
-            subProject.setName("H2 database test");
-            subProject.setDescription("H2 database test description");
-            subProject.setProjectId(1);
+        SubProject subProject = new SubProject();
+        subProject.setName("H2 database test");
+        subProject.setDescription("H2 database test description");
+        subProject.setProjectId(1);
 
-            subProjectRepo.createSubProject(subProject);
+        subProjectRepo.createSubProject(subProject);
 
-            List<SubProject> result = subProjectRepo.getSubProjects(1);
+        List<SubProject> result = subProjectRepo.getSubProjects(1);
 
-            assertTrue(
-                    result.stream()
-                            .anyMatch(sp -> sp.getName().equals("H2 database test"))
-            );
-        }
+        assertTrue(
+                result.stream()
+                        .anyMatch(sp -> sp.getName().equals("H2 database test"))
+        );
     }
+
+    @Test
+    void updateSubProject() {
+
+        // Noter Timothy: subproject oprettes i H2 databasen
+        SubProject subProject = new SubProject();
+        subProject.setName("Test");
+        subProject.setDescription("test");
+        subProject.setProjectId(1);
+
+        subProjectRepo.createSubProject(subProject);
+
+        // Noter Timothy: Kalder alle "subprojects", og leder/finder den som vi lige har oprettet
+        SubProject updatedSubproject = subProjectRepo.getSubProjects(1).stream()
+                .filter(sp -> sp.getName().equals("Test"))
+                .findFirst()
+                .orElseThrow();
+
+        // Noter Timothy: Opdatere data
+        updatedSubproject.setName("Updated test name");
+        updatedSubproject.setDescription("Updated test description");
+
+        subProjectRepo.updateSubProject(updatedSubproject);
+
+
+        //Noter Timothy: Henter (opdateret)data fra databasen
+        SubProject updated = subProjectRepo.findSubProjectById(updatedSubproject.getId());
+
+
+
+        //Noter Timothy: Her verificere jeg om dataen er blevet opdateret
+        assertEquals("Updated test name", updated.getName());
+        assertEquals("Updated test description", updated.getDescription());
+    }
+}
