@@ -8,8 +8,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.List;
-
 @Controller
 @RequestMapping("/projects")
 public class ProjectController {
@@ -23,7 +21,7 @@ public class ProjectController {
     @GetMapping("")
     public String getMyProjects(Model model){
         model.addAttribute("myProjects", projectService.getMultipleProjects());
-        return "projects";
+        return "/project/projects";
     }
 
     //ændre url til create
@@ -31,15 +29,15 @@ public class ProjectController {
     @GetMapping("/create")
     public String createNewProject(Model model){
         model.addAttribute("project", new Project());
-        return "/create_project";
+        return "/project/create_project";
     }
 
     @PostMapping("/create")
-    public String saveProject(@ModelAttribute Project project, RedirectAttributes redirectAttributes){
+    public String saveProject(@ModelAttribute Project project,  RedirectAttributes redirectAttributes){
 
         try {
             projectService.saveProject(project);
-            redirectAttributes.addFlashAttribute("successMessage", "Projektet blev oprettet succesfuldt!");
+            redirectAttributes.addFlashAttribute("successMessage", "Project was  created successfully ");
             return "redirect:/projects";
 
         } catch (IllegalArgumentException e) {

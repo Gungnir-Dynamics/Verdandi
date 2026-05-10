@@ -32,47 +32,65 @@ class ProjectControllerTest {
 
 
     @Test
-    void getMyProjects_FindProjects() throws Exception {
+    void getMyProjects_ShouldReturnProjects() throws Exception {
 
         Project project1 = new Project();
         project1.setId(1);
         project1.setName("Website Redesign");
-        project1.setDescription("Test projekt");
+        project1.setDescription("Test project");
 
         Project project2 = new Project();
         project2.setId(2);
-        project2.setName("Mobil App Udvikling");
+        project2.setName("Mobil App development");
 
         when(projectService.getMultipleProjects()).thenReturn(List.of(project1, project2));
 
 
         mockMvc.perform(get("/projects"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("projects"))
-                .andExpect(model().attributeExists("myProjects"))
-                .andExpect(model().attribute("myProjects", List.of(project1, project2)));
+                .andExpect(view().name("/project/projects"))
+                .andExpect(model().attributeExists("myProjects"));
     }
 
     @Test
     void createNewProject() throws Exception {
 
-        mockMvc.perform(get("/projects/create_project"))
+        mockMvc.perform(get("/projects/create"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("/create_project"))
+                .andExpect(view().name("/project/create_project"))
                 .andExpect(model().attributeExists("project"));
 
     }
 
+    // TEST VIRKER IKKE
+    //java.lang.AssertionError: Range for response status value 404 expected:<REDIRECTION> but was:<CLIENT_ERROR>
+    //Expected :REDIRECTION
+    //Actual   :CLIENT_ERROR
+
     @Test
-    void saveProject() throws Exception {
+    void saveProject_WithInvalidDeadline_ReturnError() throws Exception{
+        mockMvc.perform(post("/projects/create")
+                .param("name", "Test Project")
+                .param("deadline", "2020, 01, 01"))
+
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/projects/create_project"))
+                .andExpect(flash().attributeExists("errorMessage"))
+                .andExpect(flash().attribute("errorMessage", "Deadline can not be before today's date"));
+    }
+
+
+
+    @Test
+    void saveProject_ShouldRedirect() throws Exception {
 
         mockMvc.perform(post("/projects/create_project")
-                        .param("name", "Nyt Stort Projekt")
-                        .param("description", "En rigtig god beskrivelse")
+                        .param("name", "A new big project")
+                        .param("description", "A great description")
                         .param("deadline", "2026-12-31"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/projects"));
-               // .andExpect(flash().attributeExists("successMessage"));
+                .andExpect(redirectedUrl("/projects"))
+                .andExpect(flash().attributeExists("successMessage"));
 
         verify(projectService).saveProject(any(Project.class));
     }

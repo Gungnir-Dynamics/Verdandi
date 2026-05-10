@@ -61,7 +61,7 @@ public class ProjectService {
 
 
         if (project.getDeadline() != null && project.getDeadline().isBefore(LocalDate.now())) {
-            throw new IllegalArgumentException("Deadline must not be before today's date");
+            throw new IllegalArgumentException("Deadline can not be before today's date");
         }
 
 
