@@ -24,8 +24,6 @@ public class ProjectController {
         return "/project/projects";
     }
 
-    //ændre url til create
-    //Manglende validering fx (tomt navn, for lang tekst, deadline før creationDate, negative tal)
     @GetMapping("/create")
     public String createNewProject(Model model){
         model.addAttribute("project", new Project());
@@ -37,7 +35,8 @@ public class ProjectController {
 
         try {
             projectService.saveProject(project);
-            redirectAttributes.addFlashAttribute("successMessage", "Project was  created successfully ");
+
+            redirectAttributes.addFlashAttribute("successMessage", "the project '" + project.getName() + "' was  created successfully ");
             return "redirect:/projects";
 
         } catch (IllegalArgumentException e) {
