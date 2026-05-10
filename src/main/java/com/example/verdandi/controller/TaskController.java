@@ -22,6 +22,7 @@ public class TaskController {
                              @PathVariable int projectId,
                              Model model){
         model.addAttribute("tasks", taskService.getTasksBySubproject(projectId, subprojectId));
+        model.addAttribute("projectId", projectId);
         return "tasks/task-list";
     }
 

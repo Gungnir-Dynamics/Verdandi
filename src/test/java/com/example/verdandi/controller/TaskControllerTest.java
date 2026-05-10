@@ -1,9 +1,11 @@
 package com.example.verdandi.controller;
 
 import com.example.verdandi.exception.DatabaseOperationException;
+import com.example.verdandi.exception.ValidationException;
 import com.example.verdandi.model.Task;
 import com.example.verdandi.service.TaskService;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -12,8 +14,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(TaskController.class)
@@ -38,6 +42,51 @@ class TaskControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("tasks/task-list"))
                 .andExpect(model().attributeExists("tasks"))
-                .andExpect(model().attribute("tasks", List.of(task)));
+                .andExpect(model().attribute("tasks", List.of(task)))
+                .andExpect(model().attribute("projectId", projectId));
+    }
+
+    @Test
+    void showCreateForm_returnsViewAndModel() throws Exception {
+        mockMvc.perform(get("/projects/1/subprojects/2/tasks/create"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("tasks/create_task"))
+                .andExpect(model().attributeExists("task"))
+                .andExpect(model().attribute("projectId", 1))
+                .andExpect(model().attribute("subprojectId", 2));
+    }
+
+    @Test
+    void createTask_validData_redirectsToTaskList() throws Exception {
+        mockMvc.perform(post("/projects/1/subprojects/2/tasks/create")
+                        .param("name", "Test Task")
+                        .param("description", "Some description")
+                        .param("estimatedHours", "5"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/projects/1/subprojects/2/tasks"));
+
+        ArgumentCaptor<Task> captor = ArgumentCaptor.forClass(Task.class);
+
+        verify(taskService).createTask(eq(1), eq(2), captor.capture());
+
+        assertEquals("Test Task", captor.getValue().getName());
+        assertEquals("Some description", captor.getValue().getDescription());
+        assertEquals(5, captor.getValue().getEstimatedHours());
+    }
+
+    @Test
+    void createTask_invalidData_redirectsBackToFormWithFlashAttributes() throws Exception {
+        doThrow(new ValidationException("Task name cannot be empty."))
+                .when(taskService)
+                .createTask(eq(1), eq(2), any(Task.class));
+
+        mockMvc.perform(post("/projects/1/subprojects/2/tasks/create")
+                        .param("name", "")
+                        .param("description", "desc")
+                        .param("estimatedHours", "3"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/projects/1/subprojects/2/tasks/create"))
+                .andExpect(flash().attributeExists("errorMessage"))
+                .andExpect(flash().attributeExists("task"));
     }
 }

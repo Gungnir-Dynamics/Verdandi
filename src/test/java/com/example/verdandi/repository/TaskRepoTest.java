@@ -33,6 +33,15 @@ public class TaskRepoTest {
     }
 
     @Test
+    void getSingleTask() {
+        Task task = taskRepo.getSingleTask(1);
+
+        assertThat(task.getName()).isEqualTo("Lav wireframes");
+        assertThat(task.getDescription()).isEqualTo("Low-fidelity wireframes af alle hoved sider");
+        assertThat(task.getEstimatedHours()).isEqualTo(35);
+    }
+
+    @Test
     void taskBelongsToSubproject_returnsTrue() {
         assertTrue(taskRepo.taskBelongsToSubproject(1, 3));
     }
@@ -40,5 +49,21 @@ public class TaskRepoTest {
     @Test
     void taskBelongsToSubproject_returnsFalse() {
         assertFalse(taskRepo.taskBelongsToSubproject(1, 4));
+    }
+
+    @Test
+    void createTask_insertsTaskIntoDatabase() {
+        Task task = new Task();
+        task.setName("Test Task");
+        task.setDescription("This is a test task");
+        task.setEstimatedHours(5);
+
+        taskRepo.createTask(1, task);
+
+        Task mostRecentTask = taskRepo.getSingleTask(17);
+
+        assertThat(mostRecentTask.getName()).isEqualTo("Test Task");
+        assertThat(mostRecentTask.getDescription()).isEqualTo("This is a test task");
+        assertThat(mostRecentTask.getEstimatedHours()).isEqualTo(5);
     }
 }

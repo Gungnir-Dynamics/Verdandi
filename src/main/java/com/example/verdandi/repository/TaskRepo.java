@@ -45,6 +45,15 @@ public class TaskRepo {
         return count != null && count > 0;
     }
 
+    public Task getSingleTask(int taskId) {
+        String sql = """
+                SELECT task_id, name, description, estimated_hours
+                FROM task
+                WHERE task_id = ?
+                """;
+        return jdbcTemplate.queryForObject(sql, rowMapper, taskId);
+    }
+
     public void createTask(int subprojectId, Task task) {
         String sql = """
                 INSERT INTO task (name, description, estimated_hours, sub_project_id)
