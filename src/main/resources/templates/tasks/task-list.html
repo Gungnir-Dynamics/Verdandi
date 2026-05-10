@@ -12,9 +12,9 @@
     <table th:if="${tasks != null and !tasks.isEmpty()}">
         <thead>
         <tr>
-            <th>Tasknavn</th>
-            <th>Beskrivelse</th>
-            <th>Estimated time</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Estimated hours</th>
             <th>Handling</th>
         </tr>
         </thead>
@@ -24,7 +24,7 @@
             <td th:text="${task.description}"></td>
             <td th:text="${task.estimatedHours}"></td>
             <td>
-                <a th:href="@{/project/details/{id}(id=${task.id})}">Se mere</a>
+                <a th:href="@{|/projects/${projectId}/subprojects/${subprojectId}/tasks/${task.id}/edit|}">Edit</a>
             </td>
         </tr>
         </tbody>

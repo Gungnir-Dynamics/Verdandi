@@ -68,4 +68,19 @@ public class TaskRepo {
                 subprojectId);
     }
 
+    public void updateTask(int taskId, Task task) {
+        String sql = """
+            UPDATE task
+            SET name = ?, description = ?, estimated_hours = ?
+            WHERE task_id = ?
+            """;
+
+        jdbcTemplate.update(sql,
+                task.getName(),
+                task.getDescription(),
+                task.getEstimatedHours(),
+                taskId);
+    }
+
+
 }

@@ -74,5 +74,26 @@ public class TaskService {
         }
     }
 
+    public Task getSingleTask(int projectId, int subprojectId, int taskId) {
+        validateTaskBelongsToSubProject(projectId, subprojectId, taskId);
+
+        try {
+            return taskRepo.getSingleTask(taskId);
+        } catch (DataAccessException ex) {
+            throw new DatabaseOperationException("Failed to retrieve task.", ex);
+        }
+    }
+
+    public void updateTask(int projectId, int subprojectId, int taskId, Task updatedTask) {
+        validateTaskBelongsToSubProject(projectId, subprojectId, taskId);
+        validateTaskData(updatedTask);
+
+        try {
+            taskRepo.updateTask(taskId, updatedTask);
+        } catch (DataAccessException ex) {
+            throw new DatabaseOperationException("Failed to update task.", ex);
+        }
+    }
+
 
 }
