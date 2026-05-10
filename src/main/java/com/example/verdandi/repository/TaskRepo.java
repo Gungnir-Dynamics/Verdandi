@@ -82,5 +82,12 @@ public class TaskRepo {
                 taskId);
     }
 
+    public void deleteTask(int taskId) {
+        String sql = """
+            DELETE FROM task
+            WHERE task_id = ?
+            """;
 
+        jdbcTemplate.update(sql, taskId);
+    }
 }

@@ -31,5 +31,8 @@
 
 <a th:href="@{|/projects/${projectId}/subprojects/${subprojectId}/tasks|}">Cancel</a>
 
+<form th:action="@{|/projects/${projectId}/subprojects/${subprojectId}/tasks/${taskId}/delete|}" method="post">
+    <button type="submit">Delete</button>
+</form>
 </body>
 </html>

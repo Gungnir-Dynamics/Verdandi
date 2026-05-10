@@ -95,5 +95,13 @@ public class TaskService {
         }
     }
 
+    public void deleteTask(int projectId, int subprojectId, int taskId) {
+        validateTaskBelongsToSubProject(projectId, subprojectId, taskId);
 
+        try {
+            taskRepo.deleteTask(taskId);
+        } catch (DataAccessException ex) {
+            throw new DatabaseOperationException("Failed to delete task.", ex);
+        }
+    }
 }
