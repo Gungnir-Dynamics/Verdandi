@@ -137,4 +137,13 @@ class TaskControllerTest {
                 .andExpect(flash().attributeExists("errorMessage"))
                 .andExpect(flash().attributeExists("task"));
     }
+
+    @Test
+    void deleteTask_valid_redirectsToTaskList() throws Exception {
+        mockMvc.perform(post("/projects/1/subprojects/2/tasks/3/delete"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/projects/1/subprojects/2/tasks"));
+
+        verify(taskService).deleteTask(1, 2, 3);
+    }
 }

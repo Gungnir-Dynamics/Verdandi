@@ -84,4 +84,18 @@ public class TaskRepoTest {
         assertThat(afterUpdate.getDescription()).isEqualTo("Updated description");
         assertThat(afterUpdate.getEstimatedHours()).isEqualTo(99);
     }
+
+    @Test
+    void deleteTask_removesRowFromDatabase() {
+        Task beforeDelete = taskRepo.getSingleTask(1);
+        assertThat(beforeDelete).isNotNull();
+        assertThat(beforeDelete.getName()).isEqualTo("Lav wireframes");
+
+        taskRepo.deleteTask(1);
+
+        assertFalse(taskRepo.taskBelongsToSubproject(1, 1));
+
+        List<Task> remaining = taskRepo.getTasks(1);
+        assertThat(remaining.size()).isEqualTo(2);
+    }
 }
