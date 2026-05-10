@@ -63,4 +63,33 @@ public class SubProjectRepo {
                 subProject.getProjectId()
         );
     }
+
+    public void updateSubProject(SubProject subProject) {
+        String sql = """
+                UPDATE sub_project 
+                SET name = ?, description = ? 
+                WHERE sub_project_id = ?""";
+        jdbcTemplate.update(
+                sql,
+                subProject.getName(),
+                subProject.getDescription(),
+                subProject.getId()
+        );
+
+    }
+    public void deleteSubProject(int id) {
+        String sql = """
+                DELETE FROM sub_project 
+                WHERE sub_project_id = ?
+                """;
+        jdbcTemplate.update(sql, id);
+    }
+    public SubProject findSubProjectById (int id) {
+        String sql = """
+                SELECT * 
+                FROM sub_project 
+                WHERE sub_project_id = ?
+                """;
+        return jdbcTemplate.queryForObject(sql, rowMapper, id);
+    }
 }

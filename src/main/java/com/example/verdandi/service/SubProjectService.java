@@ -52,5 +52,17 @@ public class SubProjectService {
             throw new DatabaseOperationException("Failed to create subproject", ex);
         }
     }
+
+    public void updateSubProject(SubProject subProject) {
+        subProjectRepo.updateSubProject(subProject);
+    }
+
+    public void deleteSubproject(int id) {
+        subProjectRepo.deleteSubProject(id);
+    }
+
+    public SubProject findSubProjectById(int id) {
+        return subProjectRepo.findSubProjectById(id);
+    }
 }
 

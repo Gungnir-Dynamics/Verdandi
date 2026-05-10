@@ -27,7 +27,7 @@ import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TE
             SubProject subProject = new SubProject();
             subProject.setName("H2 database test");
             subProject.setDescription("H2 database test description");
-            subProject.setProjectId(1); // must exist in test DB
+            subProject.setProjectId(1);
 
             subProjectRepo.createSubProject(subProject);
 
