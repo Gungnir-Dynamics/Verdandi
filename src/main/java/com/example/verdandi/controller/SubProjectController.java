@@ -39,6 +39,7 @@ public class SubProjectController {
 
         return "create_sub_project";
     }
+
     @PostMapping("/create")
     public String saveProject(@PathVariable int projectId, @ModelAttribute SubProject subProject) {
         subProject.setProjectId(projectId);
@@ -48,7 +49,7 @@ public class SubProjectController {
     }
 
     @GetMapping("/{subprojectId}/edit")
-    public String editSubProject(@PathVariable int subprojectId,@PathVariable int projectId, Model model) {
+    public String editSubProject(@PathVariable int subprojectId, @PathVariable int projectId, Model model) {
         model.addAttribute("subProject", subProjectService.findSubProjectById(subprojectId));
         model.addAttribute("projectId", projectId);
         return "edit_sub_project";
@@ -66,4 +67,16 @@ public class SubProjectController {
         return "redirect:/projects/" + projectId + "/subprojects";
     }
 
+    @PostMapping("/{subprojectId}/delete")
+    public String deleteSubProject(@PathVariable int subprojectId,
+                                   @PathVariable int projectId) {
+
+        subProjectService.deleteSubproject(subprojectId);
+
+        return "redirect:/projects/" + projectId + "/subprojects";
+
+
+    }
 }
+
+
