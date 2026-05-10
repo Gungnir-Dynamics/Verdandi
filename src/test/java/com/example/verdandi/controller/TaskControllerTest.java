@@ -89,4 +89,52 @@ class TaskControllerTest {
                 .andExpect(flash().attributeExists("errorMessage"))
                 .andExpect(flash().attributeExists("task"));
     }
+
+    @Test
+    void showEditForm_returnsViewAndModel() throws Exception {
+        Task task = new Task(3, "Fix bug", "Desc", 5);
+        when(taskService.getSingleTask(1, 2, 3)).thenReturn(task);
+
+        mockMvc.perform(get("/projects/1/subprojects/2/tasks/3/edit"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("tasks/edit_task"))
+                .andExpect(model().attributeExists("task"))
+                .andExpect(model().attribute("projectId", 1))
+                .andExpect(model().attribute("subprojectId", 2))
+                .andExpect(model().attribute("taskId", 3));
+    }
+
+    @Test
+    void updateTask_validData_redirectsToTaskList() throws Exception {
+        mockMvc.perform(post("/projects/1/subprojects/2/tasks/3/edit")
+                        .param("name", "Updated Task")
+                        .param("description", "Updated description")
+                        .param("estimatedHours", "10"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/projects/1/subprojects/2/tasks"));
+
+        ArgumentCaptor<Task> captor = ArgumentCaptor.forClass(Task.class);
+
+        verify(taskService).updateTask(eq(1), eq(2), eq(3), captor.capture());
+
+        assertEquals("Updated Task", captor.getValue().getName());
+        assertEquals("Updated description", captor.getValue().getDescription());
+        assertEquals(10, captor.getValue().getEstimatedHours());
+    }
+
+    @Test
+    void updateTask_invalidData_redirectsBackToFormWithFlashAttributes() throws Exception {
+        doThrow(new ValidationException("Task name cannot be empty."))
+                .when(taskService)
+                .updateTask(eq(1), eq(2), eq(3), any(Task.class));
+
+        mockMvc.perform(post("/projects/1/subprojects/2/tasks/3/edit")
+                        .param("name", "")
+                        .param("description", "desc")
+                        .param("estimatedHours", "5"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/projects/1/subprojects/2/tasks/3/edit"))
+                .andExpect(flash().attributeExists("errorMessage"))
+                .andExpect(flash().attributeExists("task"));
+    }
 }
