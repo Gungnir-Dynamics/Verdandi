@@ -40,10 +40,10 @@ public class ProjectController {
 
         try {
             projectService.saveProject(project);
-
+            redirectAttributes.addFlashAttribute("successMessage", "Project was created successfully");
             return "redirect:/projects";
 
-        } catch (ValidationException e) {
+        } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
             redirectAttributes.addFlashAttribute("project", project);
             return "redirect:/projects/create";
@@ -59,7 +59,6 @@ public class ProjectController {
         if (!model.containsAttribute("project")) {
             model.addAttribute("project", project);
         }
-
         model.addAttribute("projectId", projectId);
              return "project/edit_project";
     }
@@ -71,10 +70,10 @@ public class ProjectController {
 
         try {
             projectService.updateProject(projectId, project);
-
+            redirectAttributes.addFlashAttribute("successMessage", "Project was updated successfully");
             return "redirect:/projects";
 
-        } catch (ValidationException e) {
+        } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
             redirectAttributes.addFlashAttribute("project", project);
 

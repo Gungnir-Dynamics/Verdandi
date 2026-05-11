@@ -10,8 +10,8 @@ public class Project {
 
 
     // GROK FORSLAG TIL TEST AF PROJECTCONTROLLER
-//    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-//    private LocalDate deadline;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    private LocalDate deadline;
 
 
 
@@ -19,7 +19,7 @@ public class Project {
     private String name;
     private String description;
     private int estimatedHours;
-    private LocalDate deadline;
+//    private LocalDate deadline;
     private LocalDate creationDate;
 
 // CONSTRUCTORS

@@ -75,8 +75,8 @@ public class ProjectService {
     }
 
     public void saveProject(Project project) {
-        validateProjectExists(project.getId());
         validateProject(project);
+
         try {
             projectRepo.createProject(project);
         } catch (DataAccessException ex) {
