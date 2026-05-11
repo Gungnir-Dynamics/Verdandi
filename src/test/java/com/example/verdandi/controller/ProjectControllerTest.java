@@ -1,5 +1,6 @@
 package com.example.verdandi.controller;
 
+import com.example.verdandi.exception.ValidationException;
 import com.example.verdandi.model.Project;
 import com.example.verdandi.model.Task;
 import com.example.verdandi.service.ProjectService;
@@ -65,7 +66,30 @@ class ProjectControllerTest {
                 .andExpect(model().attributeExists("project"));
 
     }
+    @Test
+    void saveProject_ValidData_ShouldRedirectWithSuccess() throws Exception {
 
+        mockMvc.perform(post("/projects/create")
+                        .param("name", "Nyt Test Projekt")
+                        .param("description", "Dette er en test")
+                        .param("deadline", "2026-12-31"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/projects"))
+                .andExpect(flash().attributeExists("successMessage"));
+
+        verify(projectService).saveProject(any(Project.class));
+    }
+
+    @Test
+    void saveProject_InvalidDeadline_ShouldReturnError() throws Exception {
+
+        mockMvc.perfrom(post("/projects/create")
+                        .param("name", "Test Project")
+                        .param("deadline", "2020-01-01"))   // ugyldig dato
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/projects/create"))
+                .andExpect(flash().attributeExists("errorMessage"));
+    }
 //    @Test
 //    void createProject_validData_redirectsToMyProjects() throws Exception {
 //        mockMvc.perform(post("/projects/create")
