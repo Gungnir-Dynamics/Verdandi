@@ -7,6 +7,7 @@ import com.example.verdandi.repository.ProjectRepo;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
+import javax.xml.crypto.Data;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -16,33 +17,6 @@ public class ProjectService {
 
     public ProjectService(ProjectRepo projectRepo) {
         this.projectRepo = projectRepo;
-    }
-
-
-    public List<Project> getMultipleProjects() {
-        try {
-            return projectRepo.getMultipleProjects();
-        } catch (DataAccessException ex) {
-            throw new DatabaseOperationException("Failed to retrieve data for project", ex);
-        }
-    }
-
-    public Project getSingleProject(int projectId) {
-        try {
-            return projectRepo.getSingleProject(projectId);
-        } catch (DataAccessException ex) {
-            throw new DatabaseOperationException("Failed to retrieve data for project", ex);
-        }
-
-    }
-
-    public void saveProject(Project project) {
-        validateProject(project);
-        projectRepo.createProject(project);
-    }
-
-    public void deleteProject(int projectId){
-        projectRepo.deleteProject(projectId);
     }
 
     private void validateProject(Project project) {
@@ -82,4 +56,52 @@ public class ProjectService {
         }
     }
 
+
+    public List<Project> getMultipleProjects() {
+        try {
+            return projectRepo.getMultipleProjects();
+        } catch (DataAccessException ex) {
+            throw new DatabaseOperationException("Failed to retrieve data for project", ex);
+        }
+    }
+
+    public Project getSingleProject(int projectId) {
+        try {
+            return projectRepo.getSingleProject(projectId);
+        } catch (DataAccessException ex) {
+            throw new DatabaseOperationException("Failed to retrieve data for project", ex);
+        }
+
+    }
+
+    public void saveProject(Project project) {
+        validateProjectExists(project.getId());
+        validateProject(project);
+        try {
+            projectRepo.createProject(project);
+        } catch (DataAccessException ex) {
+            throw new DatabaseOperationException("Failed to create project", ex);
+        }
+    }
+
+    public void updateProject(int projectId, Project updateProject) {
+        validateProject(updateProject);
+        validateProjectExists(projectId);
+
+        try {
+            projectRepo.updateProject(projectId, updateProject);
+        } catch (DataAccessException ex) {
+            throw new DatabaseOperationException("Failed to update project", ex);
+        }
+
+    }
+
+    public void deleteProject(int projectId) {
+        validateProjectExists(projectId);
+        try {
+            projectRepo.deleteProject(projectId);
+        } catch (DataAccessException ex) {
+            throw new DatabaseOperationException("Failed to delete project", ex);
+        }
+    }
 }

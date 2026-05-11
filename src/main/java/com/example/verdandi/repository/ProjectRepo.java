@@ -55,12 +55,32 @@ import java.util.List;
 
     public void createProject(Project project){
         String sql = "INSERT INTO Project (name, description, deadline) values (?, ?, ?)";
-        jdbcTemplate.update(sql, project.getName(), project.getDescription(), project.getDeadline());
+        jdbcTemplate.update(
+                sql,
+                project.getName(),
+                project.getDescription(),
+                project.getDeadline());
     }
 
     public void deleteProject(int projectId){
         String sql = "DELETE FROM project WHERE project_id = ?";
         jdbcTemplate.update(sql, projectId);
+    }
+
+    public void updateProject(int projectId, Project project){
+        String sql = """
+                UPDATE Project
+                SET name = ?, description = ?, deadline = ?
+                WHERE project_id = ?
+                """;
+
+        jdbcTemplate.update(
+                sql,
+                project.getName(),
+                project.getDescription(),
+                project.getDeadline(),
+                projectId
+        );
     }
 
 

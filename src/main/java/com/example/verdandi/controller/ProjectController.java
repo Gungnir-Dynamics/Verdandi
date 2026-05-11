@@ -1,6 +1,7 @@
 package com.example.verdandi.controller;
 
 
+import com.example.verdandi.exception.ValidationException;
 import com.example.verdandi.model.Project;
 import com.example.verdandi.service.ProjectService;
 import org.springframework.stereotype.Controller;
@@ -69,9 +70,9 @@ public class ProjectController {
                              RedirectAttributes redirectAttributes) {
 
         try {
-            projectService.getSingleProject(projectId);
+            projectService.updateProject(projectId, project);
 
-            return "redirect:/projects/";
+            return "redirect:/projects";
 
         } catch (ValidationException e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
