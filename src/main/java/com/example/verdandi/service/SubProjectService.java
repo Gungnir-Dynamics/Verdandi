@@ -23,27 +23,36 @@ public class SubProjectService {
     public List<SubProject> getSubProjects(int projectId) {
         projectService.validateProjectExists(projectId);
         try {
+
             return subProjectRepo.getSubProjects(projectId);
+
         } catch (DataAccessException ex) {
+
             throw new DatabaseOperationException("Failed to retrieve subprojects", ex);
         }
     }
+
 
     public void validateSubProjectBelongsToProject(int projectId, int subprojectId) {
         projectService.validateProjectExists(projectId);
         try {
             if (!subProjectRepo.subprojectBelongsToProject(projectId, subprojectId)) {
+
                 throw new ResourceNotFoundException(
+
                         "Subproject " + subprojectId + " does not belong to project " + projectId
                 );
             }
         } catch (DataAccessException ex) {
-            throw new DatabaseOperationException("Failed to retrieve subprojects", ex);
-        }
 
+            throw new DatabaseOperationException("Failed to validate subproject ownership", ex);
+        }
     }
+
+
     public void saveSubProject(SubProject subProject) {
         projectService.validateProjectExists(subProject.getProjectId());
+
         try {
             subProjectRepo.createSubProject(subProject);
 
@@ -53,16 +62,53 @@ public class SubProjectService {
         }
     }
 
+
     public void updateSubProject(SubProject subProject) {
-        subProjectRepo.updateSubProject(subProject);
+
+        projectService.validateProjectExists(subProject.getProjectId());
+
+        validateSubProjectBelongsToProject(subProject.getProjectId(), subProject.getId());
+
+        try {
+
+            subProjectRepo.updateSubProject(subProject);
+
+        } catch (DataAccessException ex) {
+
+            throw new DatabaseOperationException("Failed to update subproject", ex);
+        }
     }
 
-    public void deleteSubproject(int id) {
-        subProjectRepo.deleteSubProject(id);
+
+    public void deleteSubproject(int projectId, int subprojectId) {
+        validateSubProjectBelongsToProject(projectId, subprojectId);
+
+        try {
+
+            subProjectRepo.deleteSubProject(subprojectId);
+
+        } catch (DataAccessException ex) {
+
+            throw new DatabaseOperationException("Failed to delete subproject", ex);
+        }
     }
 
     public SubProject findSubProjectById(int id) {
-        return subProjectRepo.findSubProjectById(id);
+
+        try {
+            SubProject subProject = subProjectRepo.findSubProjectById(id);
+
+            if (subProject == null) {
+
+                throw new ResourceNotFoundException("Subproject with id: " + id + " not found");
+            }
+
+            return subProject;
+
+        } catch (DataAccessException ex) {
+
+            throw new DatabaseOperationException("Failed to retrieve subproject", ex);
+        }
     }
 }
 

@@ -50,8 +50,13 @@ public class SubProjectController {
 
     @GetMapping("/{subprojectId}/edit")
     public String editSubProject(@PathVariable int subprojectId, @PathVariable int projectId, Model model) {
+
+        subProjectService.validateSubProjectBelongsToProject(projectId, subprojectId);
+
         model.addAttribute("subProject", subProjectService.findSubProjectById(subprojectId));
+
         model.addAttribute("projectId", projectId);
+
         return "edit_sub_project";
     }
 
@@ -71,7 +76,7 @@ public class SubProjectController {
     public String deleteSubProject(@PathVariable int subprojectId,
                                    @PathVariable int projectId) {
 
-        subProjectService.deleteSubproject(subprojectId);
+        subProjectService.deleteSubproject(projectId, subprojectId);
 
         return "redirect:/projects/" + projectId + "/subprojects";
 
