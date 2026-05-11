@@ -26,36 +26,62 @@ public class ProjectController {
     }
 
     @GetMapping("/create")
-    public String createNewProject(Model model){
-        model.addAttribute("project", new Project());
+    public String showCreationForm(Model model){
+        if (!model.containsAttribute("project")) {
+            model.addAttribute("project", new Project());
+        }
+
         return "/project/create_project";
     }
 
     @PostMapping("/create")
-    public String saveProject(@ModelAttribute Project project, BindingResult bindingResult, RedirectAttributes redirectAttributes){
-//
-//        if (bindingResult.hasErrors()) {
-//            redirectAttributes.addFlashAttribute("errorMessage", "Ugyldig datoformat eller manglende felter");
-//            redirectAttributes.addFlashAttribute("project", project);
-//            return "redirect:/projects/create";
-//        }
+    public String saveProject(@ModelAttribute Project project, RedirectAttributes redirectAttributes){
+
         try {
             projectService.saveProject(project);
 
-            redirectAttributes.addFlashAttribute("successMessage", "the project '" + project.getName() + "' was  created successfully ");
             return "redirect:/projects";
 
-        } catch (IllegalArgumentException e) {
+        } catch (ValidationException e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
             redirectAttributes.addFlashAttribute("project", project);
             return "redirect:/projects/create";
         }
     }
 
-//    @GetMapping
-//    public String editProject(){
-//
-//    }
+    @GetMapping("/{projectId}/edit")
+    public String showEditForm(@PathVariable int projectId,
+                               Model model) {
+
+        Project project = projectService.getSingleProject(projectId);
+
+        if (!model.containsAttribute("project")) {
+            model.addAttribute("project", project);
+        }
+
+        model.addAttribute("projectId", projectId);
+             return "project/edit_project";
+    }
+
+    @PostMapping("/{projectId}/edit")
+    public String updateProject(@PathVariable int projectId,
+                             @ModelAttribute Project project,
+                             RedirectAttributes redirectAttributes) {
+
+        try {
+            projectService.getSingleProject(projectId);
+
+            return "redirect:/projects/";
+
+        } catch (ValidationException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+            redirectAttributes.addFlashAttribute("project", project);
+
+            return "redirect:/projects/" + projectId + "/edit";
+        }
+    }
+
+
 
     @PostMapping("{projectId}/delete")
     public String deleteProject (@PathVariable int projectId){
