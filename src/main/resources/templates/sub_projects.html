@@ -73,6 +73,24 @@
             <td>
                 <a th:href="@{/subproject/{id}(id=${sub.id})}"
                    class="btn btn-info">Se detaljer</a>
+            <td>
+                <a th:href="@{/subproject/{id}(id=${sub.id})}"
+                   class="btn btn-info">Se detaljer</a>
+
+                <form th:action="@{/projects/{projectId}/subprojects/{subprojectId}/delete(
+                        projectId=${sub.projectId},
+                        subprojectId=${sub.id})}"
+                      method="post"
+                      style="display:inline;">
+
+                    <button type="submit"
+                            class="btn"
+                            style="background-color:#e74c3c; color:white;"
+                            onclick="return confirm('Er du sikker på at du vil slette dette underprojekt?');">
+                        Slet
+                    </button>
+                </form>
+            </td>
             </td>
         </tr>
         </tbody>
