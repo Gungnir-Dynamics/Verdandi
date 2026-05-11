@@ -83,10 +83,14 @@ public class ProjectController {
 
 
     @PostMapping("{projectId}/delete")
-    public String deleteProject (@PathVariable int projectId){
-        projectService.deleteProject(projectId);
+    public String deleteProject (@PathVariable int projectId, RedirectAttributes redirectAttributes) {
+        try {
+            projectService.deleteProject(projectId);
+            redirectAttributes.addFlashAttribute("successMessage", "Project was deleted successfully");
+            return "redirect:/projects";
+        } catch (ValidationException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+        }
         return "redirect:/projects";
     }
-
-
 }

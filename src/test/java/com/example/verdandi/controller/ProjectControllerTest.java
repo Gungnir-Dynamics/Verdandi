@@ -66,6 +66,7 @@ class ProjectControllerTest {
                 .andExpect(model().attributeExists("project"));
 
     }
+
     @Test
     void saveProject_ValidData_ShouldRedirectWithSuccess() throws Exception {
 
@@ -80,16 +81,16 @@ class ProjectControllerTest {
         verify(projectService).saveProject(any(Project.class));
     }
 
-    @Test
-    void saveProject_InvalidDeadline_ShouldReturnError() throws Exception {
-
-        mockMvc.perfrom(post("/projects/create")
-                        .param("name", "Test Project")
-                        .param("deadline", "2020-01-01"))   // ugyldig dato
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/projects/create"))
-                .andExpect(flash().attributeExists("errorMessage"));
-    }
+//    @Test
+//    void saveProject_InvalidDeadline_ShouldReturnError() throws Exception {
+//
+//        mockMvc.perfrom(post("/projects/create")
+//                        .param("name", "Test Project")
+//                        .param("deadline", "2020-01-01"))   // ugyldig dato
+//                .andExpect(status().is3xxRedirection())
+//                .andExpect(redirectedUrl("/projects/create"))
+//                .andExpect(flash().attributeExists("errorMessage"));
+//    }
 //    @Test
 //    void createProject_validData_redirectsToMyProjects() throws Exception {
 //        mockMvc.perform(post("/projects/create")
@@ -139,7 +140,32 @@ class ProjectControllerTest {
                 })
                 .andExpect(status().is3xxRedirection());
     }
+    // ==================== GET - CREATE FORM ====================
+    @Test
+    void showCreateForm_ShouldDisplayEmptyForm() throws Exception {
 
+        mockMvc.perform(get("/projects/create"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("/project/create_project"))
+                .andExpect(model().attributeExists("project"));
+    }
+
+    // ==================== POST - CREATE SUCCESS ====================
+    @Test
+    void saveProject_ValidData_ShouldRedirectWithSuccesss() throws Exception {
+
+        mockMvc.perform(post("/projects/create")
+                        .param("name", "Nyt Internt System")
+                        .param("description", "Udvikling af nyt intern værktøj")
+                        .param("deadline", "2026-12-31"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/projects"))
+                .andExpect(flash().attributeExists("successMessage"));
+
+        verify(projectService).saveProject(any(Project.class));
+    }
+
+    // ==================== POST - CREATE WITH VALIDATION ERROR ====================
 
     @Test
     void saveProject_ShouldRedirect() throws Exception {
@@ -153,5 +179,55 @@ class ProjectControllerTest {
                 .andExpect(flash().attributeExists("successMessage"));
 
         verify(projectService).saveProject(any(Project.class));
+    }
+
+    // ==================== POST - CREATE WITH VALIDATION ERROR ====================
+    @Test
+    void saveProject_InvalidDeadline_ShouldReturnError() throws Exception {
+
+        mockMvc.perform(post("/projects/create")
+                        .param("name", "Test Projekt")
+                        .param("deadline", "2020-01-01"))   // ugyldig deadline
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/projects/create"))
+                .andExpect(flash().attributeExists("errorMessage"));
+    }
+
+
+    // ==================== POST - EDIT SUCCESS ====================
+    @Test
+    void updateProject_ValidData_ShouldRedirect() throws Exception {
+
+        mockMvc.perform(post("/projects/1/edit")
+                        .param("name", "Website Redesign - Opdateret")
+                        .param("description", "Ny og forbedret beskrivelse")
+                        .param("deadline", "2026-09-01"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/projects"))
+                .andExpect(flash().attributeExists("successMessage"));
+    }
+
+    // ==================== POST - EDIT WITH VALIDATION ERROR ====================
+
+    // ==================== VIRKER IKKE ====================================
+    @Test
+    void updateProject_InvalidName_ShouldReturnError() throws Exception {
+
+        mockMvc.perform(post("/projects/1/edit")
+                        .param("name", "")                    // tomt navn = fejl
+                        .param("deadline", "2025-06-01"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/projects/1/edit"))
+                .andExpect(flash().attributeExists("errorMessage"));
+    }
+
+    // ==================== DELETE ====================
+    @Test
+    void deleteProject_ShouldRedirectWithSuccess() throws Exception {
+
+        mockMvc.perform(post("/projects/1/delete"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/projects"))
+                .andExpect(flash().attributeExists("successMessage"));
     }
 }
