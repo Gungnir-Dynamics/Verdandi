@@ -43,7 +43,7 @@ public class ProjectController {
             redirectAttributes.addFlashAttribute("successMessage", "Project was created successfully");
             return "redirect:/projects";
 
-        } catch (Exception e) {
+        } catch (ValidationException e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
             redirectAttributes.addFlashAttribute("project", project);
             return "redirect:/projects/create";
@@ -73,7 +73,7 @@ public class ProjectController {
             redirectAttributes.addFlashAttribute("successMessage", "Project was updated successfully");
             return "redirect:/projects";
 
-        } catch (Exception e) {
+        } catch (ValidationException e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
             redirectAttributes.addFlashAttribute("project", project);
 

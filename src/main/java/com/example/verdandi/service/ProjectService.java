@@ -2,6 +2,7 @@ package com.example.verdandi.service;
 
 import com.example.verdandi.exception.DatabaseOperationException;
 import com.example.verdandi.exception.ResourceNotFoundException;
+import com.example.verdandi.exception.ValidationException;
 import com.example.verdandi.model.Project;
 import com.example.verdandi.repository.ProjectRepo;
 import org.springframework.dao.DataAccessException;
@@ -22,25 +23,25 @@ public class ProjectService {
     private void validateProject(Project project) {
 
         if (project.getName() == null || project.getName().trim().isEmpty()) {
-            throw new IllegalArgumentException("Project name is required");
+            throw new ValidationException("Project name is required");
         }
 
         if (project.getName().trim().length() < 3) {
-            throw new IllegalArgumentException("Project name need to contain a minimum of 3 characters");
+            throw new ValidationException("Project name need to contain a minimum of 3 characters");
         }
 
         if (project.getName().trim().length() > 100) {
-            throw new IllegalArgumentException("Project name can not contain more then 100 characters ");
+            throw new ValidationException("Project name can not contain more then 100 characters ");
         }
 
 
         if (project.getDeadline() != null && project.getDeadline().isBefore(LocalDate.now())) {
-            throw new IllegalArgumentException("Deadline can not be before today's date");
+            throw new ValidationException("Deadline can not be before today's date");
         }
 
 
         if (project.getDescription() != null && project.getDescription().length() > 5000) {
-            throw new IllegalArgumentException("Description must be a maximum of 5000 characters");
+            throw new ValidationException("Description must be a maximum of 5000 characters");
         }
     }
 
