@@ -1,6 +1,5 @@
 package com.example.verdandi.controller;
 
-import com.example.verdandi.exception.DatabaseOperationException;
 import com.example.verdandi.exception.ValidationException;
 import com.example.verdandi.model.Task;
 import com.example.verdandi.service.TaskService;
@@ -75,7 +74,7 @@ class TaskControllerTest {
     }
 
     @Test
-    void createTask_invalidData_redirectsBackToFormWithFlashAttributes() throws Exception {
+    void createTask_invalidData_showCreationForm() throws Exception {
         doThrow(new ValidationException("Task name cannot be empty."))
                 .when(taskService)
                 .createTask(eq(1), eq(2), any(Task.class));
@@ -84,10 +83,10 @@ class TaskControllerTest {
                         .param("name", "")
                         .param("description", "desc")
                         .param("estimatedHours", "3"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/projects/1/subprojects/2/tasks/create"))
-                .andExpect(flash().attributeExists("errorMessage"))
-                .andExpect(flash().attributeExists("task"));
+                .andExpect(status().isOk())
+                .andExpect(view().name("tasks/create_task"))
+                .andExpect(model().attributeExists("errorMessage"))
+                .andExpect(model().attributeExists("task"));
     }
 
     @Test
@@ -123,7 +122,7 @@ class TaskControllerTest {
     }
 
     @Test
-    void updateTask_invalidData_redirectsBackToFormWithFlashAttributes() throws Exception {
+    void updateTask_invalidData_showCreationForm() throws Exception {
         doThrow(new ValidationException("Task name cannot be empty."))
                 .when(taskService)
                 .updateTask(eq(1), eq(2), eq(3), any(Task.class));
@@ -132,10 +131,10 @@ class TaskControllerTest {
                         .param("name", "")
                         .param("description", "desc")
                         .param("estimatedHours", "5"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/projects/1/subprojects/2/tasks/3/edit"))
-                .andExpect(flash().attributeExists("errorMessage"))
-                .andExpect(flash().attributeExists("task"));
+                .andExpect(status().isOk())
+                .andExpect(view().name("tasks/edit_task"))
+                .andExpect(model().attributeExists("errorMessage"))
+                .andExpect(model().attributeExists("task"));
     }
 
     @Test

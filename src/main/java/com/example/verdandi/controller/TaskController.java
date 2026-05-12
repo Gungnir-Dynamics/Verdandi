@@ -6,7 +6,6 @@ import com.example.verdandi.service.TaskService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/projects/{projectId}/subprojects/{subprojectId}/tasks")
@@ -31,9 +30,8 @@ public class TaskController {
                                  @PathVariable int subprojectId,
                                  Model model) {
 
-        if (!model.containsAttribute("task")) {
-            model.addAttribute("task", new Task());
-        }
+        model.addAttribute("task", new Task());
+
         model.addAttribute("projectId", projectId);
         model.addAttribute("subprojectId", subprojectId);
 
@@ -44,7 +42,7 @@ public class TaskController {
     public String createTask(@PathVariable int projectId,
                              @PathVariable int subprojectId,
                              @ModelAttribute Task task,
-                             RedirectAttributes redirectAttributes) {
+                             Model model) {
 
         try {
             taskService.createTask(projectId, subprojectId, task);
@@ -52,9 +50,12 @@ public class TaskController {
             return "redirect:/projects/" + projectId + "/subprojects/" + subprojectId + "/tasks";
 
         } catch (ValidationException e) {
-            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
-            redirectAttributes.addFlashAttribute("task", task);
-            return "redirect:/projects/" + projectId + "/subprojects/" + subprojectId + "/tasks/create";
+            model.addAttribute("errorMessage", e.getMessage());
+            model.addAttribute("task", task);
+            model.addAttribute("projectId", projectId);
+            model.addAttribute("subprojectId", subprojectId);
+
+            return "tasks/create_task";
         }
     }
 
@@ -66,9 +67,7 @@ public class TaskController {
 
         Task task = taskService.getSingleTask(projectId, subprojectId, taskId);
 
-        if (!model.containsAttribute("task")) {
-            model.addAttribute("task", task);
-        }
+        model.addAttribute("task", task);
 
         model.addAttribute("projectId", projectId);
         model.addAttribute("subprojectId", subprojectId);
@@ -82,17 +81,21 @@ public class TaskController {
                              @PathVariable int subprojectId,
                              @PathVariable int taskId,
                              @ModelAttribute Task task,
-                             RedirectAttributes redirectAttributes) {
+                             Model model) {
 
         try {
             taskService.updateTask(projectId, subprojectId, taskId, task);
 
             return "redirect:/projects/" + projectId + "/subprojects/" + subprojectId + "/tasks";
         } catch (ValidationException e) {
-            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
-            redirectAttributes.addFlashAttribute("task", task);
+            model.addAttribute("errorMessage", e.getMessage());
+            model.addAttribute("task", task);
 
-            return "redirect:/projects/" + projectId + "/subprojects/" + subprojectId + "/tasks/" + taskId + "/edit";
+            model.addAttribute("projectId", projectId);
+            model.addAttribute("subprojectId", subprojectId);
+            model.addAttribute("taskId", taskId);
+
+            return "tasks/edit_task";
         }
     }
 
@@ -101,7 +104,7 @@ public class TaskController {
                              @PathVariable int subprojectId,
                              @PathVariable int taskId) {
 
-            taskService.deleteTask(projectId, subprojectId, taskId);
-            return "redirect:/projects/" + projectId + "/subprojects/" + subprojectId + "/tasks";
+        taskService.deleteTask(projectId, subprojectId, taskId);
+        return "redirect:/projects/" + projectId + "/subprojects/" + subprojectId + "/tasks";
     }
 }
