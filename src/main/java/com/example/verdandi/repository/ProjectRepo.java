@@ -40,9 +40,9 @@ import java.util.List;
         String sql = """
                 SELECT project.project_id, project.name, project.description, project.created_date, project.deadline, SUM(task.estimated_hours) AS estimated_hours
                 From Project
-                JOIN sub_project
+                LEFT JOIN sub_project
                 ON sub_project.project_id = project.project_id
-                JOIN task
+                LEFT JOIN task
                 ON task.sub_project_id = sub_project.sub_project_id
                 GROUP BY project.project_id, project.name;
                 """;
@@ -52,13 +52,13 @@ import java.util.List;
     public Project getSingleProject(int projectId){
         String sql = """
                SELECT project.project_id, project.name, project.description, project.created_date, project.deadline, SUM(task.estimated_hours) AS estimated_hours
-                From Project
-                JOIN sub_project
-                ON sub_project.project_id = project.project_id
-                JOIN task
-                ON task.sub_project_id = sub_project.sub_project_id
-                WHERE Project.project_id = ?;
-                GROUP BY project.project_id, project.name;
+               From Project
+               LEFT JOIN sub_project
+               ON sub_project.project_id = project.project_id
+               LEFT JOIN task
+               ON task.sub_project_id = sub_project.sub_project_id
+               WHERE project_id = ?
+               GROUP BY project.project_id, project.name;
                 """;
         return jdbcTemplate.queryForObject(sql, rowMapper, projectId);
     }
