@@ -1,3 +1,7 @@
+DROP TABLE IF EXISTS task;
+DROP TABLE IF EXISTS sub_project;
+DROP TABLE IF EXISTS project;
+
 create table project (
                          project_id int auto_increment,
                          name varchar(100) not null,

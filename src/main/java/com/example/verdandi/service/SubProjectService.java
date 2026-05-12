@@ -49,72 +49,8 @@ public class SubProjectService {
             throw new DatabaseOperationException("Failed to validate subproject ownership", ex);
         }
     }
-
-
-    public void saveSubProject(SubProject subProject, int ProjectId) {
-
-        projectService.validateProjectExists(subProject.getProjectId());
-
-        try {
-            subProjectRepo.createSubProject(subProject, ProjectId);
-
-        } catch (DataAccessException ex) {
-
-            throw new DatabaseOperationException("Failed to create subproject", ex);
-        }
-    }
-
-
-    public void updateSubProject(SubProject subProject) {
-
-        projectService.validateProjectExists(subProject.getProjectId());
-
-        validateSubProjectBelongsToProject(subProject.getProjectId(), subProject.getId());
-
-        try {
-
-            subProjectRepo.updateSubProject(subProject);
-
-        } catch (DataAccessException ex) {
-
-            throw new DatabaseOperationException("Failed to update subproject", ex);
-        }
-    }
-
-
-    public void deleteSubproject(int projectId, int subprojectId) {
-        validateSubProjectBelongsToProject(projectId, subprojectId);
-
-        try {
-
-            subProjectRepo.deleteSubProject(subprojectId);
-
-        } catch (DataAccessException ex) {
-
-            throw new DatabaseOperationException("Failed to delete subproject", ex);
-        }
-    }
-
-    public SubProject findSubProjectById(int id) {
-
-        try {
-            SubProject subProject = subProjectRepo.findSubProjectById(id);
-
-            if (subProject == null) {
-
-                throw new ResourceNotFoundException("Subproject with id: " + id + " not found");
-            }
-
-            return subProject;
-
-        } catch (DataAccessException ex) {
-
-            throw new DatabaseOperationException("Failed to retrieve subproject", ex);
-        }
-    }
-
     public void validateSubProjectData(SubProject subProject) {
-        if (subProject.getName().isBlank() || subProject.getName() == null) {
+        if (subProject.getName() == null || subProject.getName().isBlank()) {
             throw new ValidationException("Subproject name cannot be empty.");
         }
 
@@ -128,6 +64,78 @@ public class SubProjectService {
 
         if (subProject.getEstimatedHours() < 0) {
             throw new ValidationException("Estimated hours must be 0 or higher.");
+        }
+    }
+
+
+    public void saveSubProject(SubProject subProject, int ProjectId) {
+
+        projectService.validateProjectExists(subProject.getProjectId());
+        validateSubProjectData(subProject);
+
+        try {
+            subProjectRepo.createSubProject(subProject, ProjectId);
+
+        } catch (DataAccessException ex) {
+
+            throw new DatabaseOperationException("Failed to create subproject", ex);
+        }
+    }
+
+
+    public void updateSubProject(int projectId,
+                                 int subprojectId,
+                                 SubProject updatedSubproject) {
+
+        projectService.validateProjectExists(projectId);
+
+        validateSubProjectBelongsToProject(projectId, subprojectId);
+
+        validateSubProjectData(updatedSubproject);
+
+        try {
+
+            subProjectRepo.updateSubProject(subprojectId, updatedSubproject);
+
+        } catch (DataAccessException ex) {
+
+            throw new DatabaseOperationException("Failed to update subproject", ex);
+        }
+    }
+
+
+    public void deleteSubproject(int projectId,
+                                 int subprojectId) {
+        validateSubProjectBelongsToProject(projectId, subprojectId);
+
+        try {
+
+            subProjectRepo.deleteSubProject(subprojectId);
+
+        } catch (DataAccessException ex) {
+
+            throw new DatabaseOperationException("Failed to delete subproject", ex);
+        }
+    }
+
+    public SubProject findSubProjectById(int projectId,
+                                         int subprojectId) {
+
+        validateSubProjectBelongsToProject(projectId, subprojectId);
+
+        try {
+            SubProject subProject = subProjectRepo.findSubProjectById(subprojectId);
+
+            if (subProject == null) {
+
+                throw new ResourceNotFoundException("Subproject with id: " + subprojectId + " not found");
+            }
+
+            return subProject;
+
+        } catch (DataAccessException ex) {
+
+            throw new DatabaseOperationException("Failed to retrieve subproject", ex);
         }
     }
 }

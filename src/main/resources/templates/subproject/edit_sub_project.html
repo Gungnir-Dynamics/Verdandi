@@ -53,6 +53,18 @@
 
 <div class="form-container">
 
+    <div th:if="${errorMessage}"
+         style="color: red;
+                background-color: #fdecea;
+                border: 1px solid #e74c3c;
+                padding: 10px;
+                border-radius: 4px;
+                margin-bottom: 15px;">
+
+        <p th:text="${errorMessage}"></p>
+
+    </div>
+
     <form th:action="@{/projects/{projectId}/subprojects/{id}/edit(
         projectId=${subproject.projectId},
         id=${subproject.id})}"

@@ -67,7 +67,7 @@ public class SubProjectController {
 
         subProjectService.validateSubProjectBelongsToProject(projectId, subprojectId);
 
-        model.addAttribute("subproject", subProjectService.findSubProjectById(subprojectId));
+        model.addAttribute("subproject", subProjectService.findSubProjectById(projectId, subprojectId));
 
         model.addAttribute("projectId", projectId);
 
@@ -84,7 +84,7 @@ public class SubProjectController {
 
             subProject.setId(subprojectId);
             subProject.setProjectId(projectId);
-            subProjectService.updateSubProject(subProject);
+            subProjectService.updateSubProject(projectId, subprojectId, subProject);
 
             return "redirect:/projects/" + projectId + "/subprojects";
 

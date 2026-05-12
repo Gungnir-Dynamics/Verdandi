@@ -86,7 +86,7 @@ public class SubProjectRepo {
                 projectId);
     }
 
-    public void updateSubProject(SubProject subProject) {
+    public void updateSubProject(int subprojectId, SubProject subProject) {
         String sql = """
                 UPDATE 
                     sub_project 
@@ -99,10 +99,9 @@ public class SubProjectRepo {
                 sql,
                 subProject.getName(),
                 subProject.getDescription(),
-                subProject.getId()
-        );
-
+                subprojectId);
     }
+
     public void deleteSubProject(int id) {
         String sql = """
                 DELETE FROM 
