@@ -1,3 +1,5 @@
+drop all objects;
+
 create table project (
                          project_id int auto_increment,
                          name varchar(100) not null,
