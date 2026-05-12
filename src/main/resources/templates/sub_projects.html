@@ -74,9 +74,6 @@
                 <a th:href="@{/subproject/{id}(id=${sub.id})}"
                    class="btn btn-info">Se detaljer</a>
             <td>
-                <a th:href="@{/subproject/{id}(id=${sub.id})}"
-                   class="btn btn-info">Se detaljer</a>
-
                 <form th:action="@{/projects/{projectId}/subprojects/{subprojectId}/delete(
                         projectId=${sub.projectId},
                         subprojectId=${sub.id})}"
