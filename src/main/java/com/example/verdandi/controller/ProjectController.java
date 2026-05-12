@@ -35,7 +35,7 @@ public class ProjectController {
     }
 
     @PostMapping("/create")
-    public String saveProject(@ModelAttribute Project project, RedirectAttributes redirectAttributes){
+    public String saveProject(@ModelAttribute Project project, RedirectAttributes redirectAttributes, Model model){
 
         try {
             projectService.saveProject(project);
@@ -43,9 +43,9 @@ public class ProjectController {
             return "redirect:/projects";
 
         } catch (ValidationException e) {
-            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
-            redirectAttributes.addFlashAttribute("project", project);
-            return "redirect:/projects/create";
+            model.addAttribute("errorMessage", e.getMessage());
+            model.addAttribute("project", project);
+            return "/project/create_project";
         }
     }
 

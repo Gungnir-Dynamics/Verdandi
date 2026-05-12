@@ -83,7 +83,6 @@ import java.util.List;
         );
     }
 
-
     public boolean projectExists(int projectId) {
         String sql = """
                     SELECT COUNT(*)

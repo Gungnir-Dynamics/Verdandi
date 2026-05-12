@@ -188,9 +188,8 @@ class ProjectControllerTest {
         mockMvc.perform(post("/projects/create")
                         .param("name", "Test Projekt")
                         .param("deadline", "2020-01-01"))   // ugyldig deadline
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/projects/create"))
-                .andExpect(flash().attributeExists("errorMessage"));
+
+                .andExpect(model().attributeExists("errorMessage"));
     }
 
 
