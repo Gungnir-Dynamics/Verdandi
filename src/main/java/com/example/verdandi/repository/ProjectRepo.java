@@ -22,6 +22,7 @@ import java.util.List;
       project.setId(rs.getInt("project_id"));
       project.setName(rs.getString("name"));
       project.setDescription(rs.getString("description"));
+      project.setEstimatedHours(rs.getInt("estimated_hours"));
 
         if (rs.getDate("created_date") != null) {
             project.setCreationDate(rs.getDate("created_date").toLocalDate());
@@ -29,16 +30,21 @@ import java.util.List;
         if (rs.getDate("deadline") != null) {
             project.setDeadline(rs.getDate("deadline").toLocalDate());
         }
+
         return project;
 
     };
 
 
-
     public List<Project> getMultipleProjects(){
         String sql = """
-                SELECT *
+                SELECT project.project_id, project.name, project.description, project.created_date, project.deadline, SUM(task.estimated_hours) AS estimated_hours
                 From Project
+                JOIN sub_project
+                ON sub_project.project_id = project.project_id
+                JOIN task
+                ON task.sub_project_id = sub_project.sub_project_id
+                GROUP BY project.project_id, project.name;
                
                 """;
         return jdbcTemplate.query(sql, rowMapper);

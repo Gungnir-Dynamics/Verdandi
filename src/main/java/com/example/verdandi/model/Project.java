@@ -22,6 +22,7 @@ public class Project {
 //    private LocalDate deadline;
     private LocalDate creationDate;
 
+
 // CONSTRUCTORS
     public Project(LocalDate creationDate, LocalDate deadline,
                    int estimatedHours, String description, String name, int id) {

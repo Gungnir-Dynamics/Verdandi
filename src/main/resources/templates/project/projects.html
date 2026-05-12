@@ -85,6 +85,7 @@
             <th>Projektnavn</th>
             <th>Beskrivelse</th>
             <th>Oprettet</th>
+            <th>Estimated hours</th>
             <th>Deadline</th>
             <th style="width: 260px;">Handling</th>
         </tr>
@@ -94,6 +95,7 @@
             <td th:text="${project.id}"></td>
             <td th:text="${project.name}"></td>
             <td th:text="${project.description}"></td>
+            <td th:text="${project.estimatedHours}"></td>
             <td th:text="${project.creationDate}"></td>
             <td th:text="${project.deadline}"></td>
             <td>
