@@ -1,7 +1,6 @@
 package com.example.verdandi.repository;
 
 import com.example.verdandi.model.Project;
-import com.example.verdandi.service.ProjectService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -28,12 +27,16 @@ class ProjectRepoTest {
 
         assertThat(all).isNotNull();
         assertThat(all.size()).isEqualTo(4);
-        assertThat(all.get(0).getName()).isEqualTo("Website Redesign");
 
     }
 
     @Test
     void getSingleProject() {
+        Project project = projectRepo.getSingleProject(1);
+
+        assertThat(project.getName()).isEqualTo("Website Redesign");
+        assertThat(project.getDescription()).isEqualTo("Total redesign af virksomhedens hjemmeside med ny branding og moderne design");
+        assertThat(project.getEstimatedHours()).isEqualTo(331);
     }
 
 
