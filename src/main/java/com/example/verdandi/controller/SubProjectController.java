@@ -1,6 +1,7 @@
 package com.example.verdandi.controller;
 
 
+import com.example.verdandi.exception.ValidationException;
 import com.example.verdandi.model.SubProject;
 import com.example.verdandi.service.SubProjectService;
 import org.springframework.stereotype.Controller;
@@ -26,50 +27,77 @@ public class SubProjectController {
         List<SubProject> getSubProjects = subProjectService.getSubProjects(projectId);
         model.addAttribute("mySubProjects", getSubProjects);
         model.addAttribute("projectId", projectId);
-        return "sub_projects";
+        return "subproject/sub_projects";
     }
 
     @GetMapping("/create")
-    public String createNewSubProject(@PathVariable int projectId, Model model) {
-        SubProject subProject = new SubProject();
-        subProject.setProjectId(projectId);
+    public String createNewSubProject(@PathVariable int projectId,
+                                      Model model) {
 
-        model.addAttribute("subProject", subProject);
+        model.addAttribute("subproject", new SubProject());
         model.addAttribute("projectId", projectId);
 
-        return "create_sub_project";
+        return "subproject/create_sub_project";
     }
 
     @PostMapping("/create")
-    public String saveProject(@PathVariable int projectId, @ModelAttribute SubProject subProject) {
-        subProject.setProjectId(projectId);
-        subProjectService.saveSubProject(subProject);
+    public String saveSubProject(@PathVariable int projectId,
+                                 @ModelAttribute SubProject subProject,
+                              Model model) {
 
-        return "redirect:/projects/" + projectId + "/subprojects";
+        try {
+
+            subProjectService.saveSubProject(subProject, projectId);
+
+            return "redirect:/projects/" + projectId + "/subprojects";
+
+        } catch (ValidationException ex) {
+            model.addAttribute("errorMessage", ex.getMessage());
+            model.addAttribute("subproject", subProject);
+            model.addAttribute("projectId", projectId);
+
+            return "subproject/create_sub_project";
+        }
     }
 
     @GetMapping("/{subprojectId}/edit")
-    public String editSubProject(@PathVariable int subprojectId, @PathVariable int projectId, Model model) {
+    public String editSubProject(@PathVariable int subprojectId,
+                                 @PathVariable int projectId,
+                                 Model model) {
 
         subProjectService.validateSubProjectBelongsToProject(projectId, subprojectId);
 
-        model.addAttribute("subProject", subProjectService.findSubProjectById(subprojectId));
+        model.addAttribute("subproject", subProjectService.findSubProjectById(subprojectId));
 
         model.addAttribute("projectId", projectId);
 
-        return "edit_sub_project";
+        return "subproject/edit_sub_project";
     }
 
-    @PostMapping("/{id}/edit")
+    @PostMapping("/{subprojectId}/edit")
     public String updateSubProject(@PathVariable int projectId,
-                                   @PathVariable int id,
-                                   @ModelAttribute SubProject subProject) {
-        subProject.setId(id);
-        subProject.setProjectId(projectId);
+                                   @PathVariable int subprojectId,
+                                   @ModelAttribute SubProject subProject,
+                                   Model model) {
 
-        subProjectService.updateSubProject(subProject);
+        try {
 
-        return "redirect:/projects/" + projectId + "/subprojects";
+            subProject.setId(subprojectId);
+            subProject.setProjectId(projectId);
+            subProjectService.updateSubProject(subProject);
+
+            return "redirect:/projects/" + projectId + "/subprojects";
+
+        } catch (ValidationException ex) {
+
+            model.addAttribute("errorMessage", ex.getMessage());
+            model.addAttribute("subproject", subProject);
+
+            model.addAttribute("projectId", projectId);
+            model.addAttribute("subprojectId", subprojectId);
+        }
+        return "subproject/edit_sub_project";
+
     }
 
     @PostMapping("/{subprojectId}/delete")

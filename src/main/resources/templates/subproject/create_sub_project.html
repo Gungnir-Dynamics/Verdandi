@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Opret Nyt Projekt - Verdandi</title>
+    <title>Create Subproject - Verdandi</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -63,21 +63,24 @@
 </head>
 <body>
 <div>
-    <h1>Opret Nyt Del projekt</h1>
-    <p><a href="/project" class="btn btn-secondary">← Tilbage til projekter</a></p>
-
+    <h1>Create subproject</h1>
+    <p>
+        <a th:href="@{/projects/{projectId}/subprojects(projectId=${projectId})}"
+           class="btn btn-secondary">
+            ← Back to subprojects
+        </a>
+    </p>
     <div class="form-container">
         <form th:action="@{/projects/{projectId}/subprojects/create(projectId=${projectId})}"
-              th:object="${subProject}"
+              th:object="${subproject}"
               method="post">
 
-            <input type="text" th:field="*{name}" placeholder="Navn" required />
+            <input type="text" th:field="*{name}" placeholder="Name" required />
 
-            <textarea th:field="*{description}" placeholder="Beskrivelse"></textarea>
+            <textarea th:field="*{description}" placeholder="Description"></textarea>
 
             <div class="buttons">
-                <button type="submit" class="btn btn-primary">Opret Delprojekt</button>
-                <a href="/project" class="btn btn-secondary">Annuller</a>
+                <button type="submit" class="btn btn-primary">Create subproject</button>
             </div>
         </form>
     </div>

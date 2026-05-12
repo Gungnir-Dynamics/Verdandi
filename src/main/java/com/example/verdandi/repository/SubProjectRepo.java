@@ -69,7 +69,7 @@ public class SubProjectRepo {
         return count != null && count > 0;
     }
 
-    public void createSubProject(SubProject subProject) {
+    public void createSubProject(SubProject subProject, int projectId) {
         String sql = """
                 
                 INSERT INTO 
@@ -83,8 +83,7 @@ public class SubProjectRepo {
                 sql,
                 subProject.getName(),
                 subProject.getDescription(),
-                subProject.getProjectId()
-        );
+                projectId);
     }
 
     public void updateSubProject(SubProject subProject) {

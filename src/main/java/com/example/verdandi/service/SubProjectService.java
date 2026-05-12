@@ -3,6 +3,7 @@ package com.example.verdandi.service;
 
 import com.example.verdandi.exception.DatabaseOperationException;
 import com.example.verdandi.exception.ResourceNotFoundException;
+import com.example.verdandi.exception.ValidationException;
 import com.example.verdandi.model.SubProject;
 import com.example.verdandi.repository.SubProjectRepo;
 import org.springframework.dao.DataAccessException;
@@ -50,11 +51,12 @@ public class SubProjectService {
     }
 
 
-    public void saveSubProject(SubProject subProject) {
+    public void saveSubProject(SubProject subProject, int ProjectId) {
+
         projectService.validateProjectExists(subProject.getProjectId());
 
         try {
-            subProjectRepo.createSubProject(subProject);
+            subProjectRepo.createSubProject(subProject, ProjectId);
 
         } catch (DataAccessException ex) {
 
@@ -108,6 +110,24 @@ public class SubProjectService {
         } catch (DataAccessException ex) {
 
             throw new DatabaseOperationException("Failed to retrieve subproject", ex);
+        }
+    }
+
+    public void validateSubProjectData(SubProject subProject) {
+        if (subProject.getName().isBlank() || subProject.getName() == null) {
+            throw new ValidationException("Subproject name cannot be empty.");
+        }
+
+        if (subProject.getName().length() > 100) {
+            throw new ValidationException("Subproject name cannot exceed 100 characters.");
+        }
+
+        if (subProject.getDescription() != null && subProject.getDescription().length() > 1500) {
+            throw new ValidationException("Description cannot exceed 1500 characters.");
+        }
+
+        if (subProject.getEstimatedHours() < 0) {
+            throw new ValidationException("Estimated hours must be 0 or higher.");
         }
     }
 }
