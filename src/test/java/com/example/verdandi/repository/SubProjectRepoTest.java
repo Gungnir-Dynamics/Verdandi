@@ -14,7 +14,7 @@ import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TE
 
 
 @SpringBootTest
-@ActiveProfiles
+@ActiveProfiles("test")
 @Sql(scripts = "classpath:h2init.sql", executionPhase = BEFORE_TEST_METHOD)
 class SubProjectRepoTest {
 
@@ -71,5 +71,54 @@ class SubProjectRepoTest {
         //Noter Timothy: Her verificere jeg om dataen er blevet opdateret
         assertEquals("Updated test name", updated.getName());
         assertEquals("Updated test description", updated.getDescription());
+    }
+
+    @Test
+    void deleteSubProject() {
+
+        SubProject subProject = new SubProject();
+        subProject.setName("DELETE TEST");
+        subProject.setDescription("DELETED");
+        subProject.setProjectId(1);
+
+        subProjectRepo.createSubProject(subProject);
+
+        SubProject created = subProjectRepo.getSubProjects(1).stream()
+                .filter(sp -> sp.getName().equals("DELETE TEST"))
+                .findFirst()
+                .orElseThrow();
+
+        int id = created.getId();
+
+        subProjectRepo.deleteSubProject(id);
+
+        assertThrows(Exception.class, () -> {
+            subProjectRepo.findSubProjectById(id);
+        });
+
+    }
+
+    @Test
+    void findSubProjectById() {
+
+        SubProject subProject = new SubProject();
+        subProject.setName("Find subproject");
+        subProject.setDescription("Find subproject test");
+        subProject.setProjectId(1);
+
+        subProjectRepo.createSubProject(subProject);
+
+        SubProject created = subProjectRepo.getSubProjects(1).stream()
+                .filter(sp -> sp.getName().equals("Find subproject"))
+                .findFirst()
+                .orElseThrow();
+
+        int id = created.getId();
+
+        SubProject result = subProjectRepo.findSubProjectById(id);
+
+        assertNotNull(result);
+        assertEquals("Find subproject", result.getName());
+        assertEquals("Find subproject test", result.getDescription());
     }
 }

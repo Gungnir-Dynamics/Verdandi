@@ -23,6 +23,7 @@ public class SubProjectRepo {
         subProject.setName(rs.getString("name"));
         subProject.setDescription(rs.getString("description"));
         subProject.setProjectId(rs.getInt("project_id"));
+        subProject.setEstimatedHours(rs.getInt("estimated_hours"));
 
         return subProject;
 
@@ -30,9 +31,25 @@ public class SubProjectRepo {
 
     public List<SubProject> getSubProjects(int projectId) {
         String sql = """
-                SELECT *
-                From sub_project
-                where project_id = ?
+                SELECT 
+                    sub_project.name, 
+                    sub_project.description, 
+                    sub_project.sub_project_id,
+                    sub_project.project_id,
+                    COALESCE(sum(task.estimated_hours), 0) as estimated_hours
+                FROM 
+                    sub_project
+                LEFT JOIN 
+                        task
+                ON 
+                    task.sub_project_id = sub_project.sub_project_id
+                WHERE 
+                    sub_project.project_id = ?
+                group by 
+                    sub_project.sub_project_id, 
+                    sub_project.name, 
+                    sub_project.description, 
+                    sub_project.project_id
                 """;
 
         return jdbcTemplate.query(sql, rowMapper, projectId);
@@ -40,9 +57,12 @@ public class SubProjectRepo {
 
     public boolean subprojectBelongsToProject(int projectId, int subprojectId) {
         String sql = """
-                    SELECT COUNT(*)
-                    FROM sub_project
-                    WHERE sub_project_id = ? AND project_id = ?
+                    SELECT 
+                        COUNT(*)
+                    FROM 
+                        sub_project
+                    WHERE 
+                        sub_project_id = ? AND project_id = ?
                 """;
 
         Integer count = jdbcTemplate.queryForObject(sql, Integer.class, subprojectId, projectId);
@@ -52,8 +72,11 @@ public class SubProjectRepo {
     public void createSubProject(SubProject subProject) {
         String sql = """
                 
-                INSERT INTO sub_project (name, description, project_id)
-                VALUES (?, ?, ?)
+                INSERT INTO 
+                    sub_project 
+                    (name, description, project_id)
+                VALUES 
+                    (?, ?, ?)
                 """;
 
         jdbcTemplate.update(
@@ -66,9 +89,13 @@ public class SubProjectRepo {
 
     public void updateSubProject(SubProject subProject) {
         String sql = """
-                UPDATE sub_project 
-                SET name = ?, description = ? 
-                WHERE sub_project_id = ?""";
+                UPDATE 
+                    sub_project 
+                SET 
+                    name = ?, 
+                    description = ? 
+                WHERE 
+                    sub_project_id = ?""";
         jdbcTemplate.update(
                 sql,
                 subProject.getName(),
@@ -79,16 +106,25 @@ public class SubProjectRepo {
     }
     public void deleteSubProject(int id) {
         String sql = """
-                DELETE FROM sub_project 
-                WHERE sub_project_id = ?
+                DELETE FROM 
+                           sub_project 
+                WHERE 
+                    sub_project_id = ?
                 """;
         jdbcTemplate.update(sql, id);
     }
     public SubProject findSubProjectById (int id) {
         String sql = """
-                SELECT * 
-                FROM sub_project 
-                WHERE sub_project_id = ?
+                SELECT 
+                    sub_project_id,
+                    project_id,
+                    name, 
+                    description,
+                    0 as estimated_hours
+                FROM 
+                    sub_project 
+                WHERE 
+                    sub_project_id = ?
                 """;
         return jdbcTemplate.queryForObject(sql, rowMapper, id);
     }

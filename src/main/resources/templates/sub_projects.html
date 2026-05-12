@@ -61,6 +61,7 @@
             <th>Underprojektnavn</th>
             <th>Beskrivelse</th>
             <th>Projekt ID</th>
+            <th>Estimated hours</th>
             <th>Handling</th>
         </tr>
         </thead>
@@ -70,6 +71,7 @@
             <td th:text="${sub.name}"></td>
             <td th:text="${sub.description}"></td>
             <td th:text="${sub.projectId}"></td>
+            <td th:text="${sub.estimatedHours}"></td>
             <td>
                 <a th:href="@{/subproject/{id}(id=${sub.id})}"
                    class="btn btn-info">Se detaljer</a>
