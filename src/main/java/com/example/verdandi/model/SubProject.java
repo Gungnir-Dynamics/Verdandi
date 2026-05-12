@@ -6,13 +6,15 @@ public class SubProject {
     private String name;
     private String description;
     private int projectId;
+    private int estimatedHours;
 
     // CONSTRUCTORS
-    public SubProject(int id, String name, String description, int projectId) {
+    public SubProject(int id, String name, String description, int projectId, int estimatedHours) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.projectId = projectId;
+        this.estimatedHours = estimatedHours;
 
     }
 
@@ -37,6 +39,10 @@ public class SubProject {
         return projectId;
     }
 
+    public int getEstimatedHours() {
+        return estimatedHours;
+    }
+
     // SETTERS
     public void setId(int id) {
         this.id = id;
@@ -52,5 +58,9 @@ public class SubProject {
 
     public void setProjectId(int projectId) {
         this.projectId = projectId;
+    }
+
+    public void setEstimatedHours(int estimatedHours) {
+        this.estimatedHours = estimatedHours;
     }
 }

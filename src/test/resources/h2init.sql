@@ -1,5 +1,3 @@
-drop all objects;
-
 create table project (
                          project_id int auto_increment,
                          name varchar(100) not null,
@@ -28,12 +26,6 @@ create table task(
                      primary key (task_id),
                      foreign key (sub_project_id) references sub_project (sub_project_id) on delete cascade
 );
-
-
-
-                                                    -- ==================== TEST DATA ====================
-
-
 
 -- ==================== PROJECTS ====================
 INSERT INTO project (name, description, deadline) VALUES

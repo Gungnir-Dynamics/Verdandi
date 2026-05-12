@@ -5,9 +5,7 @@ import com.example.verdandi.model.SubProject;
 import com.example.verdandi.service.SubProjectService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -31,5 +29,57 @@ public class SubProjectController {
         return "sub_projects";
     }
 
+    @GetMapping("/create")
+    public String createNewSubProject(@PathVariable int projectId, Model model) {
+        SubProject subProject = new SubProject();
+        subProject.setProjectId(projectId);
 
+        model.addAttribute("subProject", subProject);
+        model.addAttribute("projectId", projectId);
+
+        return "create_sub_project";
+    }
+
+    @PostMapping("/create")
+    public String saveProject(@PathVariable int projectId, @ModelAttribute SubProject subProject) {
+        subProject.setProjectId(projectId);
+        subProjectService.saveSubProject(subProject);
+
+        return "redirect:/projects/" + projectId + "/subprojects";
+    }
+
+    @GetMapping("/{subprojectId}/edit")
+    public String editSubProject(@PathVariable int subprojectId, @PathVariable int projectId, Model model) {
+
+        subProjectService.validateSubProjectBelongsToProject(projectId, subprojectId);
+
+        model.addAttribute("subProject", subProjectService.findSubProjectById(subprojectId));
+
+        model.addAttribute("projectId", projectId);
+
+        return "edit_sub_project";
+    }
+
+    @PostMapping("/{id}/edit")
+    public String updateSubProject(@PathVariable int projectId,
+                                   @PathVariable int id,
+                                   @ModelAttribute SubProject subProject) {
+        subProject.setId(id);
+        subProject.setProjectId(projectId);
+
+        subProjectService.updateSubProject(subProject);
+
+        return "redirect:/projects/" + projectId + "/subprojects";
+    }
+
+    @PostMapping("/{subprojectId}/delete")
+    public String deleteSubProject(@PathVariable int subprojectId,
+                                   @PathVariable int projectId) {
+
+        subProjectService.deleteSubproject(projectId, subprojectId);
+
+        return "redirect:/projects/" + projectId + "/subprojects";
+
+
+    }
 }

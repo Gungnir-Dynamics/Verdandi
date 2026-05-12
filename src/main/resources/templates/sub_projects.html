@@ -61,6 +61,7 @@
             <th>Underprojektnavn</th>
             <th>Beskrivelse</th>
             <th>Projekt ID</th>
+            <th>Estimated hours</th>
             <th>Handling</th>
         </tr>
         </thead>
@@ -70,9 +71,25 @@
             <td th:text="${sub.name}"></td>
             <td th:text="${sub.description}"></td>
             <td th:text="${sub.projectId}"></td>
+            <td th:text="${sub.estimatedHours}"></td>
             <td>
                 <a th:href="@{/subproject/{id}(id=${sub.id})}"
                    class="btn btn-info">Se detaljer</a>
+            <td>
+                <form th:action="@{/projects/{projectId}/subprojects/{subprojectId}/delete(
+                        projectId=${sub.projectId},
+                        subprojectId=${sub.id})}"
+                      method="post"
+                      style="display:inline;">
+
+                    <button type="submit"
+                            class="btn"
+                            style="background-color:#e74c3c; color:white;"
+                            onclick="return confirm('Er du sikker på at du vil slette dette underprojekt?');">
+                        Slet
+                    </button>
+                </form>
+            </td>
             </td>
         </tr>
         </tbody>
