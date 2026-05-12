@@ -65,7 +65,8 @@ public class ProjectController {
     @PostMapping("/{projectId}/edit")
     public String updateProject(@PathVariable int projectId,
                              @ModelAttribute Project project,
-                             RedirectAttributes redirectAttributes) {
+                             RedirectAttributes redirectAttributes,
+                                Model model) {
 
         try {
             projectService.updateProject(projectId, project);
@@ -73,10 +74,10 @@ public class ProjectController {
             return "redirect:/projects";
 
         } catch (ValidationException e) {
-            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
-            redirectAttributes.addFlashAttribute("project", project);
+            model.addAttribute("errorMessage", e.getMessage());
+            model.addAttribute("project", project);
 
-            return "redirect:/projects/" + projectId + "/edit";
+            return "project/edit_project";
         }
     }
 
