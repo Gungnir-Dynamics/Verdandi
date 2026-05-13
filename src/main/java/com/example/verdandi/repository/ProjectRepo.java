@@ -52,7 +52,7 @@ import java.util.List;
     public Project getSingleProject(int projectId){
         String sql = """
                SELECT project.project_id, project.name, project.description, project.created_date, project.deadline, SUM(task.estimated_hours) AS estimated_hours
-               From Project AS project
+               From Project
                LEFT JOIN sub_project
                ON sub_project.project_id = project.project_id
                LEFT JOIN task
