@@ -81,6 +81,7 @@ class ProjectRepoTest {
         assertThat(projectRepo.projectExists(1)).isFalse();
     }
 
+    @Test
     void projectExists() {
         assertThat(projectRepo.projectExists(2)).isTrue();
         assertThat(projectRepo.projectExists(999)).isFalse();

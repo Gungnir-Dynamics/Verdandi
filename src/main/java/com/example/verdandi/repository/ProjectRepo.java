@@ -38,7 +38,7 @@ import java.util.List;
 
     public List<Project> getMultipleProjects(){
         String sql = """
-                SELECT project.project_id, project.name, project.description, project.created_date, project.deadline, SUM(task.estimated_hours) AS estimated_hours
+                SELECT project.project_id, project.name, project.description, project.created_date, project.deadline, COALESCE(sum(task.estimated_hours), 0) AS estimated_hours
                 From Project
                 LEFT JOIN sub_project
                 ON sub_project.project_id = project.project_id
@@ -51,7 +51,7 @@ import java.util.List;
 
     public Project getSingleProject(int projectId){
         String sql = """
-               SELECT project.project_id, project.name, project.description, project.created_date, project.deadline, SUM(task.estimated_hours) AS estimated_hours
+               SELECT project.project_id, project.name, project.description, project.created_date, project.deadline, COALESCE(sum(task.estimated_hours), 0) AS estimated_hours
                From Project
                LEFT JOIN sub_project
                ON sub_project.project_id = project.project_id

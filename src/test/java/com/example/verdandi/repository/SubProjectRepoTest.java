@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -16,7 +15,6 @@ import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TE
 
 
 @SpringBootTest
-@Transactional
 @ActiveProfiles("test")
 @Sql(scripts = "classpath:h2init.sql", executionPhase = BEFORE_TEST_METHOD)
 class SubProjectRepoTest {
@@ -31,7 +29,6 @@ class SubProjectRepoTest {
         subProject.setName("H2 database test");
         subProject.setDescription("H2 database test description");
         subProject.setProjectId(1);
-        subProject.setEstimatedHours(10);
 
         subProjectRepo.createSubProject(subProject, 1);
 

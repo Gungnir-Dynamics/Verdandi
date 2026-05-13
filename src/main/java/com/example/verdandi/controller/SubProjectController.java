@@ -19,7 +19,6 @@ public class SubProjectController {
         this.subProjectService = subProjectService;
     }
 
-    //validering af id fx negativ eller bogstaver. kan måske bruge @min
     @GetMapping("")
     public String getMySubProjects(@PathVariable int projectId,
                                    Model model) {

@@ -114,15 +114,24 @@ public class SubProjectRepo {
     public SubProject findSubProjectById (int id) {
         String sql = """
                 SELECT 
-                    sub_project_id,
-                    project_id,
-                    name, 
-                    description,
-                    0 as estimated_hours
+                    sub_project.sub_project_id,
+                    sub_project.project_id,
+                    sub_project.name, 
+                    sub_project.description,
+                    COALESCE(sum(task.estimated_hours), 0) as estimated_hours
                 FROM 
                     sub_project 
+                LEFT JOIN 
+                        task
+                ON 
+                    task.sub_project_id = sub_project.sub_project_id
                 WHERE 
-                    sub_project_id = ?
+                    sub_project.sub_project_id = ?
+                group by 
+                    sub_project.sub_project_id, 
+                    sub_project.name, 
+                    sub_project.description, 
+                    sub_project.project_id
                 """;
         return jdbcTemplate.queryForObject(sql, rowMapper, id);
     }
