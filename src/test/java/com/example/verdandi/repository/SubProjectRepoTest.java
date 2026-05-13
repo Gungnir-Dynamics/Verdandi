@@ -45,7 +45,6 @@ class SubProjectRepoTest {
     @Test
     void updateSubProject() {
 
-        // Noter Timothy: subproject oprettes i H2 databasen
         SubProject subProject = new SubProject();
         subProject.setName("Test");
         subProject.setDescription("test");
@@ -89,13 +88,12 @@ class SubProjectRepoTest {
         List<SubProject> remainingSubprojects = subProjectRepo.getSubProjects(1);
         assertThat(remainingSubprojects.size()).isEqualTo(3);
 
-
-
-
     }
 
     @Test
     void findSubProjectById() {
+
+
 
         SubProject subProject = new SubProject();
         subProject.setName("Find subproject");
@@ -103,6 +101,7 @@ class SubProjectRepoTest {
         subProject.setEstimatedHours(10);
         subProject.setProjectId(1);
 
+        subProjectRepo.findSubProjectById(1);
 
 
         assertThat(subProject.getProjectId()).isEqualTo(1);
