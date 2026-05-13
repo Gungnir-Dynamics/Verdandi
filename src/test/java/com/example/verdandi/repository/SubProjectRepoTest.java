@@ -92,20 +92,10 @@ class SubProjectRepoTest {
 
     @Test
     void findSubProjectById() {
-
-
-
-        SubProject subProject = new SubProject();
-        subProject.setName("Find subproject");
-        subProject.setDescription("Find subproject test");
-        subProject.setEstimatedHours(10);
-        subProject.setProjectId(1);
-
-        subProjectRepo.findSubProjectById(1);
-
+        SubProject subProject = subProjectRepo.findSubProjectById(1);
 
         assertThat(subProject.getProjectId()).isEqualTo(1);
-        assertThat(subProject.getName()).isEqualTo("Find subproject");
-        assertThat(subProject.getDescription()).isEqualTo("Find subproject test");
+        assertThat(subProject.getName()).isEqualTo("Design fase");
+        assertThat(subProject.getDescription()).isEqualTo("Wireframes, mockups og design af hele sitet");
     }
 }
