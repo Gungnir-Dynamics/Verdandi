@@ -1,6 +1,4 @@
-DROP TABLE IF EXISTS task;
-DROP TABLE IF EXISTS sub_project;
-DROP TABLE IF EXISTS project;
+drop all objects;
 
 create table project (
                          project_id int auto_increment,
