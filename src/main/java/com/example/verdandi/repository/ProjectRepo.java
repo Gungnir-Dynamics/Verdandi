@@ -57,8 +57,8 @@ import java.util.List;
                ON sub_project.project_id = project.project_id
                LEFT JOIN task
                ON task.sub_project_id = sub_project.sub_project_id
-               WHERE project_id = ?
-               GROUP BY project.project_id, project.name;
+               WHERE project.project_id = ?
+               GROUP BY project.project_id, project.name, project.description, project.created_date, project.deadline;
                 """;
         return jdbcTemplate.queryForObject(sql, rowMapper, projectId);
     }

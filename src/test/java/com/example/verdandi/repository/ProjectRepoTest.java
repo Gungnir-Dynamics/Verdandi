@@ -1,7 +1,6 @@
 package com.example.verdandi.repository;
 
 import com.example.verdandi.model.Project;
-import com.example.verdandi.service.ProjectService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -34,6 +33,11 @@ class ProjectRepoTest {
 
     @Test
     void getSingleProject() {
+        Project project = projectRepo.getSingleProject(1);
+
+        assertThat(project.getName()).isEqualTo("Website Redesign");
+        assertThat(project.getDescription()).isEqualTo("Total redesign af virksomhedens hjemmeside med ny branding og moderne design");
+        assertThat(project.getEstimatedHours()).isEqualTo(331);
     }
 
 
@@ -53,5 +57,32 @@ class ProjectRepoTest {
         assertThat(mostRecentProject.getDescription()).isEqualTo("Testing description with H2");
         assertThat(mostRecentProject.getDeadline()).isEqualTo(LocalDate.of(2026,12,31));
 
+    }
+
+    @Test
+    void updateProject(){
+        Project updated = new Project();
+        updated.setName("Website Redesign - Opdateret");
+        updated.setDescription("Ny beskrivelse");
+        updated.setDeadline(LocalDate.of(2026, 9, 1));
+
+        projectRepo.updateProject(1, updated);
+
+        Project database = projectRepo.getSingleProject(1);
+        assertThat(database.getName()).isEqualTo("Website Redesign - Opdateret");
+        assertThat(database.getDescription()).isEqualTo("Ny beskrivelse");
+        assertThat(database.getDeadline()).isEqualTo(LocalDate.of(2026, 9, 1));
+    }
+
+    @Test
+    void deleteProject() {
+        projectRepo.deleteProject(1);
+
+        assertThat(projectRepo.projectExists(1)).isFalse();
+    }
+
+    void projectExists() {
+        assertThat(projectRepo.projectExists(2)).isTrue();
+        assertThat(projectRepo.projectExists(999)).isFalse();
     }
 }
