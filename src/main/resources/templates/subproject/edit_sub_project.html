@@ -49,33 +49,44 @@
 
 <body>
 
-<h1>Rediger Delprojekt</h1>
+<h1>Edit Subproject</h1>
 
 <div class="form-container">
 
+    <div th:if="${errorMessage}"
+         style="color: red;
+                background-color: #fdecea;
+                border: 1px solid #e74c3c;
+                padding: 10px;
+                border-radius: 4px;
+                margin-bottom: 15px;">
+
+        <p th:text="${errorMessage}"></p>
+
+    </div>
+
     <form th:action="@{/projects/{projectId}/subprojects/{id}/edit(
-        projectId=${subProject.projectId},
-        id=${subProject.id})}"
-          th:object="${subProject}"
+        projectId=${subproject.projectId},
+        id=${subproject.id})}"
+          th:object="${subproject}"
           method="post">
 
-        <!-- hidden fields -->
         <input type="hidden" th:field="*{id}" />
         <input type="hidden" th:field="*{projectId}" />
 
-        <label for="name">Navn</label>
+        <label for="name">Name</label>
         <input type="text" th:field="*{name}" required />
 
-        <label for="description">Beskrivelse</label>
+        <label for="description">Description</label>
         <textarea th:field="*{description}"></textarea>
 
         <button type="submit" class="btn btn-primary">
-            Gem ændringer
+            Save
         </button>
 
-        <a th:href="@{/projects/{projectId}/subprojects(projectId=${subProject.projectId})}"
+        <a th:href="@{/projects/{projectId}/subprojects(projectId=${projectId})}"
            class="btn btn-secondary">
-            Annuller
+            Cancel
         </a>
 
     </form>

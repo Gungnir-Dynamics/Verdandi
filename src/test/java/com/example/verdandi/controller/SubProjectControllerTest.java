@@ -61,7 +61,7 @@ class SubProjectControllerTest {
         subProject.setProjectId(1);
         subProject.setName("Test");
 
-        when(subProjectService.findSubProjectById(5))
+        when(subProjectService.findSubProjectById(5, 1))
                 .thenReturn(subProject);
 
         mockMvc.perform(get("/projects/1/subprojects/5/edit"))

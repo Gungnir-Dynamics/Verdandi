@@ -3,6 +3,7 @@ package com.example.verdandi.service;
 
 import com.example.verdandi.exception.DatabaseOperationException;
 import com.example.verdandi.exception.ResourceNotFoundException;
+import com.example.verdandi.exception.ValidationException;
 import com.example.verdandi.model.SubProject;
 import com.example.verdandi.repository.SubProjectRepo;
 import org.springframework.dao.DataAccessException;
@@ -48,13 +49,32 @@ public class SubProjectService {
             throw new DatabaseOperationException("Failed to validate subproject ownership", ex);
         }
     }
+    public void validateSubProjectData(SubProject subProject) {
+        if (subProject.getName() == null || subProject.getName().isBlank()) {
+            throw new ValidationException("Subproject name cannot be empty.");
+        }
+
+        if (subProject.getName().length() > 100) {
+            throw new ValidationException("Subproject name cannot exceed 100 characters.");
+        }
+
+        if (subProject.getDescription() != null && subProject.getDescription().length() > 1500) {
+            throw new ValidationException("Description cannot exceed 1500 characters.");
+        }
+
+        if (subProject.getEstimatedHours() < 0) {
+            throw new ValidationException("Estimated hours must be 0 or higher.");
+        }
+    }
 
 
-    public void saveSubProject(SubProject subProject) {
+    public void saveSubProject(SubProject subProject, int ProjectId) {
+
         projectService.validateProjectExists(subProject.getProjectId());
+        validateSubProjectData(subProject);
 
         try {
-            subProjectRepo.createSubProject(subProject);
+            subProjectRepo.createSubProject(subProject, ProjectId);
 
         } catch (DataAccessException ex) {
 
@@ -63,15 +83,19 @@ public class SubProjectService {
     }
 
 
-    public void updateSubProject(SubProject subProject) {
+    public void updateSubProject(int projectId,
+                                 int subprojectId,
+                                 SubProject updatedSubproject) {
 
-        projectService.validateProjectExists(subProject.getProjectId());
+        projectService.validateProjectExists(projectId);
 
-        validateSubProjectBelongsToProject(subProject.getProjectId(), subProject.getId());
+        validateSubProjectBelongsToProject(projectId, subprojectId);
+
+        validateSubProjectData(updatedSubproject);
 
         try {
 
-            subProjectRepo.updateSubProject(subProject);
+            subProjectRepo.updateSubProject(subprojectId, updatedSubproject);
 
         } catch (DataAccessException ex) {
 
@@ -80,7 +104,8 @@ public class SubProjectService {
     }
 
 
-    public void deleteSubproject(int projectId, int subprojectId) {
+    public void deleteSubproject(int projectId,
+                                 int subprojectId) {
         validateSubProjectBelongsToProject(projectId, subprojectId);
 
         try {
@@ -93,14 +118,17 @@ public class SubProjectService {
         }
     }
 
-    public SubProject findSubProjectById(int id) {
+    public SubProject findSubProjectById(int projectId,
+                                         int subprojectId) {
+
+        validateSubProjectBelongsToProject(projectId, subprojectId);
 
         try {
-            SubProject subProject = subProjectRepo.findSubProjectById(id);
+            SubProject subProject = subProjectRepo.findSubProjectById(subprojectId);
 
             if (subProject == null) {
 
-                throw new ResourceNotFoundException("Subproject with id: " + id + " not found");
+                throw new ResourceNotFoundException("Subproject with id: " + subprojectId + " not found");
             }
 
             return subProject;
