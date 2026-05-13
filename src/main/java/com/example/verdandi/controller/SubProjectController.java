@@ -64,8 +64,6 @@ public class SubProjectController {
                                  @PathVariable int projectId,
                                  Model model) {
 
-        subProjectService.validateSubProjectBelongsToProject(projectId, subprojectId);
-
         model.addAttribute("subproject", subProjectService.findSubProjectById(projectId, subprojectId));
 
         model.addAttribute("projectId", projectId);

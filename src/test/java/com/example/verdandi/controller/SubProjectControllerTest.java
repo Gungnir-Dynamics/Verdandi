@@ -38,7 +38,7 @@ class SubProjectControllerTest {
 
         mockMvc.perform(get("/projects/1/subprojects"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("sub_projects"))
+                .andExpect(view().name("subproject/sub_projects"))
                 .andExpect(model().attributeExists("mySubProjects"))
                 .andExpect(model().attributeExists("projectId"));
     }
@@ -48,8 +48,8 @@ class SubProjectControllerTest {
 
         mockMvc.perform(get("/projects/1/subprojects/create"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("create_sub_project"))
-                .andExpect(model().attributeExists("subProject"))
+                .andExpect(view().name("subproject/create_sub_project"))
+                .andExpect(model().attributeExists("subproject"))
                 .andExpect(model().attribute("projectId", 1));
     }
 
@@ -61,13 +61,13 @@ class SubProjectControllerTest {
         subProject.setProjectId(1);
         subProject.setName("Test");
 
-        when(subProjectService.findSubProjectById(5, 1))
+        when(subProjectService.findSubProjectById(1, 5))
                 .thenReturn(subProject);
 
         mockMvc.perform(get("/projects/1/subprojects/5/edit"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("edit_sub_project"))
-                .andExpect(model().attributeExists("subProject"))
+                .andExpect(view().name("subproject/edit_sub_project"))
+                .andExpect(model().attributeExists("subproject"))
                 .andExpect(model().attribute("projectId", 1));
     }
 
