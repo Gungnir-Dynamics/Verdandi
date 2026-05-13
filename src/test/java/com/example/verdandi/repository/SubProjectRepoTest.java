@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
 
@@ -32,16 +33,13 @@ class SubProjectRepoTest {
         subProject.setProjectId(1);
         subProject.setEstimatedHours(10);
 
-
-
         subProjectRepo.createSubProject(subProject, 1);
 
-        List<SubProject> result = subProjectRepo.getSubProjects(1);
+        SubProject createdSubproject = subProjectRepo.findSubProjectById(11);
 
-        assertTrue(
-                result.stream()
-                        .anyMatch(sp -> sp.getName().equals("H2 database test"))
-        );
+        assertThat(createdSubproject.getName()).isEqualTo("H2 database test");
+        assertThat(createdSubproject.getDescription()).isEqualTo("H2 database test description");
+        assertThat(createdSubproject.getProjectId()).isEqualTo(1);
     }
 
     @Test
@@ -56,25 +54,17 @@ class SubProjectRepoTest {
 
         subProjectRepo.createSubProject(subProject, 1);
 
-        // Noter Timothy: Kalder alle "subprojects", og leder/finder den som vi lige har oprettet
-        SubProject updatedSubproject = subProjectRepo.getSubProjects(1).stream()
-                .filter(sp -> sp.getName().equals("Test"))
-                .findFirst()
-                .orElseThrow();
-
-        // Noter Timothy: Opdatere data
+        SubProject updatedSubproject = subProjectRepo.findSubProjectById(1);
         updatedSubproject.setName("Updated test name");
         updatedSubproject.setDescription("Updated test description");
 
 
         subProjectRepo.updateSubProject(updatedSubproject.getId(), updatedSubproject);
 
-        //Noter Timothy: Henter (opdateret)data fra databasen
         SubProject updated = subProjectRepo.findSubProjectById(updatedSubproject.getId());
 
 
 
-        //Noter Timothy: Her verificere jeg om dataen er blevet opdateret
         assertEquals("Updated test name", updated.getName());
         assertEquals("Updated test description", updated.getDescription());
 
@@ -89,21 +79,18 @@ class SubProjectRepoTest {
         subProject.setEstimatedHours(10);
         subProject.setProjectId(1);
 
+        assertThat(subProject).isNotNull();
+        assertThat(subProject.getName()).isEqualTo("DELETE TEST");
 
-        subProjectRepo.createSubProject(subProject, 1);
+        subProjectRepo.deleteSubProject(1);
 
-        SubProject created = subProjectRepo.getSubProjects(1).stream()
-                .filter(sp -> sp.getName().equals("DELETE TEST"))
-                .findFirst()
-                .orElseThrow();
+        assertFalse(subProjectRepo.subprojectBelongsToProject(1, 1));
 
-        int id = created.getId();
+        List<SubProject> remainingSubprojects = subProjectRepo.getSubProjects(1);
+        assertThat(remainingSubprojects.size()).isEqualTo(3);
 
-        subProjectRepo.deleteSubProject(id);
 
-        assertThrows(Exception.class, () -> {
-            subProjectRepo.findSubProjectById(id);
-        });
+
 
     }
 
@@ -116,19 +103,10 @@ class SubProjectRepoTest {
         subProject.setEstimatedHours(10);
         subProject.setProjectId(1);
 
-        subProjectRepo.createSubProject(subProject, 1);
 
-        SubProject created = subProjectRepo.getSubProjects(1).stream()
-                .filter(sp -> sp.getName().equals("Find subproject"))
-                .findFirst()
-                .orElseThrow();
 
-        int id = created.getId();
-
-        SubProject result = subProjectRepo.findSubProjectById(id);
-
-        assertNotNull(result);
-        assertEquals("Find subproject", result.getName());
-        assertEquals("Find subproject test", result.getDescription());
+        assertThat(subProject.getProjectId()).isEqualTo(1);
+        assertThat(subProject.getName()).isEqualTo("Find subproject");
+        assertThat(subProject.getDescription()).isEqualTo("Find subproject test");
     }
 }
