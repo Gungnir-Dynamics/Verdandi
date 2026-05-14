@@ -8,7 +8,7 @@ import com.example.verdandi.repository.ProjectRepo;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
-import javax.xml.crypto.Data;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -68,7 +68,10 @@ public class ProjectService {
 
     public Project getSingleProject(int projectId) {
         try {
-            return projectRepo.getSingleProject(projectId);
+            Project project = projectRepo.getSingleProject(projectId);
+            project.setEstimatedEndDate(calculateExpectedProjectEndDate(project,.size));
+            project.setPrice(calculateProjectPrice(project,list));
+            return project;
         } catch (DataAccessException ex) {
             throw new DatabaseOperationException("Failed to retrieve data for project", ex);
         }
@@ -104,5 +107,37 @@ public class ProjectService {
         } catch (DataAccessException ex) {
             throw new DatabaseOperationException("Failed to delete project", ex);
         }
+    }
+
+    private LocalDate calculateExpectedProjectEndDate(Project project, int numberOfWorkers) {
+
+        int hoursPerDay = numberOfWorkers * 8;
+        int workDays = (int) Math.ceil((double) project.getEstimatedHours() / hoursPerDay);
+
+        LocalDate date = project.getCreationDate();
+        int addedDays = 0;
+
+        while (addedDays < workDays) {
+            date = date.plusDays(1);
+
+            DayOfWeek day = date.getDayOfWeek();
+            if (day != DayOfWeek.SATURDAY && day != DayOfWeek.SUNDAY) {
+                addedDays++;
+            }
+        }
+
+        return date;
+    }
+
+    private double calculateProjectPrice(Project project, List<Profile> workers) {
+
+        double hoursPerUser = (double) project.getEstimatedHours() / workers.size();
+        double total = 0;
+
+        for (Profile worker : workers) {
+            total += worker.getHourlyRate() * hoursPerUser;
+        }
+
+        return total;
     }
 }
