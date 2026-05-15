@@ -1,11 +1,12 @@
 package com.example.verdandi.model;
 
+
 public class User {
     private int id;
     private String username;
     private String password;
     private String email;
-    private int roleId;
+    private String role;
     private int hourlyRate;
 
     public User() {
@@ -15,14 +16,14 @@ public class User {
                 String username,
                 String password,
                 String email,
-                int roleId,
-                int hourlyRate) {
+                int hourlyRate,
+                String role) {
 
         this.id = id;
         this.username = username;
         this.password = password;
         this.email = email;
-        this.roleId = roleId;
+        this.role = role;
         this.hourlyRate = hourlyRate;
     }
 
@@ -44,12 +45,13 @@ public class User {
         return email;
     }
 
-    public int getRoleId() {
-        return roleId;
-    }
 
     public int getHourlyRate() {
         return hourlyRate;
+    }
+
+    public String getRole() {
+        return role;
     }
 
     // Setter methods
@@ -69,8 +71,8 @@ public class User {
         this.email = email;
     }
 
-    public void setRoleId(int roleId) {
-        this.roleId = roleId;
+    public void setRole(String role) {
+        this.role = role;
     }
 
     public void setHourlyRate(int hourlyRate) {

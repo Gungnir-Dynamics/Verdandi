@@ -4,6 +4,8 @@ import com.example.verdandi.model.User;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
+import java.util.List;
+
 public class UserRepo {
 
     private final JdbcTemplate jdbcTemplate;
@@ -19,15 +21,32 @@ public class UserRepo {
         user.setPassword(rs.getString("password"));
         user.setEmail(rs.getString("email"));
         user.setHourlyRate(rs.getInt("hourly_rate"));
-        user.setRoleId(rs.getInt("role_id"));
+        user.setRole(rs.getString("role_name"));
 
         return user;
     };
 
+    public List<User> getUsers() {
+        String sql = """
+                SELECT profile.name, 
+                profile.username, 
+                profile.password, 
+                profile.email, 
+                profile.hourly_rate
+               
+                FROM profile
+                LEFT JOIN role
+                on role.role_id = profile.role_id
+                """;
+        return jdbcTemplate.query(sql, rowMapper);
+    }
+
+
+
     public User findUserByEmail(String email) {
         String sql = """
                 SELECT profile_id, username, password, email
-                FROM Profile
+                FROM profile
                 WHERE email = ?
                 """;
         try {
@@ -41,7 +60,7 @@ public class UserRepo {
     public User findUserById(int id) {
         String sql = """
                 SELECT profile_id, username, password, email
-                FROM Profile
+                FROM profile
                 WHERE id = ?
                 """;
 
@@ -49,14 +68,14 @@ public class UserRepo {
     }
 
     public void saveUser(User user) {
-        String sql = "INSERT INTO Profile (username, password, email, hourly_rate) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO profile (username, password, email, hourly_rate) VALUES (?, ?, ?, ?)";
 
         jdbcTemplate.update(sql, user.getUsername(), user.getPassword(), user.getEmail());
 
     }
 
     public void editProfile(User user) {
-        String sql = "UPDATE Profile SET username = ?, password = ? WHERE email =?";
+        String sql = "UPDATE profile SET username = ?, password = ? WHERE email =?";
         jdbcTemplate.update(
                 sql,
                 user.getUsername(),
@@ -67,7 +86,7 @@ public class UserRepo {
 
     public void deleteProfile(String email) {
         String sql = """
-                DELETE FROM Profile
+                DELETE FROM profile
                 WHERE email = ?
                 """;
         jdbcTemplate.update(sql, email);
