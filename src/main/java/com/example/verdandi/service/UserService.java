@@ -57,6 +57,17 @@ public class UserService {
         }
     }
 
+    public void validateUserExists(User user) {
+
+        if (repository.findUserByEmail(user.getEmail()) != null) {
+            throw new ValidationException("Email already exists");
+        }
+
+        if (repository.findUserByUsername(user.getUsername()) != null) {
+            throw new ValidationException("Username already exists");
+        }
+    }
+
 
     public User findUserByEmail(String email) {
         return repository.findUserByEmail(email);
@@ -85,10 +96,12 @@ public class UserService {
 
     @Transactional
     public void saveUser(User user) {
+        validateUser(user);
         repository.saveUser(user);
     }
 
     public void editProfile(User user) {
+        validateUser(user);
         repository.editProfile(user);
     }
 }

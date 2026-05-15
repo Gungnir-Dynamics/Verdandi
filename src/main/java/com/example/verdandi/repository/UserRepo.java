@@ -63,10 +63,18 @@ public class UserRepo {
         String sql = """
                 SELECT profile_id, username, password, email
                 FROM profile
-                WHERE id = ?
+                WHERE profile_id = ?
                 """;
 
         return jdbcTemplate.queryForObject(sql, rowMapper, id);
+    }
+    public User findUserByUsername(String username) {
+        String sql = """
+                SELECT profile_id, username
+                FROM profile
+                WHERE profile_id = ?
+                """;
+        return jdbcTemplate.queryForObject(sql, rowMapper, username);
     }
 
     public void saveUser(User user) {
