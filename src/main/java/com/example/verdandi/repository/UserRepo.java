@@ -3,9 +3,11 @@ package com.example.verdandi.repository;
 import com.example.verdandi.model.User;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public class UserRepo {
 
     private final JdbcTemplate jdbcTemplate;
