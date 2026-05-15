@@ -43,7 +43,7 @@ public class UserController {
 
         if (userService.login(email, password)) {
             session.setAttribute("user", userService.findUserByEmail(email));
-            return "redirect:/wishlists";
+            return "redirect:/projects";
         }
         // WRONG INPUT
         model.addAttribute("wrongCredentials", true);
@@ -69,7 +69,7 @@ public class UserController {
         User updatedUser = userService.findUserByEmail(profile.getEmail());
 
         session.setAttribute("user", updatedUser);
-        return "redirect:/wishlists";
+        return "redirect:/projects";
 
     }
 
