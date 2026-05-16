@@ -29,20 +29,22 @@ public class UserRepo {
     };
 
     public List<User> getUsers() {
+
         String sql = """
-                SELECT profile.name, 
-                profile.username, 
-                profile.password, 
-                profile.email, 
-                profile.hourly_rate
-               
+                SELECT 
+                    profile.profile_id,
+                    profile.username,
+                    profile.password,
+                    profile.email,
+                    profile.hourly_rate,
+                    role.role_name
                 FROM profile
-                LEFT JOIN role
-                on role.role_id = profile.role_id
+                LEFT JOIN role 
+                    ON role.role_id = profile.role_id
                 """;
+
         return jdbcTemplate.query(sql, rowMapper);
     }
-
 
 
     public User findUserByEmail(String email) {
@@ -60,37 +62,60 @@ public class UserRepo {
     }
 
     public User findUserById(int id) {
+
         String sql = """
-                SELECT profile_id, username, password, email
+                SELECT profile_id, username, email, password, hourly_rate, role_id
                 FROM profile
                 WHERE profile_id = ?
                 """;
 
         return jdbcTemplate.queryForObject(sql, rowMapper, id);
     }
+
     public User findUserByUsername(String username) {
+
         String sql = """
-                SELECT profile_id, username
+                SELECT profile_id, username, email, password, hourly_rate, role_id
                 FROM profile
-                WHERE profile_id = ?
+                WHERE username = ?
                 """;
+
         return jdbcTemplate.queryForObject(sql, rowMapper, username);
     }
 
     public void saveUser(User user) {
-        String sql = "INSERT INTO profile (username, password, email, hourly_rate) VALUES (?, ?, ?, ?)";
 
-        jdbcTemplate.update(sql, user.getUsername(), user.getPassword(), user.getEmail());
+        String sql = """
+                INSERT INTO profile (username, password, email, hourly_rate, role_id)
+                VALUES (?, ?, ?, ?, ?)
+                """;
 
-    }
-
-    public void editProfile(User user) {
-        String sql = "UPDATE profile SET username = ?, password = ? WHERE email =?";
         jdbcTemplate.update(
                 sql,
                 user.getUsername(),
                 user.getPassword(),
-                user.getEmail()
+                user.getEmail(),
+                user.getHourlyRate(),
+                user.getRole()
+        );
+    }
+
+    public void editProfile(User user) {
+        String sql = """
+                UPDATE profile 
+                SET 
+                    username = ?, 
+                    password = ?, 
+                    email = ? 
+                WHERE 
+                    profile_id = ?
+                """;
+        jdbcTemplate.update(
+                sql,
+                user.getUsername(),
+                user.getPassword(),
+                user.getEmail(),
+                user.getId()
         );
     }
 

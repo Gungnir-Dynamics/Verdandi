@@ -60,15 +60,15 @@ INSERT INTO role (role_name) VALUES
 
 
 -- ==================== PROFILES ====================
-INSERT INTO profile (name, password, hourly_rate, role_id) VALUES
-                                                               ('Anders Jensen', 'anders123', 850, 1),
-                                                               ('Mette Larsen', 'mette123', 650, 2),
-                                                               ('Jonas Nielsen', 'jonas123', 700, 2),
-                                                               ('Sofie Hansen', 'sofie123', 950, 1),
-                                                               ('Frederik Pedersen', 'frederik123', 600, 2),
-                                                               ('Emma Christensen', 'emma123', 750, 2),
-                                                               ('Lucas Mortensen', 'lucas123', 500, 2),
-                                                               ('Ida Sørensen', 'ida123', 680, 2);
+INSERT INTO profile (username, email, password, hourly_rate, role_id) VALUES
+                                                                          ('Anders Jensen', 'anders@example.com', 'anders123', 850, 1),
+                                                                          ('Mette Larsen', 'mette@example.com', 'mette123', 650, 2),
+                                                                          ('Jonas Nielsen', 'jonas@example.com', 'jonas123', 700, 2),
+                                                                          ('Sofie Hansen', 'sofie@example.com', 'sofie123', 950, 1),
+                                                                          ('Frederik Pedersen', 'frederik@example.com', 'frederik123', 600, 2),
+                                                                          ('Emma Christensen', 'emma@example.com', 'emma123', 750, 2),
+                                                                          ('Lucas Mortensen', 'lucas@example.com', 'lucas123', 500, 2),
+                                                                          ('Ida Sørensen', 'ida@example.com', 'ida123', 680, 2);
 
 
 -- ==================== ASSIGNMENTS ====================
