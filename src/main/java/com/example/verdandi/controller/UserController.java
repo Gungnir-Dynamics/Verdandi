@@ -43,7 +43,7 @@ public class UserController {
 
         if (userService.login(email, password)) {
             session.setAttribute("user", userService.findUserByEmail(email));
-            return "redirect:/project/projects";
+            return "redirect:/projects";
         }
         // WRONG INPUT
         model.addAttribute("wrongCredentials", true);

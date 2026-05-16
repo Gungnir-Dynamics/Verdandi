@@ -49,9 +49,21 @@ public class UserRepo {
 
     public User findUserByEmail(String email) {
         String sql = """
-                SELECT profile_id, username, password, email
-                FROM profile
-                WHERE email = ?
+                SELECT 
+                    p.profile_id, 
+                    p.username, 
+                    p.password, 
+                    p.email, 
+                    p.hourly_rate, 
+                    r.role_name
+                FROM 
+                    profile p
+                LEFT JOIN
+                    role r
+                ON
+                    r.role_id = p.role_id
+                
+                WHERE p.email = ?
                 """;
         try {
             return jdbcTemplate.queryForObject(sql, rowMapper, email);
@@ -64,9 +76,21 @@ public class UserRepo {
     public User findUserById(int id) {
 
         String sql = """
-                SELECT profile_id, username, email, password, hourly_rate, role_id
-                FROM profile
-                WHERE profile_id = ?
+                SELECT 
+                    p.profile_id, 
+                    p.username, 
+                    p.email, 
+                    p.password, 
+                    p.hourly_rate, 
+                    r.role_name
+                FROM 
+                    profile p
+                LEFT JOIN
+                    role r
+                ON
+                    r.role_id = p.role_id
+                WHERE 
+                    p.profile_id = ?
                 """;
 
         return jdbcTemplate.queryForObject(sql, rowMapper, id);
@@ -75,20 +99,56 @@ public class UserRepo {
     public User findUserByUsername(String username) {
 
         String sql = """
-                SELECT profile_id, username, email, password, hourly_rate, role_id
-                FROM profile
-                WHERE username = ?
+                SELECT 
+                    p.profile_id, 
+                    p.username, 
+                    p.email, 
+                    p.password, 
+                    p.hourly_rate, 
+                    r.role_name
+                FROM 
+                    profile p 
+                LEFT JOIN
+                    role r
+                ON
+                    r.role_id = p.role_id
+                WHERE 
+                    p.username = ?
+                """;
+        try {
+
+            return jdbcTemplate.queryForObject(sql, rowMapper, username);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public int findRoleIdByName(String roleName) {
+        String sql = """
+                SELECT 
+                    r.role_id 
+                FROM 
+                    role r
+                WHERE 
+                    r.role_name = ?
                 """;
 
-        return jdbcTemplate.queryForObject(sql, rowMapper, username);
+        return jdbcTemplate.queryForObject(sql, Integer.class, roleName);
     }
 
     public void saveUser(User user) {
 
         String sql = """
-                INSERT INTO profile (username, password, email, hourly_rate, role_id)
+                INSERT INTO profile 
+                    (username, 
+                     password, 
+                     email, 
+                     hourly_rate, 
+                     role_id)
                 VALUES (?, ?, ?, ?, ?)
                 """;
+
+        int roleId = findRoleIdByName(user.getRole());
 
         jdbcTemplate.update(
                 sql,
@@ -96,8 +156,8 @@ public class UserRepo {
                 user.getPassword(),
                 user.getEmail(),
                 user.getHourlyRate(),
-                user.getRole()
-        );
+                roleId);
+
     }
 
     public void editProfile(User user) {

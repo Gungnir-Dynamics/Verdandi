@@ -8,6 +8,8 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Locale;
+
 
 @Service
 public class UserService {
@@ -55,9 +57,17 @@ public class UserService {
         if (user.getRole() == null || user.getRole().isBlank()) {
             throw new ValidationException("Must select a role");
         }
+
+        String role = user.getRole().trim().toLowerCase();
+        user.setRole(role);
+
+        if (!role.equals("admin") && !role.equals("user")) {
+            throw new ValidationException("Invalid role selected");
+        }
     }
 
     public void validateUserExists(User user) {
+
         User existingEmail = repository.findUserByEmail(user.getEmail());
 
         if (existingEmail != null && existingEmail.getId() != user.getId()) {
@@ -84,7 +94,6 @@ public class UserService {
         // USER NOT FOUND
         return false;
     }
-
 
     // ( SKAL MÅSKE LAVES OM TIL PRIVATE)
     //TIDELIGERE OPGAVE LIGGER DEN I CONTROLLER
