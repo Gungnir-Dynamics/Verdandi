@@ -75,6 +75,16 @@ public class ProjectService {
 
     }
 
+    public List<Project> getAssignedProjects(int profileId) {
+
+        try {
+            return projectRepo.getAssignedProjects(profileId);
+
+        } catch (DataAccessException ex) {
+            throw new DatabaseOperationException("Failed to retrieve data for project", ex);
+        }
+    }
+
     public void saveProject(Project project) {
         validateProject(project);
 

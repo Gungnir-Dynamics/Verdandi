@@ -1,10 +1,53 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<div class="container">
 
-</body>
-</html>
+    <h2>User Profile</h2>
+
+    <!-- DISPLAY INFO -->
+    <div class="field">
+        <span class="label">Name:</span>
+        <span th:text="${session.user.username}"></span>
+    </div>
+
+    <div class="field">
+        <span class="label">Email:</span>
+        <span th:text="${session.user.email}"></span>
+    </div>
+
+    <!-- EDIT FORM -->
+    <h3>Edit Profile</h3>
+
+    <form th:action="@{/profile/edit}" method="post">
+        <input type="hidden" name="id" th:value="${session.user.id}"/>
+
+        <div>
+            <input type="text" name="username"
+                   th:value="${session.user.username}"
+                   placeholder="Username"/>
+        </div>
+
+        <div>
+            <input type="email" name="email"
+                   th:value="${session.user.email}"
+                   placeholder="Email"/>
+        </div>
+
+        <div>
+            <input type="password" name="password"
+                   placeholder="New Password"/>
+        </div>
+
+        <button type="submit">Update Profile</button>
+    </form>
+
+    <br>
+
+    <!-- DELETE BUTTON -->
+    <form th:action="@{/profile/delete}" method="post"
+          onsubmit="return confirm('Are you sure you want to delete your account?');">
+
+        <button type="submit" style="background:red;color:white;">
+            Delete Account
+        </button>
+    </form>
+
+</div>

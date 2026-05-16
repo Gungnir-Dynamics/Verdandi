@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Projects - Verdandi</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f8f9fa;
+        }
+
+        h1 {
+            color: #2c3e50;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .btn {
+            padding: 10px 18px;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        th, td {
+            padding: 14px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #34495e;
+            color: white;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .no-projects {
+            text-align: center;
+            padding: 60px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+
+<body>
+
+<div>
+
+    <div class="header">
+        <h1>My Projects</h1>
+
+        <a href="/auth/logout" class="btn btn-primary">
+            Logout
+        </a>
+    </div>
+
+    <!-- TABLE -->
+    <table th:if="${myProjects != null and !myProjects.isEmpty()}">
+
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Project Name</th>
+            <th>Description</th>
+            <th>Estimated Hours</th>
+            <th>Creation Date</th>
+            <th>Deadline</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+
+        <tbody>
+
+        <tr th:each="project : ${myProjects}">
+
+            <td th:text="${project.id}"></td>
+
+            <td th:text="${project.name}"></td>
+
+            <td th:text="${project.description}"></td>
+
+            <td th:text="${project.estimatedHours}"></td>
+
+            <td th:text="${project.creationDate}"></td>
+
+            <td th:text="${project.deadline}"></td>
+
+            <td>
+
+                <div class="actions">
+
+                    <a th:href="@{/projects/{id}(id=${project.id})}"
+                       class="btn btn-primary">
+                        View
+                    </a>
+
+                    <a th:href="@{/projects/{id}/edit(id=${project.id})}"
+                       class="btn btn-primary">
+                        Edit
+                    </a>
+
+                </div>
+
+            </td>
+
+        </tr>
+
+        </tbody>
+
+    </table>
+
+    <!-- EMPTY STATE -->
+    <div class="no-projects"
+         th:if="${myProjects == null or myProjects.isEmpty()}">
+
+        <h2>No Projects Yet</h2>
+        <p>You don't have any assigned projects.</p>
+
+    </div>
+
+</div>
+
+</body>
+</html>

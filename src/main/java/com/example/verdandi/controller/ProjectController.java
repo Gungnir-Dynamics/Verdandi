@@ -3,7 +3,10 @@ package com.example.verdandi.controller;
 
 import com.example.verdandi.exception.ValidationException;
 import com.example.verdandi.model.Project;
+import com.example.verdandi.model.User;
+import com.example.verdandi.repository.ProjectRepo;
 import com.example.verdandi.service.ProjectService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -14,15 +17,33 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class ProjectController {
 
     private final ProjectService projectService;
+    private final ProjectRepo projectRepo;
 
-    public ProjectController(ProjectService projectService){
+    public ProjectController(ProjectService projectService, ProjectRepo projectRepo){
         this.projectService = projectService;
+        this.projectRepo = projectRepo;
     }
 
     @GetMapping("")
     public String getMyProjects(Model model){
         model.addAttribute("myProjects", projectService.getMultipleProjects());
         return "/project/projects";
+    }
+
+
+    // Timothy's Tilføjelse -
+    // Virkede ikke i UserController da URL ikke passer
+    @GetMapping("/my_projects")
+    public String getAssignedProjects(HttpSession session, Model model) {
+
+        User user = (User) session.getAttribute("user");
+
+        if (user == null) {
+            return "redirect:/auth/login";
+        }
+        model.addAttribute("myProjects", projectService.getAssignedProjects(user.getId()));
+        return "/project/my_projects";
+
     }
 
     @GetMapping("/create")

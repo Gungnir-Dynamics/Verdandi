@@ -1,6 +1,7 @@
 package com.example.verdandi.controller;
 
 import com.example.verdandi.model.User;
+import com.example.verdandi.service.ProjectService;
 import com.example.verdandi.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
@@ -13,9 +14,11 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
+    private final ProjectService projectService;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, ProjectService projectService) {
         this.userService = userService;
+        this.projectService = projectService;
     }
 
     @GetMapping("/register")
@@ -35,6 +38,7 @@ public class UserController {
         return "auth/login";
     }
 
+
     @PostMapping("/login")
     public String login(@RequestParam String email,
                         @RequestParam String password,
@@ -43,7 +47,19 @@ public class UserController {
 
         if (userService.login(email, password)) {
             session.setAttribute("user", userService.findUserByEmail(email));
-            return "redirect:/projects";
+
+            User user = (User) session.getAttribute("user");
+
+            // Admin/User redirect
+            if (user.getRole().equalsIgnoreCase("Admin")) {
+
+                return "redirect:/projects";
+
+            } else {
+
+                return "redirect:/projects/my_projects";
+            }
+
         }
         // WRONG INPUT
         model.addAttribute("wrongCredentials", true);
@@ -69,7 +85,7 @@ public class UserController {
         User updatedUser = userService.findUserByEmail(profile.getEmail());
 
         session.setAttribute("user", updatedUser);
-        return "redirect:/projects";
+        return "redirect:/profile_details";
 
     }
 
