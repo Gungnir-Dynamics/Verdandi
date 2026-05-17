@@ -1,5 +1,6 @@
 package com.example.verdandi.controller;
 
+import com.example.verdandi.exception.AccessDeniedException;
 import com.example.verdandi.exception.DatabaseOperationException;
 import com.example.verdandi.exception.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -27,5 +28,11 @@ public class GlobalExceptionHandler {
         model.addAttribute("error", HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
         model.addAttribute("message", "A database error occurred.");
         return "error/500";
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public String handleDatabaseOperation(AccessDeniedException ex, Model model) {
+        return "error/403";
     }
 }

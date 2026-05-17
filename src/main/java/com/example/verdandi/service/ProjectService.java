@@ -15,12 +15,14 @@ import java.util.List;
 @Service
 public class ProjectService {
     private final ProjectRepo projectRepo;
+    private final AssignmentService assignmentService;
 
-    public ProjectService(ProjectRepo projectRepo) {
+    public ProjectService(ProjectRepo projectRepo, AssignmentService assignmentService) {
         this.projectRepo = projectRepo;
+        this.assignmentService = assignmentService;
     }
 
-    private void validateProject(Project project) {
+    private void validateProjectData(Project project) {
 
         if (project.getName() == null || project.getName().trim().isEmpty()) {
             throw new ValidationException("Project name is required");
@@ -45,13 +47,14 @@ public class ProjectService {
         }
     }
 
-    public void validateProjectExists(int projectId) {
+    public void validateProjectExists(int projectId, Profile profile) {
         try {
             if (!projectRepo.projectExists(projectId)) {
                 throw new ResourceNotFoundException(
                         "project " + projectId + " does not exist"
                 );
             }
+            assignmentService.validateUserHasAccessToProject(projectId, profile);
         } catch (DataAccessException ex) {
             throw new DatabaseOperationException("Failed to retrieve data for project", ex);
         }
@@ -67,10 +70,10 @@ public class ProjectService {
     }
 
     public Project getSingleProject(int projectId) {
+        validateProjectExists(projectId);
         try {
             Project project = projectRepo.getSingleProject(projectId);
-            project.setEstimatedEndDate(calculateExpectedProjectEndDate(project,.size));
-            project.setPrice(calculateProjectPrice(project,list));
+            setPriceAndEndDateForProject(project);
             return project;
         } catch (DataAccessException ex) {
             throw new DatabaseOperationException("Failed to retrieve data for project", ex);
@@ -79,7 +82,7 @@ public class ProjectService {
     }
 
     public void saveProject(Project project) {
-        validateProject(project);
+        validateProjectData(project);
 
         try {
             projectRepo.createProject(project);
@@ -89,7 +92,7 @@ public class ProjectService {
     }
 
     public void updateProject(int projectId, Project updateProject) {
-        validateProject(updateProject);
+        validateProjectData(updateProject);
         validateProjectExists(projectId);
 
         try {
@@ -109,9 +112,17 @@ public class ProjectService {
         }
     }
 
-    private LocalDate calculateExpectedProjectEndDate(Project project, int numberOfWorkers) {
+    private void setPriceAndEndDateForProject(Project project) {
+        List<Profile> employees = assignmentService.getEmployees;
+        int numberOfEmployees = employees.size();
+        project.setNumberOfEmployees(numberOfEmployees);
+        project.setPrice(calculateProjectPrice(project,employees));
+        project.setEstimatedEndDate(calculateExpectedProjectEndDate(project,numberOfEmployees));
+    }
 
-        int hoursPerDay = numberOfWorkers * 8;
+    private LocalDate calculateExpectedProjectEndDate(Project project, int numberOfEmployees) {
+
+        int hoursPerDay = numberOfEmployees * 8;
         int workDays = (int) Math.ceil((double) project.getEstimatedHours() / hoursPerDay);
 
         LocalDate date = project.getCreationDate();
@@ -129,13 +140,13 @@ public class ProjectService {
         return date;
     }
 
-    private double calculateProjectPrice(Project project, List<Profile> workers) {
+    private double calculateProjectPrice(Project project, List<Profile> employees) {
 
-        double hoursPerUser = (double) project.getEstimatedHours() / workers.size();
+        double hoursPerUser = (double) project.getEstimatedHours() / employees.size();
         double total = 0;
 
-        for (Profile worker : workers) {
-            total += worker.getHourlyRate() * hoursPerUser;
+        for (Profile employee : employees) {
+            total += employee.getHourlyRate() * hoursPerUser;
         }
 
         return total;

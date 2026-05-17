@@ -23,6 +23,7 @@ public class Project {
     private LocalDate creationDate;
     private double price;
     private LocalDate estimatedEndDate;
+    private int numberOfEmployees;
 
 
 // CONSTRUCTORS
@@ -74,6 +75,10 @@ public class Project {
         return estimatedEndDate;
     }
 
+    public int getNumberOfEmployees() {
+        return numberOfEmployees;
+    }
+
     // SETTERS
 
     public void setId(int id) {
@@ -106,5 +111,9 @@ public class Project {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public void setNumberOfEmployees(int numberOfEmployees) {
+        this.numberOfEmployees = numberOfEmployees;
     }
 }
