@@ -72,7 +72,7 @@ public class UserController {
         User updatedUser = userService.findUserByEmail(profile.getEmail());
 
         session.setAttribute("user", updatedUser);
-        return "redirect:/profile_details";
+        return "redirect:/auth/show_users";
 
     }
 

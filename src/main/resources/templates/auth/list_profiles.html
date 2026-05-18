@@ -1,45 +1,41 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <title>All Users</title>
     <meta charset="UTF-8">
-    <title>Users</title>
 </head>
+
 <body>
 
-<div th:replace="navigationbar/navbar :: navbar"></div>
+<h1>All Users</h1>
 
-<div>
-    <h1>All Users</h1>
-    <p><a href="/">← Tilbage</a></p>
+<table border="1">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Username</th>
+        <th>Email</th>
+        <th>Hourly Rate</th>
+        <th>Role</th>
+        <th>Actions</th> <!-- 👈 ny kolonne -->
+    </tr>
+    </thead>
 
-    <table th:if="${users != null and !tasks.isEmpty()}">
-        <thead>
-        <tr>
-            <th>Name</th>
-            <th>Description</th>
-            <th>Estimated hours</th>
-            <th>Handling</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="task : ${tasks}">
-            <td th:text="${task.name}"></td>
-            <td th:text="${task.description}"></td>
-            <td th:text="${task.estimatedHours}"></td>
-            <td>
-                <a th:href="@{|/projects/${projectId}/subprojects/${subprojectId}/tasks/${task.id}/edit|}">Edit</a>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+    <tbody>
+    <tr th:each="user : ${getUsers}">
+        <td th:text="${user.id}"></td>
+        <td th:text="${user.username}"></td>
+        <td th:text="${user.email}"></td>
+        <td th:text="${user.hourlyRate}"></td>
+        <td th:text="${user.role}"></td>
+        <td>
+            <a th:href="@{/auth/edit/profile/{id}(id=${user.id})}">
+                Edit
+            </a>
+        </td>
+    </tr>
+    </tbody>
+</table>
 
-    <!-- Hvis der ikke er nogen projekter -->
-    <div th:if="${tasks == null or tasks.isEmpty()}">
-        <h3>Du har ingen tasks endnu</h3>
-        <p>Opret din første task for at komme i gang.</p>
-    </div>
-</div>
-
-<a th:href="@{|/projects/${projectId}/subprojects/${subprojectId}/tasks/create|}">Create new task</a>
 </body>
 </html>
