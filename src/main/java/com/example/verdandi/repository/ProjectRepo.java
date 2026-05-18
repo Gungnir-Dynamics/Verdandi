@@ -63,7 +63,31 @@ public class ProjectRepo {
         return jdbcTemplate.queryForObject(sql, rowMapper, projectId);
     }
 
-    public void createProject(Project project) {
+    public List<Project> getAssignedProjects(int profileId) {
+        String sql = """
+                SELECT 
+                    p.project_id,
+                    p.name,
+                    p.description,
+                    p.created_date,
+                    p.deadline,
+                    COALESCE(SUM(t.estimated_hours), 0) AS estimated_hours
+                       FROM project p
+                       JOIN assignment a
+                           ON a.project_id = p.project_id
+                       LEFT JOIN sub_project sp
+                           ON sp.project_id = p.project_id
+                       LEFT JOIN task t
+                           ON t.sub_project_id = sp.sub_project_id
+                       WHERE a.profile_id = ?
+                       GROUP BY p.project_id, p.name, p.description, p.created_date, p.deadline;
+                """;
+        return jdbcTemplate.query(sql, rowMapper, profileId);
+
+    }
+
+
+    public void createProject(Project project){
         String sql = "INSERT INTO Project (name, description, deadline) values (?, ?, ?)";
         jdbcTemplate.update(
                 sql,
