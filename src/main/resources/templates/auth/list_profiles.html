@@ -2,17 +2,17 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Tasks</title>
+    <title>Users</title>
 </head>
 <body>
 
 <div th:replace="navigationbar/navbar :: navbar"></div>
 
 <div>
-    <h1>Mine Projekter</h1>
+    <h1>All Users</h1>
     <p><a href="/">← Tilbage</a></p>
 
-    <table th:if="${tasks != null and !tasks.isEmpty()}">
+    <table th:if="${users != null and !tasks.isEmpty()}">
         <thead>
         <tr>
             <th>Name</th>

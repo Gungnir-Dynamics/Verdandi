@@ -102,4 +102,14 @@ public class UserController {
         session.invalidate();
         return "redirect:/";
     }
+
+    @GetMapping("/show_users")
+    public String showUsers(HttpSession session, Model model) {
+
+//        User user = (User) session.getAttribute("user");
+
+        model.addAttribute("getUsers", userService.getUsers());
+        return "/auth/list_profiles";
+    }
+
 }

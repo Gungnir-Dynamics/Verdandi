@@ -7,6 +7,8 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 
 @Service
 public class UserService {
@@ -105,5 +107,9 @@ public class UserService {
     public void editProfile(User user) {
         validateUser(user);
         repository.editProfile(user);
+    }
+
+    public List<User> getUsers(){
+        return repository.getUsers();
     }
 }
