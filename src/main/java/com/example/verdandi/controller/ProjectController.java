@@ -17,11 +17,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class ProjectController {
 
     private final ProjectService projectService;
-    private final ProjectRepo projectRepo;
 
-    public ProjectController(ProjectService projectService, ProjectRepo projectRepo){
+    public ProjectController(ProjectService projectService){
         this.projectService = projectService;
-        this.projectRepo = projectRepo;
     }
 
     @GetMapping("")

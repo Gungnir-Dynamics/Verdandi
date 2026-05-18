@@ -1,14 +1,11 @@
 package com.example.verdandi.service;
 
 import com.example.verdandi.exception.ValidationException;
-import com.example.verdandi.model.Project;
 import com.example.verdandi.model.User;
 import com.example.verdandi.repository.UserRepo;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Locale;
 
 
 @Service
@@ -74,11 +71,6 @@ public class UserService {
 
             throw new ValidationException("Email already exists");
         }
-        User existingUsername = repository.findUserByUsername(user.getUsername());
-
-        if (existingUsername != null && existingUsername.getId() != user.getId()) {
-            throw new ValidationException("Username already exists");
-        }
     }
 
 
@@ -99,11 +91,6 @@ public class UserService {
     //TIDELIGERE OPGAVE LIGGER DEN I CONTROLLER
     public boolean isLoggedIn(HttpSession session) {
         return session.getAttribute("user") != null;
-    }
-
-    public boolean isAdmin(HttpSession session) {
-        User user = (User) session.getAttribute("user");
-        return user != null && user.getRole().equals("admin");
     }
 
     @Transactional

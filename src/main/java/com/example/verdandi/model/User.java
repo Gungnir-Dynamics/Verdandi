@@ -1,6 +1,5 @@
 package com.example.verdandi.model;
 
-
 public class User {
     private int id;
     private String username;
@@ -77,5 +76,11 @@ public class User {
 
     public void setHourlyRate(int hourlyRate) {
         this.hourlyRate = hourlyRate;
+    }
+
+    // Method ADMIN/USER
+
+    public boolean isAdmin() {
+        return role.equalsIgnoreCase("Admin");
     }
 }

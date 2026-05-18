@@ -14,11 +14,9 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
-    private final ProjectService projectService;
 
-    public UserController(UserService userService, ProjectService projectService) {
+    public UserController(UserService userService) {
         this.userService = userService;
-        this.projectService = projectService;
     }
 
     @GetMapping("/register")

@@ -96,32 +96,6 @@ public class UserRepo {
         return jdbcTemplate.queryForObject(sql, rowMapper, id);
     }
 
-    public User findUserByUsername(String username) {
-
-        String sql = """
-                SELECT 
-                    p.profile_id, 
-                    p.username, 
-                    p.email, 
-                    p.password, 
-                    p.hourly_rate, 
-                    r.role_name
-                FROM 
-                    profile p 
-                LEFT JOIN
-                    role r
-                ON
-                    r.role_id = p.role_id
-                WHERE 
-                    p.username = ?
-                """;
-        try {
-
-            return jdbcTemplate.queryForObject(sql, rowMapper, username);
-        } catch (Exception e) {
-            return null;
-        }
-    }
 
     public int findRoleIdByName(String roleName) {
         String sql = """
