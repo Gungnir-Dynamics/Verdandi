@@ -65,15 +65,11 @@ public class UserRepo {
                 
                 WHERE p.email = ?
                 """;
-        try {
-            return jdbcTemplate.queryForObject(sql, rowMapper, email);
 
-        } catch (Exception e) {
-            return null;
-        }
+            return jdbcTemplate.queryForObject(sql, rowMapper, email);
     }
 
-    public User findUserById(int id) {
+    public User findUserById(int profileId) {
 
         String sql = """
                 SELECT 
@@ -93,7 +89,7 @@ public class UserRepo {
                     p.profile_id = ?
                 """;
 
-        return jdbcTemplate.queryForObject(sql, rowMapper, id);
+        return jdbcTemplate.queryForObject(sql, rowMapper, profileId);
     }
 
 
@@ -136,28 +132,30 @@ public class UserRepo {
 
     public void editProfile(User user) {
         String sql = """
-                UPDATE profile 
+                UPDATE profile p
                 SET 
-                    username = ?, 
-                    password = ?, 
-                    email = ? 
+                    p.username = ?, 
+                    p.password = ?, 
+                    p.email = ?,
+                    role_id =?
                 WHERE 
                     profile_id = ?
                 """;
+        int roleId = findRoleIdByName(user.getRole());
         jdbcTemplate.update(
                 sql,
                 user.getUsername(),
                 user.getPassword(),
                 user.getEmail(),
-                user.getId()
-        );
+                user.getId(),
+                roleId);
     }
 
-    public void deleteProfile(String email) {
+    public void deleteProfile(int profileId) {
         String sql = """
                 DELETE FROM profile
-                WHERE email = ?
+                WHERE profile_id = ?
                 """;
-        jdbcTemplate.update(sql, email);
+        jdbcTemplate.update(sql, profileId);
     }
 }

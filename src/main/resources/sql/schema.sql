@@ -39,7 +39,7 @@ create table role(
 
 create table profile(
                         profile_id int auto_increment,
-                        username varchar(100) not null unique,
+                        username varchar(100) not null,
                         email varchar(100) not null unique,
                         password varchar(30) not null,
                         hourly_rate int not null,

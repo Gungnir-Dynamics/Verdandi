@@ -91,6 +91,11 @@ public class UserService {
         return session.getAttribute("user") != null;
     }
 
+    public User findUserById(int profileId) {
+
+       return repository.findUserById(profileId);
+    }
+
     @Transactional
     public void saveUser(User user) {
         validateUser(user);

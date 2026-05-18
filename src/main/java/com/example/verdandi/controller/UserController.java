@@ -1,6 +1,7 @@
 package com.example.verdandi.controller;
 
 import com.example.verdandi.model.User;
+import com.example.verdandi.repository.UserRepo;
 import com.example.verdandi.service.ProjectService;
 import com.example.verdandi.service.UserService;
 import jakarta.servlet.http.HttpSession;
@@ -54,16 +55,14 @@ public class UserController {
         return "auth/login";
     }
 
-    @GetMapping("/editProfile")
-    public String showEditProfile(Model model, HttpSession session) {
-        User user = (User) session.getAttribute("user");
+    @GetMapping("/edit/profile/{profileId}")
+    public String showEditProfile(Model model, @PathVariable int profileId) {
 
-        if (user == null) {
-            return "redirect:/";
-        }
+        User user = userService.findUserById(profileId);
 
         model.addAttribute("user", user);
-        return "auth/editProfile";
+
+        return "auth/edit_profile";
     }
 
     @PostMapping("/editProfile")
