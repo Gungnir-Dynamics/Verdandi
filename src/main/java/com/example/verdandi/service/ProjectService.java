@@ -58,15 +58,6 @@ public class ProjectService {
         }
     }
 
-
-    public List<Project> getMultipleProjects() {
-        try {
-            return projectRepo.getMultipleProjects();
-        } catch (DataAccessException ex) {
-            throw new DatabaseOperationException("Failed to retrieve data for project", ex);
-        }
-    }
-
     public Project getSingleProject(int projectId) {
         try {
             return projectRepo.getSingleProject(projectId);
@@ -77,22 +68,27 @@ public class ProjectService {
     }
 
     public List<Project> getProjects(int profileId, User user) {
-        if (user.isAdmin()) {
-            return projectRepo.getMultipleProjects();
 
+        if (user.isAdmin()) {
+
+            try {
+
+                return projectRepo.getMultipleProjects();
+
+            } catch (DataAccessException ex) {
+
+                throw new DatabaseOperationException("Failed to retrieve data projects", ex);
+            }
         } else {
 
-            return projectRepo.getAssignedProjects(profileId);
-        }
-    }
+            try {
 
-    public List<Project> getAssignedProjects(int profileId) {
+                return projectRepo.getAssignedProjects(profileId);
 
-        try {
-            return projectRepo.getAssignedProjects(profileId);
+            } catch (DataAccessException ex) {
 
-        } catch (DataAccessException ex) {
-            throw new DatabaseOperationException("Failed to retrieve data for project", ex);
+                throw new DatabaseOperationException("Failed to retrieve data projects", ex);
+            }
         }
     }
 
