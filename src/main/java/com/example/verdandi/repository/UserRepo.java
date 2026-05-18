@@ -1,6 +1,7 @@
 package com.example.verdandi.repository;
 
 import com.example.verdandi.model.User;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -89,7 +90,15 @@ public class UserRepo {
                     p.profile_id = ?
                 """;
 
-        return jdbcTemplate.queryForObject(sql, rowMapper, profileId);
+        // Try/Catch til repo test
+        try {
+
+            return jdbcTemplate.queryForObject(sql, rowMapper, profileId);
+
+        } catch (EmptyResultDataAccessException ex) {
+
+            return null;
+        }
     }
 
 
@@ -132,11 +141,11 @@ public class UserRepo {
 
     public void editProfile(User user) {
         String sql = """
-                UPDATE profile p
+                UPDATE profile
                 SET 
-                    p.username = ?, 
-                    p.password = ?, 
-                    p.email = ?,
+                    username = ?, 
+                    password = ?, 
+                    email = ?,
                     role_id =?
                 WHERE 
                     profile_id = ?

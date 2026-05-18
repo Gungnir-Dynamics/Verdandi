@@ -3,7 +3,9 @@ package com.example.verdandi.controller;
 import com.example.verdandi.exception.ValidationException;
 import com.example.verdandi.model.Project;
 import com.example.verdandi.model.Task;
+import com.example.verdandi.model.User;
 import com.example.verdandi.service.ProjectService;
+import com.example.verdandi.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +31,7 @@ class ProjectControllerTest {
 
     @MockitoBean
     private ProjectService projectService;
+    private UserService userService;
 
 
     @Autowired
@@ -38,19 +41,25 @@ class ProjectControllerTest {
     @Test
     void MyProjects_ShouldReturnProjects() throws Exception {
 
+        User user = new User(1, "ProjectControllerTEST", "1234", "Test@mail.com", 1, "admin");
+
         Project project1 = new Project();
         project1.setId(1);
         project1.setName("Website Redesign");
         project1.setDescription("Test project");
 
+
+
         Project project2 = new Project();
         project2.setId(2);
         project2.setName("Mobil App development");
 
-        when(projectService.getMultipleProjects()).thenReturn(List.of(project1, project2));
+        when(userService.findUserById(anyInt())).thenReturn(user);
+        when(projectService.getProjects(1, user)).thenReturn(List.of(project1, project2));
 
 
-        mockMvc.perform(get("/projects"))
+        mockMvc.perform(get("/projects")
+                .sessionAttr("user", user))
                 .andExpect(status().isOk())
                 .andExpect(view().name("/project/projects"))
                 .andExpect(model().attributeExists("myProjects"));
