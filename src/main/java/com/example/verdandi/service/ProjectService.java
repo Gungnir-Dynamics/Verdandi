@@ -1,5 +1,6 @@
 package com.example.verdandi.service;
 
+import com.example.verdandi.exception.AccessDeniedException;
 import com.example.verdandi.exception.DatabaseOperationException;
 import com.example.verdandi.exception.ResourceNotFoundException;
 import com.example.verdandi.exception.ValidationException;
@@ -16,11 +17,9 @@ import java.util.List;
 @Service
 public class ProjectService {
     private final ProjectRepo projectRepo;
-    private final AssignmentService assignmentService;
 
-    public ProjectService(ProjectRepo projectRepo, AssignmentService assignmentService) {
+    public ProjectService(ProjectRepo projectRepo) {
         this.projectRepo = projectRepo;
-        this.assignmentService = assignmentService;
     }
 
     private void validateProjectData(Project project) {
@@ -48,14 +47,13 @@ public class ProjectService {
         }
     }
 
-    public void validateProjectExists(int projectId, Profile profile) {
+    public void validateProjectExists(int projectId) {
         try {
             if (!projectRepo.projectExists(projectId)) {
                 throw new ResourceNotFoundException(
                         "project " + projectId + " does not exist"
                 );
             }
-            assignmentService.validateUserHasAccessToProject(projectId, profile);
         } catch (DataAccessException ex) {
             throw new DatabaseOperationException("Failed to retrieve data for project", ex);
         }
@@ -130,11 +128,11 @@ public class ProjectService {
     }
 
     private void setPriceAndEndDateForProject(Project project) {
-        List<Profile> employees = assignmentService.getEmployees;
+        List<User> employees = getEmployees;
         int numberOfEmployees = employees.size();
         project.setNumberOfEmployees(numberOfEmployees);
-        project.setPrice(calculateProjectPrice(project,employees));
-        project.setEstimatedEndDate(calculateExpectedProjectEndDate(project,numberOfEmployees));
+        project.setPrice(calculateProjectPrice(project, employees));
+        project.setEstimatedEndDate(calculateExpectedProjectEndDate(project, numberOfEmployees));
     }
 
     private LocalDate calculateExpectedProjectEndDate(Project project, int numberOfEmployees) {
@@ -157,15 +155,25 @@ public class ProjectService {
         return date;
     }
 
-    private double calculateProjectPrice(Project project, List<Profile> employees) {
+    private double calculateProjectPrice(Project project, List<User> employees) {
 
         double hoursPerUser = (double) project.getEstimatedHours() / employees.size();
         double total = 0;
 
-        for (Profile employee : employees) {
+        for (User employee : employees) {
             total += employee.getHourlyRate() * hoursPerUser;
         }
 
         return total;
+    }
+
+    public void validateUserHasAccessToProject(int projectId, User user) {
+
+        if (!user.isAdmin()) {
+            if (!projectRepo.userHasAccessToProject(user.getId(), projectId)) {
+                throw new AccessDeniedException("You do not have access to this project");
+            }
+        }
+
     }
 }
