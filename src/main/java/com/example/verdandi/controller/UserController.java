@@ -46,17 +46,7 @@ public class UserController {
         if (userService.login(email, password)) {
             session.setAttribute("user", userService.findUserByEmail(email));
 
-            User user = (User) session.getAttribute("user");
-
-            // Admin/User redirect
-            if (user.getRole().equalsIgnoreCase("Admin")) {
-
                 return "redirect:/projects";
-
-            } else {
-
-                return "redirect:/projects/my_projects";
-            }
 
         }
         // WRONG INPUT

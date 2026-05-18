@@ -63,7 +63,7 @@ import java.util.List;
         return jdbcTemplate.queryForObject(sql, rowMapper, projectId);
     }
 
-    public List<Project> getAssignedProjects(int id) {
+    public List<Project> getAssignedProjects(int profileId) {
         String sql = """
                 SELECT 
                     p.project_id,
@@ -82,7 +82,7 @@ import java.util.List;
                        WHERE a.profile_id = ?
                        GROUP BY p.project_id, p.name, p.description, p.created_date, p.deadline;
                 """;
-        return jdbcTemplate.query(sql, rowMapper, id);
+        return jdbcTemplate.query(sql, rowMapper, profileId);
 
     }
 

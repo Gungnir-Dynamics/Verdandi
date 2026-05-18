@@ -27,7 +27,7 @@ public class UserService {
             throw new ValidationException("Username must be at least 3 characters");
         }
 
-        if (user.getUsername().length() > 10) {
+        if (user.getUsername().length() > 100) {
             throw new ValidationException("Username cannot be more than 10 characters");
         }
 
@@ -55,21 +55,19 @@ public class UserService {
             throw new ValidationException("Must select a role");
         }
 
-        String role = user.getRole().trim().toLowerCase();
-        user.setRole(role);
 
-        if (!role.equals("admin") && !role.equals("user")) {
-            throw new ValidationException("Invalid role selected");
-        }
-    }
+        // Roll down menu i HTML
+//        String role = user.getRole().trim().toLowerCase();
+//        user.setRole(role);
+//
+//        if (!role.equals("admin") && !role.equals("user")) {
+//            throw new ValidationException("Invalid role selected");
+//        }
 
-    public void validateUserExists(User user) {
+        User existingUser = repository.findUserByEmail(user.getEmail());
 
-        User existingEmail = repository.findUserByEmail(user.getEmail());
-
-        if (existingEmail != null && existingEmail.getId() != user.getId()) {
-
-            throw new ValidationException("Email already exists");
+        if (existingUser != null && existingUser.getId() != user.getId()) {
+            throw new ValidationException("User with " + existingUser.getEmail() + " already exists");
         }
     }
 
@@ -96,13 +94,11 @@ public class UserService {
     @Transactional
     public void saveUser(User user) {
         validateUser(user);
-        validateUserExists(user);
         repository.saveUser(user);
     }
 
     public void editProfile(User user) {
         validateUser(user);
-        validateUserExists(user);
         repository.editProfile(user);
     }
 }

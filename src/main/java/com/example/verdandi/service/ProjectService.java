@@ -4,6 +4,7 @@ import com.example.verdandi.exception.DatabaseOperationException;
 import com.example.verdandi.exception.ResourceNotFoundException;
 import com.example.verdandi.exception.ValidationException;
 import com.example.verdandi.model.Project;
+import com.example.verdandi.model.User;
 import com.example.verdandi.repository.ProjectRepo;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
@@ -73,6 +74,16 @@ public class ProjectService {
             throw new DatabaseOperationException("Failed to retrieve data for project", ex);
         }
 
+    }
+
+    public List<Project> getProjects(int profileId, User user) {
+        if (user.isAdmin()) {
+            return projectRepo.getMultipleProjects();
+
+        } else {
+
+            return projectRepo.getAssignedProjects(profileId);
+        }
     }
 
     public List<Project> getAssignedProjects(int profileId) {

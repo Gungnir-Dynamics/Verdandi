@@ -4,7 +4,6 @@ package com.example.verdandi.controller;
 import com.example.verdandi.exception.ValidationException;
 import com.example.verdandi.model.Project;
 import com.example.verdandi.model.User;
-import com.example.verdandi.repository.ProjectRepo;
 import com.example.verdandi.service.ProjectService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
@@ -18,31 +17,19 @@ public class ProjectController {
 
     private final ProjectService projectService;
 
-    public ProjectController(ProjectService projectService){
+    public ProjectController(ProjectService projectService ){
         this.projectService = projectService;
     }
 
     @GetMapping("")
-    public String getMyProjects(Model model){
-        model.addAttribute("myProjects", projectService.getMultipleProjects());
-        return "/project/projects";
-    }
-
-
-    // Timothy's Tilføjelse -
-    // Virkede ikke i UserController da URL ikke passer
-    @GetMapping("/my_projects")
-    public String getAssignedProjects(HttpSession session, Model model) {
+    public String getProjects(Model model, HttpSession session){
 
         User user = (User) session.getAttribute("user");
 
-        if (user == null) {
-            return "redirect:/auth/login";
-        }
-        model.addAttribute("myProjects", projectService.getAssignedProjects(user.getId()));
-        return "/project/my_projects";
-
+        model.addAttribute("myProjects", projectService.getProjects(user.getId(), user));
+        return "/project/projects";
     }
+
 
     @GetMapping("/create")
     public String showCreationForm(Model model){
