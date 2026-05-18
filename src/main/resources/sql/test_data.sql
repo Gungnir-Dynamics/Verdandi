@@ -52,3 +52,45 @@ INSERT INTO task (name, description, estimated_hours, sub_project_id) VALUES
 ('Dokumentér krav', 'Skriv detaljeret kravsspecifikation', 35, 8),
 ('Analyse af nuværende system', 'Kortlægning af nuværende processer', 30, 8),
 ('Data migration plan', 'Plan for overførsel af data', 25, 10);
+
+-- ==================== ROLES ====================
+INSERT INTO role (role_name) VALUES
+                                 ('admin'),
+                                 ('user');
+
+
+-- ==================== PROFILES ====================
+INSERT INTO profile (username, email, password, hourly_rate, role_id) VALUES
+                                                                          ('Anders Jensen', 'anders@example.com', 'anders123', 850, 1),
+                                                                          ('Mette Larsen', 'mette@example.com', 'mette123', 650, 2),
+                                                                          ('Jonas Nielsen', 'jonas@example.com', 'jonas123', 700, 2),
+                                                                          ('Sofie Hansen', 'sofie@example.com', 'sofie123', 950, 1),
+                                                                          ('Frederik Pedersen', 'frederik@example.com', 'frederik123', 600, 2),
+                                                                          ('Emma Christensen', 'emma@example.com', 'emma123', 750, 2),
+                                                                          ('Lucas Mortensen', 'lucas@example.com', 'lucas123', 500, 2),
+                                                                          ('Ida Sørensen', 'ida@example.com', 'ida123', 680, 2);
+
+
+-- ==================== ASSIGNMENTS ====================
+INSERT INTO assignment (profile_id, project_id) VALUES
+
+-- Website Redesign
+(1, 1),
+(2, 1),
+(3, 1),
+(7, 1),
+
+-- Mobil App Udvikling
+(1, 2),
+(5, 2),
+(6, 2),
+
+-- ERP System
+(4, 3),
+(2, 3),
+(8, 3),
+
+-- Marketing Campaign
+(4, 4),
+(6, 4),
+(7, 4);

@@ -3,7 +3,9 @@ package com.example.verdandi.controller;
 
 import com.example.verdandi.exception.ValidationException;
 import com.example.verdandi.model.Project;
+import com.example.verdandi.model.User;
 import com.example.verdandi.service.ProjectService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -15,15 +17,19 @@ public class ProjectController {
 
     private final ProjectService projectService;
 
-    public ProjectController(ProjectService projectService){
+    public ProjectController(ProjectService projectService ){
         this.projectService = projectService;
     }
 
     @GetMapping("")
-    public String getMyProjects(Model model){
-        model.addAttribute("myProjects", projectService.getMultipleProjects());
+    public String getProjects(Model model, HttpSession session){
+
+        User user = (User) session.getAttribute("user");
+
+        model.addAttribute("myProjects", projectService.getProjects(user.getId(), user));
         return "/project/projects";
     }
+
 
     @GetMapping("/create")
     public String showCreationForm(Model model){
