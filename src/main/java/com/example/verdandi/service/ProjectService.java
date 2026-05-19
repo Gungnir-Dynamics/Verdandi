@@ -201,4 +201,11 @@ public class ProjectService {
             throw new AccessDeniedException("You do not have access to this project");
         }
     }
+
+    //brug denne i stedet for validateProjectExists
+    public void validateProjectAccess(int projectId, User user) {
+        validateProjectExists(projectId);
+        validateUserHasAccessToProject(projectId, user);
+    }
+
 }
