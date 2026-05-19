@@ -112,4 +112,8 @@ public class UserService {
     public List<User> getUsers(){
         return repository.getUsers();
     }
+
+    public void deleteUser (int profileId){
+        repository.deleteProfile(profileId);
+    }
 }

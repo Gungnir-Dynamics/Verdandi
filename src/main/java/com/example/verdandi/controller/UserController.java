@@ -112,4 +112,10 @@ public class UserController {
         return "/auth/list_profiles";
     }
 
+    @PostMapping("/{profileId}/delete")
+    public String deleteUser (@PathVariable int profileId){
+        userService.deleteUser(profileId);
+        return "redirect:/show_users";
+    }
+
 }
