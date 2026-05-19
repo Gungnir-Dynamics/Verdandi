@@ -41,6 +41,7 @@ public class UserRepo {
     public List<Role> getRoles() {
         String sql = """
                 SELECT 
+                    role_id,
                     role_name
                 FROM
                     role
