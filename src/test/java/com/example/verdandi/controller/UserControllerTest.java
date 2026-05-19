@@ -6,14 +6,12 @@ import jakarta.servlet.http.HttpSession;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
-import org.mockito.Mock;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
-
-import java.rmi.server.ExportException;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
@@ -51,9 +49,7 @@ class UserControllerTest {
         session = new MockHttpSession();
         session.setAttribute("user", user);
 
-
     }
-
 
     @Test
     void registerPage() throws Exception {
@@ -109,7 +105,15 @@ class UserControllerTest {
     }
 
     @Test
-    void showEditProfile() {
+    void showEditProfileWhenLoggedIn() throws Exception {
+
+        when(service.findUserById(10)).thenReturn(user);
+
+        mockMvc.perform(get("/auth/edit/profile/{profileId}", 10)
+                        .session((MockHttpSession) session))
+                .andExpect(status().isOk())
+                .andExpect(view().name("auth/edit_profile"))
+                .andExpect(model().attributeExists("user"));
     }
 
     @Test
@@ -125,6 +129,11 @@ class UserControllerTest {
     }
 
     @Test
-    void logout() {
+    void logout() throws Exception {
+        mockMvc.perform(get("/auth/logout").session((MockHttpSession) session))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/"));
+
+        assert ((MockHttpSession) session).isInvalid();
     }
 }
