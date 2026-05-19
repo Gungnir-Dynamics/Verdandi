@@ -5,7 +5,7 @@ public class User {
     private String username;
     private String password;
     private String email;
-    private String role;
+    private Role role;
     private int hourlyRate;
 
     public User() {
@@ -16,7 +16,7 @@ public class User {
                 String password,
                 String email,
                 int hourlyRate,
-                String role) {
+                Role role) {
 
         this.id = id;
         this.username = username;
@@ -49,7 +49,7 @@ public class User {
         return hourlyRate;
     }
 
-    public String getRole() {
+    public Role getRole() {
         return role;
     }
 
@@ -70,7 +70,7 @@ public class User {
         this.email = email;
     }
 
-    public void setRole(String role) {
+    public void setRole(Role role) {
         this.role = role;
     }
 
@@ -81,6 +81,16 @@ public class User {
     // Method ADMIN/USER
 
     public boolean isAdmin() {
-        return role.equalsIgnoreCase("Admin");
+
+    User user = new User();
+
+        if (user.getRole().equals("Admin")) {
+
+            return user.isAdmin();
+
+        } else {
+
+            return user.equals("user");
+        }
     }
 }

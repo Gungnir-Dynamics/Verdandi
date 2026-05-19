@@ -1,5 +1,6 @@
 package com.example.verdandi.repository;
 
+import com.example.verdandi.model.Role;
 import com.example.verdandi.model.User;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -17,13 +18,21 @@ public class UserRepo {
     }
 
     private final RowMapper<User> rowMapper = (rs, rowNum) -> {
+
+
         User user = new User();
+        Role role = new Role();
+
         user.setId(rs.getInt("profile_id"));
         user.setUsername(rs.getString("username"));
         user.setPassword(rs.getString("password"));
         user.setEmail(rs.getString("email"));
         user.setHourlyRate(rs.getInt("hourly_rate"));
-        user.setRole(rs.getString("role_name"));
+
+        role.setRoleName(rs.getString("role_name"));
+        role.setId(rs.getInt("role_id"));
+
+        user.setRole(role);
 
         return user;
     };
@@ -118,7 +127,6 @@ public class UserRepo {
                 VALUES (?, ?, ?, ?, ?)
                 """;
 
-        int roleId = findRoleIdByName(user.getRole());
 
         jdbcTemplate.update(
                 sql,
@@ -126,29 +134,30 @@ public class UserRepo {
                 user.getPassword(),
                 user.getEmail(),
                 user.getHourlyRate(),
-                roleId);
+                user.getRole().getId());
 
     }
 
     public void editProfile(User user) {
         String sql = """
-                UPDATE profile p
+                UPDATE profile 
                 SET 
-                    p.username = ?, 
-                    p.password = ?, 
-                    p.email = ?,
+                    username = ?, 
+                    password = ?, 
+                    email = ?,
                     role_id =?
                 WHERE 
                     profile_id = ?
                 """;
-        int roleId = findRoleIdByName(user.getRole());
+
+
         jdbcTemplate.update(
                 sql,
                 user.getUsername(),
                 user.getPassword(),
                 user.getEmail(),
                 user.getId(),
-                roleId);
+                user.getRole().getId());
     }
 
     public void deleteProfile(int profileId) {
