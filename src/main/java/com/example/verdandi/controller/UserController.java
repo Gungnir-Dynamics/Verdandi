@@ -67,9 +67,10 @@ public class UserController {
 
     @PostMapping("/editProfile")
     public String editProfile(@ModelAttribute User profile, HttpSession session) {
+
         userService.editProfile(profile);
 
-        User updatedUser = userService.findUserByEmail(profile.getEmail());
+        User updatedUser = userService.findUserById(profile.getId());
 
         session.setAttribute("user", updatedUser);
         return "redirect:/auth/show_users";
@@ -115,7 +116,7 @@ public class UserController {
     @PostMapping("/{profileId}/delete")
     public String deleteUser (@PathVariable int profileId){
         userService.deleteUser(profileId);
-        return "redirect:/show_users";
+        return "redirect:/auth/show_users";
     }
 
 }

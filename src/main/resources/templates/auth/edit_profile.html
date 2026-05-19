@@ -24,8 +24,11 @@
     <label>Password:</label>
     <input type="text" th:field="*{password}" />
 
+    <br>
+
     <label>HourlyRate:</label>
     <input type="number" th:field="*{hourlyRate}" />
+    <br>
 
     <label>Role:</label>
     <input type="text" th:field="*{role}" />
@@ -33,14 +36,15 @@
     <br/>
 
     <button type="submit">Save</button>
+</form>
 
-    <form th:action="@{/auth/delete/${profileId}}" method="post"
-          onsubmit="return confirm('Are you sure you want to delete this entire project?\n\nNote: All sub-projects and their tasks will also be permanently deleted.')">
+    <form th:action="@{/auth/{id}/delete(id=${user.id})}" method="post"
+          onsubmit="return confirm('Are you sure you want to delete this User?')">
         <button type="submit" class="btn btn-danger">
-            Delete Project
+            Delete User
         </button>
     </form>
-</form>
+
 
 
 <a href="/auth/show_users">Back</a>

@@ -132,11 +132,11 @@ public class UserRepo {
 
     public void editProfile(User user) {
         String sql = """
-                UPDATE profile p
+                UPDATE profile
                 SET 
-                    p.username = ?, 
-                    p.password = ?, 
-                    p.email = ?,
+                    username = ?, 
+                    password = ?, 
+                    email = ?,
                     role_id =?
                 WHERE 
                     profile_id = ?
