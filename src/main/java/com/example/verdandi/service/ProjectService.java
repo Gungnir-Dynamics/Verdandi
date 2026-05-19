@@ -11,6 +11,8 @@ import com.example.verdandi.repository.ProjectRepo;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.List;
@@ -83,7 +85,7 @@ public class ProjectService {
             try {
 
                 List<Project> projects = projectRepo.getMultipleProjects();
-                for (Project project : projects){
+                for (Project project : projects) {
                     setPriceAndEndDateForProject(project);
                 }
                 return projects;
@@ -97,7 +99,7 @@ public class ProjectService {
             try {
 
                 List<Project> projects = projectRepo.getAssignedProjects(profileId);
-                for (Project project : projects){
+                for (Project project : projects) {
                     setPriceAndEndDateForProject(project);
                 }
                 return projects;
@@ -150,6 +152,10 @@ public class ProjectService {
 
     private LocalDate calculateExpectedProjectEndDate(Project project, int numberOfUsersOnProject) {
 
+        if (numberOfUsersOnProject == 0) {
+            return project.getCreationDate();
+        }
+
         int hoursPerDay = numberOfUsersOnProject * 8;
         int workDays = (int) Math.ceil((double) project.getEstimatedHours() / hoursPerDay);
 
@@ -170,6 +176,9 @@ public class ProjectService {
 
     private double calculateProjectPrice(Project project, List<User> users) {
 
+        if (users == null || users.isEmpty()) {
+            return 0.0;
+        }
         double hoursPerUser = (double) project.getEstimatedHours() / users.size();
         double total = 0;
 
@@ -177,7 +186,9 @@ public class ProjectService {
             total += employee.getHourlyRate() * hoursPerUser;
         }
 
-        return total;
+        return new BigDecimal(total)
+                .setScale(2, RoundingMode.HALF_UP)
+                .doubleValue();
     }
 
     public void validateUserHasAccessToProject(int projectId, User user) {
