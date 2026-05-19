@@ -37,6 +37,24 @@ public class UserRepo {
         return user;
     };
 
+
+    public List<Role> getRoles() {
+        String sql = """
+                SELECT 
+                    role_name
+                FROM
+                    role
+                """;
+        return jdbcTemplate.query(sql, (rs, rowNum) -> {
+            Role role = new Role();
+            role.setId(rs.getInt("role_id"));
+            role.setRoleName(rs.getString("role_name"));
+
+            return role;
+        });
+    }
+
+
     public List<User> getUsers() {
 
         String sql = """
@@ -46,6 +64,7 @@ public class UserRepo {
                     profile.password,
                     profile.email,
                     profile.hourly_rate,
+                    role.role_id,
                     role.role_name
                 FROM profile
                 LEFT JOIN role 
@@ -64,7 +83,8 @@ public class UserRepo {
                     p.password, 
                     p.email, 
                     p.hourly_rate, 
-                    r.role_name
+                    r.role_name,
+                    r.role_id
                 FROM 
                     profile p
                 LEFT JOIN
@@ -75,7 +95,7 @@ public class UserRepo {
                 WHERE p.email = ?
                 """;
 
-            return jdbcTemplate.queryForObject(sql, rowMapper, email);
+        return jdbcTemplate.queryForObject(sql, rowMapper, email);
     }
 
     public User findUserById(int profileId) {
@@ -86,7 +106,8 @@ public class UserRepo {
                     p.username, 
                     p.email, 
                     p.password, 
-                    p.hourly_rate, 
+                    p.hourly_rate,
+                    r.role_id,
                     r.role_name
                 FROM 
                     profile p
@@ -101,19 +122,7 @@ public class UserRepo {
         return jdbcTemplate.queryForObject(sql, rowMapper, profileId);
     }
 
-
-    public int findRoleIdByName(String roleName) {
-        String sql = """
-                SELECT 
-                    r.role_id 
-                FROM 
-                    role r
-                WHERE 
-                    r.role_name = ?
-                """;
-
-        return jdbcTemplate.queryForObject(sql, Integer.class, roleName);
-    }
+    //  SAVE/CREATE USER/PROFILE
 
     public void saveUser(User user) {
 
@@ -138,6 +147,8 @@ public class UserRepo {
 
     }
 
+    // EDIT USER/PROFILE
+
     public void editProfile(User user) {
         String sql = """
                 UPDATE profile 
@@ -156,9 +167,11 @@ public class UserRepo {
                 user.getUsername(),
                 user.getPassword(),
                 user.getEmail(),
-                user.getId(),
-                user.getRole().getId());
+                user.getRole().getId(),
+                user.getId());
     }
+
+    // DELETE USER/PROFILE
 
     public void deleteProfile(int profileId) {
         String sql = """
@@ -168,3 +181,4 @@ public class UserRepo {
         jdbcTemplate.update(sql, profileId);
     }
 }
+

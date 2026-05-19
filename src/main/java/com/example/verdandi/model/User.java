@@ -78,19 +78,10 @@ public class User {
         this.hourlyRate = hourlyRate;
     }
 
-    // Method ADMIN/USER
-
+    // ADMIN CHECK METHOD
     public boolean isAdmin() {
 
-    User user = new User();
+        return role != null && "ADMIN".equalsIgnoreCase(role.getRoleName());
 
-        if (user.getRole().equals("Admin")) {
-
-            return user.isAdmin();
-
-        } else {
-
-            return user.equals("user");
-        }
     }
 }

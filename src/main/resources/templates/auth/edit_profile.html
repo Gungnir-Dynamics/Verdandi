@@ -24,7 +24,19 @@
 
     <br/>
 
+    <label>Role:</label>
+    <select th:field="{role.roleId}">
+        <option th:each="role : ${roles}"
+                th:value="${role.roleId}"
+                th:text="${role.roleName}">
+        </option>
+    </select>
+
+
+
     <button type="submit">Save</button>
+
+
 
 </form>
 
