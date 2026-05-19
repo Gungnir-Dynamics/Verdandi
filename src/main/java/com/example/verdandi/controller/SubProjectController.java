@@ -3,6 +3,7 @@ package com.example.verdandi.controller;
 
 import com.example.verdandi.exception.ValidationException;
 import com.example.verdandi.model.SubProject;
+import com.example.verdandi.service.ProjectService;
 import com.example.verdandi.service.SubProjectService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,9 +15,11 @@ import java.util.List;
 @RequestMapping("/projects/{projectId}/subprojects")
 public class SubProjectController {
     private final SubProjectService subProjectService;
+    private final ProjectService projectService;
 
-    public SubProjectController(SubProjectService subProjectService) {
+    public SubProjectController(SubProjectService subProjectService, ProjectService projectService) {
         this.subProjectService = subProjectService;
+        this.projectService = projectService;
     }
 
     @GetMapping("")
@@ -26,6 +29,7 @@ public class SubProjectController {
         List<SubProject> getSubProjects = subProjectService.getSubProjects(projectId);
         model.addAttribute("mySubProjects", getSubProjects);
         model.addAttribute("projectId", projectId);
+        model.addAttribute("project", projectService.getSingleProject(projectId));
         return "subproject/sub_projects";
     }
 
