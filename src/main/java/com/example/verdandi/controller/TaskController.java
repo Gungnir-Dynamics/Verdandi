@@ -2,6 +2,7 @@ package com.example.verdandi.controller;
 
 import com.example.verdandi.exception.ValidationException;
 import com.example.verdandi.model.Task;
+import com.example.verdandi.service.SubProjectService;
 import com.example.verdandi.service.TaskService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,9 +12,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/projects/{projectId}/subprojects/{subprojectId}/tasks")
 public class TaskController {
     private final TaskService taskService;
+    private final SubProjectService subProjectService;
 
-    public TaskController(TaskService taskService) {
+    public TaskController(TaskService taskService, SubProjectService subProjectService) {
         this.taskService = taskService;
+        this.subProjectService = subProjectService;
     }
 
     @GetMapping("")
@@ -22,6 +25,8 @@ public class TaskController {
                             Model model) {
         model.addAttribute("tasks", taskService.getTasksBySubproject(projectId, subprojectId));
         model.addAttribute("projectId", projectId);
+        model.addAttribute("subprojectId", subprojectId);
+        model.addAttribute("subproject", subProjectService.findSubProjectById(projectId, subprojectId));
         return "tasks/task-list";
     }
 
