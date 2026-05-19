@@ -86,6 +86,9 @@
             <th>Estimated Hours</th>
             <th>Creation Date</th>
             <th>Deadline</th>
+            <th>End Date</th>
+            <th>Price</th>
+            <th>Number Of Workers</th>
             <th style="width: 320px; text-align: right;">Actions</th>
         </tr>
         </thead>
@@ -97,6 +100,9 @@
             <td th:text="${project.estimatedHours}"></td>
             <td th:text="${project.creationDate}"></td>
             <td th:text="${project.deadline}"></td>
+            <td th:text="${project.estimatedEndDate}"></td>
+            <td th:text="${project.price}"></td>
+            <td th:text="${project.numberOfEmployees}"></td>
             <td>
                 <div class="actions">
                     <!-- Sub-projects -->

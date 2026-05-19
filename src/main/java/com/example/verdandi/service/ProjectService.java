@@ -6,6 +6,7 @@ import com.example.verdandi.exception.ResourceNotFoundException;
 import com.example.verdandi.exception.ValidationException;
 import com.example.verdandi.model.Project;
 import com.example.verdandi.model.User;
+import com.example.verdandi.repository.AssignmentRepo;
 import com.example.verdandi.repository.ProjectRepo;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
@@ -17,9 +18,13 @@ import java.util.List;
 @Service
 public class ProjectService {
     private final ProjectRepo projectRepo;
+    private final UserService userService;
+    private final AssignmentRepo assignmentRepo;
 
-    public ProjectService(ProjectRepo projectRepo) {
+    public ProjectService(ProjectRepo projectRepo, UserService userService, AssignmentRepo assignmentRepo) {
         this.projectRepo = projectRepo;
+        this.userService = userService;
+        this.assignmentRepo = assignmentRepo;
     }
 
     private void validateProjectData(Project project) {
@@ -77,7 +82,11 @@ public class ProjectService {
 
             try {
 
-                return projectRepo.getMultipleProjects();
+                List<Project> projects = projectRepo.getMultipleProjects();
+                for (Project project : projects){
+                    setPriceAndEndDateForProject(project);
+                }
+                return projects;
 
             } catch (DataAccessException ex) {
 
@@ -87,7 +96,11 @@ public class ProjectService {
 
             try {
 
-                return projectRepo.getAssignedProjects(profileId);
+                List<Project> projects = projectRepo.getAssignedProjects(profileId);
+                for (Project project : projects){
+                    setPriceAndEndDateForProject(project);
+                }
+                return projects;
 
             } catch (DataAccessException ex) {
 
@@ -128,16 +141,16 @@ public class ProjectService {
     }
 
     private void setPriceAndEndDateForProject(Project project) {
-        List<User> employees = getEmployees;
-        int numberOfEmployees = employees.size();
+        List<User> users = userService.getUsersForProject(project.getId());
+        int numberOfEmployees = users.size();
         project.setNumberOfEmployees(numberOfEmployees);
-        project.setPrice(calculateProjectPrice(project, employees));
+        project.setPrice(calculateProjectPrice(project, users));
         project.setEstimatedEndDate(calculateExpectedProjectEndDate(project, numberOfEmployees));
     }
 
-    private LocalDate calculateExpectedProjectEndDate(Project project, int numberOfEmployees) {
+    private LocalDate calculateExpectedProjectEndDate(Project project, int numberOfUsersOnProject) {
 
-        int hoursPerDay = numberOfEmployees * 8;
+        int hoursPerDay = numberOfUsersOnProject * 8;
         int workDays = (int) Math.ceil((double) project.getEstimatedHours() / hoursPerDay);
 
         LocalDate date = project.getCreationDate();
@@ -155,12 +168,12 @@ public class ProjectService {
         return date;
     }
 
-    private double calculateProjectPrice(Project project, List<User> employees) {
+    private double calculateProjectPrice(Project project, List<User> users) {
 
-        double hoursPerUser = (double) project.getEstimatedHours() / employees.size();
+        double hoursPerUser = (double) project.getEstimatedHours() / users.size();
         double total = 0;
 
-        for (User employee : employees) {
+        for (User employee : users) {
             total += employee.getHourlyRate() * hoursPerUser;
         }
 
@@ -169,11 +182,12 @@ public class ProjectService {
 
     public void validateUserHasAccessToProject(int projectId, User user) {
 
-        if (!user.isAdmin()) {
-            if (!projectRepo.userHasAccessToProject(user.getId(), projectId)) {
-                throw new AccessDeniedException("You do not have access to this project");
-            }
+        if (user.isAdmin()) {
+            return;
         }
 
+        if (!assignmentRepo.userHasAccessToProject(user.getId(), projectId)) {
+            throw new AccessDeniedException("You do not have access to this project");
+        }
     }
 }
