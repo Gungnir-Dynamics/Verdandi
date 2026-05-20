@@ -111,11 +111,12 @@ public class ProjectService {
         }
     }
 
-    public void saveProject(Project project) {
+    public void saveProject(Project project, User user) {
         validateProjectData(project);
 
         try {
-            projectRepo.createProject(project);
+            int projectId = projectRepo.createProject(project);
+            assignmentRepo.addUserToProject(user.getId(), projectId);
         } catch (DataAccessException ex) {
             throw new DatabaseOperationException("Failed to create project", ex);
         }

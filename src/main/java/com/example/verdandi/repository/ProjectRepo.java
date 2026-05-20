@@ -4,8 +4,12 @@ package com.example.verdandi.repository;
 import com.example.verdandi.model.Project;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.util.List;
 
 @Repository
@@ -87,13 +91,23 @@ public class ProjectRepo {
     }
 
 
-    public void createProject(Project project) {
-        String sql = "INSERT INTO Project (name, description, deadline) values (?, ?, ?)";
-        jdbcTemplate.update(
-                sql,
-                project.getName(),
-                project.getDescription(),
-                project.getDeadline());
+    public int createProject(Project project) {
+        String sql = """
+        INSERT INTO project (name, description, deadline)
+        VALUES (?, ?, ?)
+    """;
+
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            ps.setString(1, project.getName());
+            ps.setString(2, project.getDescription());
+            ps.setObject(3, project.getDeadline());
+            return ps;
+        }, keyHolder);
+
+        return keyHolder.getKey().intValue();
     }
 
     public void deleteProject(int projectId) {
