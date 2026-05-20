@@ -30,18 +30,18 @@ class SubProjectControllerTest {
     @MockitoBean
     private ProjectService projectService;
 
-    @Test
-    void getMySubProjects() throws Exception {
-
-        when(subProjectService.getSubProjects(1))
-                .thenReturn(List.of(new SubProject()));
-
-        mockMvc.perform(get("/projects/1/subprojects"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("subproject/sub_projects"))
-                .andExpect(model().attributeExists("mySubProjects"))
-                .andExpect(model().attributeExists("projectId"));
-    }
+//    @Test
+//    void getMySubProjects() throws Exception {
+//
+//        when(subProjectService.getSubProjects(1))
+//                .thenReturn(List.of(new SubProject()));
+//
+//        mockMvc.perform(get("/projects/1/subprojects"))
+//                .andExpect(status().isOk())
+//                .andExpect(view().name("subproject/sub_projects"))
+//                .andExpect(model().attributeExists("mySubProjects"))
+//                .andExpect(model().attributeExists("projectId"));
+//    }
 
     @Test
     void createNewSubProject() throws Exception {

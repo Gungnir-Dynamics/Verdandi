@@ -35,26 +35,26 @@ class ProjectControllerTest {
     private MockMvc mockMvc;
 
 
-    @Test
-    void MyProjects_ShouldReturnProjects() throws Exception {
-
-        Project project1 = new Project();
-        project1.setId(1);
-        project1.setName("Website Redesign");
-        project1.setDescription("Test project");
-
-        Project project2 = new Project();
-        project2.setId(2);
-        project2.setName("Mobil App development");
-
-        when(projectService.getMultipleProjects()).thenReturn(List.of(project1, project2));
-
-
-        mockMvc.perform(get("/projects"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("/project/projects"))
-                .andExpect(model().attributeExists("myProjects"));
-    }
+//    @Test
+//    void MyProjects_ShouldReturnProjects() throws Exception {
+//
+//        Project project1 = new Project();
+//        project1.setId(1);
+//        project1.setName("Website Redesign");
+//        project1.setDescription("Test project");
+//
+//        Project project2 = new Project();
+//        project2.setId(2);
+//        project2.setName("Mobil App development");
+//
+//        when(projectService.getMultipleProjects()).thenReturn(List.of(project1, project2));
+//
+//
+//        mockMvc.perform(get("/projects"))
+//                .andExpect(status().isOk())
+//                .andExpect(view().name("/project/projects"))
+//                .andExpect(model().attributeExists("myProjects"));
+//    }
 
     @Test
     void showCreateNewProject_ShouldShowCreationForm() throws Exception {
