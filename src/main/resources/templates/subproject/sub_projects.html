@@ -88,9 +88,6 @@
             <td th:text="${sub.projectId}"></td>
             <td th:text="${sub.estimatedHours}"></td>
             <td>
-                <a th:href="@{/subproject/{id}(id=${sub.id})}"
-                   class="btn btn-info">Se detaljer</a>
-
 
                 <a th:href="@{/projects/{projectId}/subprojects/{subprojectId}/edit(
             projectId=${sub.projectId},

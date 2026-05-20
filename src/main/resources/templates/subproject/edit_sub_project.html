@@ -65,9 +65,9 @@
 
     </div>
 
-    <form th:action="@{/projects/{projectId}/subprojects/{id}/edit(
+    <form th:action="@{/projects/{projectId}/subprojects/{subprojectId}/edit(
         projectId=${subproject.projectId},
-        id=${projectId})}"
+        subprojectId=${subproject.id})}"
           th:object="${subproject}"
           method="post">
 
