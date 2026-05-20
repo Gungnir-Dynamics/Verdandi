@@ -21,6 +21,9 @@ public class Project {
     private int estimatedHours;
 //    private LocalDate deadline;
     private LocalDate creationDate;
+    private double price;
+    private LocalDate estimatedEndDate;
+    private int numberOfEmployees;
 
 
 // CONSTRUCTORS
@@ -64,7 +67,19 @@ public class Project {
         return id;
     }
 
-// SETTERS
+    public double getPrice() {
+        return price;
+    }
+
+    public LocalDate getEstimatedEndDate() {
+        return estimatedEndDate;
+    }
+
+    public int getNumberOfEmployees() {
+        return numberOfEmployees;
+    }
+
+    // SETTERS
 
     public void setId(int id) {
         this.id = id;
@@ -88,5 +103,17 @@ public class Project {
 
     public void setCreationDate(LocalDate creationDate) {
         this.creationDate = creationDate;
+    }
+
+    public void setEstimatedEndDate(LocalDate estimatedEndDate) {
+        this.estimatedEndDate = estimatedEndDate;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public void setNumberOfEmployees(int numberOfEmployees) {
+        this.numberOfEmployees = numberOfEmployees;
     }
 }

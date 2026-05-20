@@ -35,7 +35,7 @@ public class SubProjectService {
 
 
     public void validateSubProjectBelongsToProject(int projectId, int subprojectId) {
-        projectService.validateProjectExists(projectId);
+        //projectService.validateProjectAccess(projectId, user);
         try {
             if (!subProjectRepo.subprojectBelongsToProject(projectId, subprojectId)) {
 

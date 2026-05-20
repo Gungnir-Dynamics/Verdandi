@@ -1,27 +1,35 @@
 package com.example.verdandi.service;
 
+import com.example.verdandi.exception.AccessDeniedException;
 import com.example.verdandi.exception.DatabaseOperationException;
 import com.example.verdandi.exception.ResourceNotFoundException;
 import com.example.verdandi.exception.ValidationException;
 import com.example.verdandi.model.Project;
 import com.example.verdandi.model.User;
+import com.example.verdandi.repository.AssignmentRepo;
 import com.example.verdandi.repository.ProjectRepo;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
-import javax.xml.crypto.Data;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.List;
 
 @Service
 public class ProjectService {
     private final ProjectRepo projectRepo;
+    private final UserService userService;
+    private final AssignmentRepo assignmentRepo;
 
-    public ProjectService(ProjectRepo projectRepo) {
+    public ProjectService(ProjectRepo projectRepo, UserService userService, AssignmentRepo assignmentRepo) {
         this.projectRepo = projectRepo;
+        this.userService = userService;
+        this.assignmentRepo = assignmentRepo;
     }
 
-    private void validateProject(Project project) {
+    private void validateProjectData(Project project) {
 
         if (project.getName() == null || project.getName().trim().isEmpty()) {
             throw new ValidationException("Project name is required");
@@ -59,8 +67,11 @@ public class ProjectService {
     }
 
     public Project getSingleProject(int projectId) {
+        validateProjectExists(projectId);
         try {
-            return projectRepo.getSingleProject(projectId);
+            Project project = projectRepo.getSingleProject(projectId);
+            setPriceAndEndDateForProject(project);
+            return project;
         } catch (DataAccessException ex) {
             throw new DatabaseOperationException("Failed to retrieve data for project", ex);
         }
@@ -73,7 +84,11 @@ public class ProjectService {
 
             try {
 
-                return projectRepo.getMultipleProjects();
+                List<Project> projects = projectRepo.getMultipleProjects();
+                for (Project project : projects) {
+                    setPriceAndEndDateForProject(project);
+                }
+                return projects;
 
             } catch (DataAccessException ex) {
 
@@ -83,7 +98,11 @@ public class ProjectService {
 
             try {
 
-                return projectRepo.getAssignedProjects(profileId);
+                List<Project> projects = projectRepo.getAssignedProjects(profileId);
+                for (Project project : projects) {
+                    setPriceAndEndDateForProject(project);
+                }
+                return projects;
 
             } catch (DataAccessException ex) {
 
@@ -93,7 +112,7 @@ public class ProjectService {
     }
 
     public void saveProject(Project project) {
-        validateProject(project);
+        validateProjectData(project);
 
         try {
             projectRepo.createProject(project);
@@ -103,7 +122,7 @@ public class ProjectService {
     }
 
     public void updateProject(int projectId, Project updateProject) {
-        validateProject(updateProject);
+        validateProjectData(updateProject);
         validateProjectExists(projectId);
 
         try {
@@ -121,5 +140,71 @@ public class ProjectService {
         } catch (DataAccessException ex) {
             throw new DatabaseOperationException("Failed to delete project", ex);
         }
+    }
+
+    private void setPriceAndEndDateForProject(Project project) {
+        List<User> users = userService.getUsersForProject(project.getId());
+        int numberOfEmployees = users.size();
+        project.setNumberOfEmployees(numberOfEmployees);
+        project.setPrice(calculateProjectPrice(project, users));
+        project.setEstimatedEndDate(calculateExpectedProjectEndDate(project, numberOfEmployees));
+    }
+
+    private LocalDate calculateExpectedProjectEndDate(Project project, int numberOfUsersOnProject) {
+
+        if (numberOfUsersOnProject == 0) {
+            return project.getCreationDate();
+        }
+
+        int hoursPerDay = numberOfUsersOnProject * 8;
+        int workDays = (int) Math.ceil((double) project.getEstimatedHours() / hoursPerDay);
+
+        LocalDate date = project.getCreationDate();
+        int addedDays = 0;
+
+        while (addedDays < workDays) {
+            date = date.plusDays(1);
+
+            DayOfWeek day = date.getDayOfWeek();
+            if (day != DayOfWeek.SATURDAY && day != DayOfWeek.SUNDAY) {
+                addedDays++;
+            }
+        }
+
+        return date;
+    }
+
+    private double calculateProjectPrice(Project project, List<User> users) {
+
+        if (users == null || users.isEmpty()) {
+            return 0.0;
+        }
+        double hoursPerUser = (double) project.getEstimatedHours() / users.size();
+        double total = 0;
+
+        for (User employee : users) {
+            total += employee.getHourlyRate() * hoursPerUser;
+        }
+
+        return new BigDecimal(total)
+                .setScale(2, RoundingMode.HALF_UP)
+                .doubleValue();
+    }
+
+    public void validateUserHasAccessToProject(int projectId, User user) {
+
+        if (user.isAdmin()) {
+            return;
+        }
+
+        if (!assignmentRepo.userHasAccessToProject(user.getId(), projectId)) {
+            throw new AccessDeniedException("You do not have access to this project");
+        }
+    }
+
+    //brug denne i stedet for validateProjectExists
+    public void validateProjectAccess(int projectId, User user) {
+        validateProjectExists(projectId);
+        validateUserHasAccessToProject(projectId, user);
     }
 }

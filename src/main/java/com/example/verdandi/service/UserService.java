@@ -106,6 +106,9 @@ public class UserService {
         repository.editProfile(user);
     }
 
+    public List<User> getUsersForProject(int projectId){
+        return repository.getUsersForProject(projectId);
+      
     public List<User> getUsers(){
         return repository.getUsers();
     }

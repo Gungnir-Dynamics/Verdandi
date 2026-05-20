@@ -77,6 +77,27 @@ public class UserRepo {
         return jdbcTemplate.query(sql, rowMapper);
     }
 
+    public List<User> getUsersForProject(int projectId) {
+
+        String sql = """
+                SELECT 
+                    profile.profile_id,
+                    profile.username,
+                    profile.password,
+                    profile.email,
+                    profile.hourly_rate,
+                    role.role_name
+                FROM profile
+                LEFT JOIN role 
+                    ON role.role_id = profile.role_id
+                JOIN assignment 
+                    ON assignment.profile_id = profile.profile_id
+                WHERE assignment.project_id = ?;
+                """;
+
+        return jdbcTemplate.query(sql, rowMapper, projectId);
+    }
+
 
     public User findUserByEmail(String email) {
         String sql = """

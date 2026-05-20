@@ -9,20 +9,20 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-    public class ProjectRepo {
+public class ProjectRepo {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public ProjectRepo (JdbcTemplate jdbcTemplate){
+    public ProjectRepo(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public final RowMapper<Project> rowMapper = (rs, rowNum) ->{
-      Project project = new Project();
-      project.setId(rs.getInt("project_id"));
-      project.setName(rs.getString("name"));
-      project.setDescription(rs.getString("description"));
-      project.setEstimatedHours(rs.getInt("estimated_hours"));
+    public final RowMapper<Project> rowMapper = (rs, rowNum) -> {
+        Project project = new Project();
+        project.setId(rs.getInt("project_id"));
+        project.setName(rs.getString("name"));
+        project.setDescription(rs.getString("description"));
+        project.setEstimatedHours(rs.getInt("estimated_hours"));
 
         if (rs.getDate("created_date") != null) {
             project.setCreationDate(rs.getDate("created_date").toLocalDate());
@@ -36,7 +36,7 @@ import java.util.List;
     };
 
 
-    public List<Project> getMultipleProjects(){
+    public List<Project> getMultipleProjects() {
         String sql = """
                 SELECT project.project_id, project.name, project.description, project.created_date, project.deadline, COALESCE(sum(task.estimated_hours), 0) AS estimated_hours
                 From Project
@@ -49,16 +49,16 @@ import java.util.List;
         return jdbcTemplate.query(sql, rowMapper);
     }
 
-    public Project getSingleProject(int projectId){
+    public Project getSingleProject(int projectId) {
         String sql = """
-               SELECT project.project_id, project.name, project.description, project.created_date, project.deadline, COALESCE(sum(task.estimated_hours), 0) AS estimated_hours
-               From Project
-               LEFT JOIN sub_project
-               ON sub_project.project_id = project.project_id
-               LEFT JOIN task
-               ON task.sub_project_id = sub_project.sub_project_id
-               WHERE project.project_id = ?
-               GROUP BY project.project_id, project.name, project.description, project.created_date, project.deadline;
+                SELECT project.project_id, project.name, project.description, project.created_date, project.deadline, COALESCE(sum(task.estimated_hours), 0) AS estimated_hours
+                From Project
+                LEFT JOIN sub_project
+                ON sub_project.project_id = project.project_id
+                LEFT JOIN task
+                ON task.sub_project_id = sub_project.sub_project_id
+                WHERE project.project_id = ?
+                GROUP BY project.project_id, project.name, project.description, project.created_date, project.deadline;
                 """;
         return jdbcTemplate.queryForObject(sql, rowMapper, projectId);
     }
@@ -87,7 +87,7 @@ import java.util.List;
     }
 
 
-    public void createProject(Project project){
+    public void createProject(Project project) {
         String sql = "INSERT INTO Project (name, description, deadline) values (?, ?, ?)";
         jdbcTemplate.update(
                 sql,
@@ -96,12 +96,12 @@ import java.util.List;
                 project.getDeadline());
     }
 
-    public void deleteProject(int projectId){
+    public void deleteProject(int projectId) {
         String sql = "DELETE FROM project WHERE project_id = ?";
         jdbcTemplate.update(sql, projectId);
     }
 
-    public void updateProject(int projectId, Project project){
+    public void updateProject(int projectId, Project project) {
         String sql = """
                 UPDATE Project
                 SET name = ?, description = ?, deadline = ?
@@ -127,5 +127,4 @@ import java.util.List;
         Integer count = jdbcTemplate.queryForObject(sql, Integer.class, projectId);
         return count != null && count > 0;
     }
-
 }
