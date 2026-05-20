@@ -67,6 +67,9 @@
     </style>
 </head>
 <body>
+
+<div th:replace="navigationbar/navbar :: navbar"></div>
+
 <div>
     <div class="header">
         <h1>My Projects</h1>
@@ -80,9 +83,7 @@
     <table th:if="${myProjects != null and !myProjects.isEmpty()}">
         <thead>
         <tr>
-            <th>ID</th>
             <th>Project Name</th>
-            <th>Description</th>
             <th>Estimated Hours</th>
             <th>Creation Date</th>
             <th>Deadline</th>
@@ -91,9 +92,8 @@
         </thead>
         <tbody>
         <tr th:each="project : ${myProjects}">
-            <td th:text="${project.id}"></td>
             <td th:text="${project.name}"></td>
-            <td th:text="${project.description}"></td>
+
             <td th:text="${project.estimatedHours}"></td>
             <td th:text="${project.creationDate}"></td>
             <td th:text="${project.deadline}"></td>

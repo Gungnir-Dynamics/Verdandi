@@ -7,7 +7,9 @@
 
 <h1>Edit Profile</h1>
 
-<form method="post" action="/auth/editProfile" th:object="${user}">
+<form th:action="@{/auth/editProfile}" method="post" th:object="${user}">
+
+    <input type="hidden" th:field="*{id}" />
 
     <label>Username:</label>
     <input type="text" th:field="*{username}" />
@@ -20,15 +22,26 @@
     <br/>
 
     <label>Password:</label>
-    <input type="password" th:field="*{password}" />
+    <input type="text" th:field="*{password}" />
+
+    <br>
+
+    <label>HourlyRate:</label>
+    <input type="number" th:field="*{hourlyRate}" />
+    <br>
+
+    <label>Role:</label>
+    <input type="text" th:field="*{role}" />
 
     <br/>
 
     <button type="submit">Save</button>
-
 </form>
 
-<a href="/projects">Back</a>
+
+
+
+<a href="/auth/show_users">Back</a>
 
 </body>
 </html>

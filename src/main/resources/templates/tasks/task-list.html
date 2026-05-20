@@ -5,10 +5,18 @@
     <title>Tasks</title>
 </head>
 <body>
+
+<div th:replace="navigationbar/navbar :: navbar"></div>
+
 <div>
     <h1>Mine Projekter</h1>
     <p><a th:href="@{/projects/{projectId}/subprojects(projectId=${projectId})}">
         ← Tilbage</a></p>
+
+    <div >
+        <h2 th:text="${subproject.name}"></h2>                    <!-- NYT TILFØJET -->
+        <p th:text="${subproject.description}"></p>
+    </div>
 
     <table th:if="${tasks != null and !tasks.isEmpty()}">
         <thead>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="da">
+<body>
+
+<nav th:fragment="navbar" class="navbar">
+    <div class="nav-left">
+        <h3 th:href="@{/projects}" class="logo">Verdandi</h3>
+    </div>
+
+    <div class="nav-links">
+        <a th:href="@{/projects}">Back to projects</a>
+    </div>
+
+    <div class="nav-links">
+        <a th:href="@{/auth/show_users}">See Users</a>
+    </div>
+
+
+    <div class="nav-right">
+
+
+
+        <a th:if="${session.user == null}" th:href="@{/auth/login}" class="login-btn">Login</a>
+
+        <a th:if="${session.user != null}" th:href="@{/auth/logout}" class="login-btn">Log ud</a>
+<!--        <form th:if="${session.user != null}" th:action="@{/auth/logout}" method="post">-->
+<!--        <button type="submit" class="logout-btn">Log ud</button>-->
+<!--        </form>-->
+
+    </div>
+</nav>
+
+</body>
+</html>
