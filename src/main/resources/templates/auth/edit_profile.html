@@ -12,12 +12,12 @@
     <input type="hidden" th:field="*{id}" />
 
     <label>Username:</label>
-    <input type="text" th:field="*{username}" />
+    <input type="text" th:field="*{username}"/>
 
     <br/>
 
     <label>Email:</label>
-    <input type="text" th:field="*{email}" />
+    <input type="text" th:field="*{email}"/>
 
     <br/>
 
@@ -31,8 +31,14 @@
     <br>
 
     <label>Role:</label>
-    <input type="text" th:field="*{role}" />
-
+    <form th:object="${user}">
+        <select th:field="*{role.id}">
+            <option th:each="role : ${roles}"
+                    th:value="${role.id}"
+                    th:text="${role.roleName}">
+            </option>
+        </select>
+    </form>
     <br/>
 
     <button type="submit">Save</button>
@@ -45,3 +51,4 @@
 
 </body>
 </html>
+
