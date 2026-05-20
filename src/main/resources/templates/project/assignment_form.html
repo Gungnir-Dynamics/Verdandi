@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<div>
+
+    <div th:if="${errorMessage}">
+        <p th:text="${errorMessage}"></p>
+    </div>
+
+    <form th:action="@{/projects/{projectId}/assignments/add (projectId=${projectId})}" method="post">
+        <label for="email">Del med email</label>
+        <input id="email" type="email" name="email" required placeholder="Indtast email...">
+        <button type="submit">Del</button>
+    </form>
+
+    <div>
+        <h2>Personer med adgang</h2>
+
+        <div th:each="user : ${users}">
+            <p th:text="${user.username}"></p>
+
+            <form th:action="@{/projects/{projectId}/assignments/delete(projectId=${projectId})}" method="post">
+                <input type="hidden" name="userIdToDelete" th:value="${user.id}">
+                <button type="submit">Remove</button>
+            </form>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

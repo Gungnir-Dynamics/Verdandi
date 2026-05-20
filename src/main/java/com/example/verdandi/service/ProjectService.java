@@ -207,5 +207,4 @@ public class ProjectService {
         validateProjectExists(projectId);
         validateUserHasAccessToProject(projectId, user);
     }
-
 }
