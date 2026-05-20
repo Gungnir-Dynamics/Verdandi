@@ -203,6 +203,7 @@ public class ProjectService {
     }
 
     //brug denne i stedet for validateProjectExists
+    
     public void validateProjectAccess(int projectId, User user) {
         validateProjectExists(projectId);
         validateUserHasAccessToProject(projectId, user);
