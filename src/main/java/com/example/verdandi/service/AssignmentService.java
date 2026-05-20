@@ -32,17 +32,17 @@ public class AssignmentService {
         try {
             userToAdd = userService.findUserByEmail(email);
         }catch (EmptyResultDataAccessException e){
-            throw new ValidationException("User does not exist");
+            throw new ValidationException("No user was found with the provided email");
         }
 
         if (assignmentRepo.isUserAlreadyAssigned(userToAdd.getId(), projectId)) {
-            throw new ValidationException("User is already assigned to this project");
+            throw new ValidationException("This user is already assigned to the project");
         }
 
         try {
             assignmentRepo.addUserToProject(userToAdd.getId(), projectId);
         } catch (DataAccessException ex) {
-            throw new DatabaseOperationException("Failed to assign user to project", ex);
+            throw new DatabaseOperationException("The user could not be assigned to the project due to a system error. Please try again later", ex);
         }
     }
 
@@ -51,7 +51,7 @@ public class AssignmentService {
         projectService.validateProjectAccess(projectId, user);
 
         if (!assignmentRepo.isUserAlreadyAssigned(profileId, projectId)) {
-            throw new ResourceNotFoundException("User is not assigned to this project");
+            throw new ResourceNotFoundException("The selected user is not assigned to this project");
         }
 
         try {

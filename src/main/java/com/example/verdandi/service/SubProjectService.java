@@ -46,12 +46,12 @@ public class SubProjectService {
             }
         } catch (DataAccessException ex) {
 
-            throw new DatabaseOperationException("Failed to validate subproject ownership", ex);
+            throw new DatabaseOperationException("The system could not verify that this subproject belongs to the selected project", ex);
         }
     }
     public void validateSubProjectData(SubProject subProject) {
         if (subProject.getName() == null || subProject.getName().isBlank()) {
-            throw new ValidationException("Subproject name cannot be empty.");
+            throw new ValidationException("The subproject name cannot be empty");
         }
 
         if (subProject.getName().length() > 100) {
@@ -59,7 +59,7 @@ public class SubProjectService {
         }
 
         if (subProject.getDescription() != null && subProject.getDescription().length() > 1500) {
-            throw new ValidationException("Description cannot exceed 1500 characters.");
+            throw new ValidationException("The description may not exceed 1500 characters");
         }
 
         if (subProject.getEstimatedHours() < 0) {
