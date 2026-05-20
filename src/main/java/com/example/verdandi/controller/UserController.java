@@ -16,11 +16,9 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
-    private final UserRepo userRepo;
 
-    public UserController(UserService userService, UserRepo userRepo) {
+    public UserController(UserService userService) {
         this.userService = userService;
-        this.userRepo = userRepo;
     }
 
     @GetMapping("/register")
@@ -65,7 +63,7 @@ public class UserController {
         user.setRole(new Role());
 
         model.addAttribute("user", user);
-        model.addAttribute("roles", userRepo.getRoles());
+        model.addAttribute("roles", userService.getRoles());
 
         return "auth/edit_profile";
     }
