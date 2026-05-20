@@ -10,38 +10,46 @@
             margin: 20px;
             background-color: #f8f9fa;
         }
+
         h1 {
             color: #2c3e50;
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
             background: white;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
+
         th, td {
             padding: 12px;
             text-align: left;
             border-bottom: 1px solid #ddd;
         }
+
         th {
             background-color: #34495e;
             color: white;
         }
+
         tr:hover {
             background-color: #f1f1f1;
         }
+
         .btn {
             padding: 8px 12px;
             text-decoration: none;
             border-radius: 4px;
             font-size: 14px;
         }
+
         .btn-info {
             background-color: #3498db;
             color: white;
         }
+
         .no-items {
             text-align: center;
             padding: 40px;
@@ -50,16 +58,24 @@
     </style>
 </head>
 <body>
+
+<div th:replace="navigationbar/navbar :: navbar"></div>
+
 <div>
     <h1>My Subprojects</h1>
-    <p><a th:href="@{/projects/my_projects}" class="btn btn-info">← Tilbage til Projekter</a></p>
+    <p><a th:href="@{/projects}" class="btn btn-info">← Tilbage til Projekter</a></p>
+
+    <div style="margin-bottom: 20px;">
+        <h2 th:text="${project.name}"></h2>
+        <p th:text="${project.description}"></p>
+    </div>
+
 
     <table th:if="${mySubProjects != null and !mySubProjects.isEmpty()}">
         <thead>
         <tr>
             <th>ID</th>
             <th>Subproject</th>
-            <th>Description</th>
             <th>Project ID</th>
             <th>Estimated hours</th>
             <th>Handling</th>
@@ -69,7 +85,6 @@
         <tr th:each="sub : ${mySubProjects}">
             <td th:text="${sub.id}"></td>
             <td th:text="${sub.name}"></td>
-            <td th:text="${sub.description}"></td>
             <td th:text="${sub.projectId}"></td>
             <td th:text="${sub.estimatedHours}"></td>
             <td>
@@ -82,6 +97,11 @@
             subprojectId=${sub.id})}"
                    class="btn btn-info">
                     Edit
+                </a>
+
+                <a th:href="@{/projects/{projectId}/subprojects/{subprojectId}/tasks(projectId=${sub.projectId}, subprojectId=${sub.id})}"
+                   class="btn btn-info">
+                    Tasks
                 </a>
 
                 <form th:action="@{/projects/{projectId}/subprojects/{subprojectId}/delete(

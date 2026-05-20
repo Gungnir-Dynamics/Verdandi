@@ -105,4 +105,12 @@ public class UserService {
         validateUser(user);
         repository.editProfile(user);
     }
+
+    public List<User> getUsers(){
+        return repository.getUsers();
+    }
+
+    public void deleteUser (int profileId){
+        repository.deleteProfile(profileId);
+    }
 }
