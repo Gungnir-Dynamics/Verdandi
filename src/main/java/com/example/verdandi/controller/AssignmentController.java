@@ -10,7 +10,7 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-//
+
 @Controller
 @RequestMapping("/projects/{projectId}/assignments")
 public class AssignmentController {
