@@ -47,6 +47,7 @@ public class UserRepo {
                     role
                 """;
         return jdbcTemplate.query(sql, (rs, rowNum) -> {
+
             Role role = new Role();
             role.setId(rs.getInt("role_id"));
             role.setRoleName(rs.getString("role_name"));
