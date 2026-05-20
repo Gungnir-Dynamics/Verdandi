@@ -1,6 +1,7 @@
 package com.example.verdandi.service;
 
 import com.example.verdandi.exception.ValidationException;
+import com.example.verdandi.model.Role;
 import com.example.verdandi.model.User;
 import com.example.verdandi.repository.UserRepo;
 import jakarta.servlet.http.HttpSession;
@@ -53,24 +54,20 @@ public class UserService {
             throw new ValidationException("Hourly rate must be greater than 0");
         }
 
-        if (user.getRole() == null || user.getRole().isBlank()) {
+        if (user.getRole() == null || user.getRole().getId() <= 0) {
             throw new ValidationException("Must select a role");
         }
-
-
-        // Roll down menu i HTML
-//        String role = user.getRole().trim().toLowerCase();
-//        user.setRole(role);
-//
-//        if (!role.equals("admin") && !role.equals("user")) {
-//            throw new ValidationException("Invalid role selected");
-//        }
 
         User existingUser = repository.findUserByEmail(user.getEmail());
 
         if (existingUser != null && existingUser.getId() != user.getId()) {
             throw new ValidationException("User with " + existingUser.getEmail() + " already exists");
         }
+    }
+
+    public List<Role> getRoles () {
+
+        return repository.getRoles();
     }
 
 
@@ -111,5 +108,12 @@ public class UserService {
 
     public List<User> getUsersForProject(int projectId){
         return repository.getUsersForProject(projectId);
+      
+    public List<User> getUsers(){
+        return repository.getUsers();
+    }
+
+    public void deleteUser (int profileId){
+        repository.deleteProfile(profileId);
     }
 }

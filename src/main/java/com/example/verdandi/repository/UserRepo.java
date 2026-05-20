@@ -1,6 +1,8 @@
 package com.example.verdandi.repository;
 
+import com.example.verdandi.model.Role;
 import com.example.verdandi.model.User;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -17,16 +19,44 @@ public class UserRepo {
     }
 
     private final RowMapper<User> rowMapper = (rs, rowNum) -> {
+
+
         User user = new User();
+        Role role = new Role();
+
         user.setId(rs.getInt("profile_id"));
         user.setUsername(rs.getString("username"));
         user.setPassword(rs.getString("password"));
         user.setEmail(rs.getString("email"));
         user.setHourlyRate(rs.getInt("hourly_rate"));
-        user.setRole(rs.getString("role_name"));
+
+        role.setRoleName(rs.getString("role_name"));
+        role.setId(rs.getInt("role_id"));
+
+        user.setRole(role);
 
         return user;
     };
+
+
+    public List<Role> getRoles() {
+        String sql = """
+                SELECT 
+                    role_id,
+                    role_name
+                FROM
+                    role
+                """;
+        return jdbcTemplate.query(sql, (rs, rowNum) -> {
+
+            Role role = new Role();
+            role.setId(rs.getInt("role_id"));
+            role.setRoleName(rs.getString("role_name"));
+
+            return role;
+        });
+    }
+
 
     public List<User> getUsers() {
 
@@ -37,6 +67,7 @@ public class UserRepo {
                     profile.password,
                     profile.email,
                     profile.hourly_rate,
+                    role.role_id,
                     role.role_name
                 FROM profile
                 LEFT JOIN role 
@@ -76,18 +107,25 @@ public class UserRepo {
                     p.password, 
                     p.email, 
                     p.hourly_rate, 
-                    r.role_name
+                    r.role_name,
+                    r.role_id
                 FROM 
                     profile p
                 LEFT JOIN
                     role r
                 ON
                     r.role_id = p.role_id
-                
+
                 WHERE p.email = ?
                 """;
+        try {
 
             return jdbcTemplate.queryForObject(sql, rowMapper, email);
+
+        } catch (EmptyResultDataAccessException exception) {
+
+            return null;
+        }
     }
 
     public User findUserById(int profileId) {
@@ -98,7 +136,8 @@ public class UserRepo {
                     p.username, 
                     p.email, 
                     p.password, 
-                    p.hourly_rate, 
+                    p.hourly_rate,
+                    r.role_id,
                     r.role_name
                 FROM 
                     profile p
@@ -113,19 +152,7 @@ public class UserRepo {
         return jdbcTemplate.queryForObject(sql, rowMapper, profileId);
     }
 
-
-    public int findRoleIdByName(String roleName) {
-        String sql = """
-                SELECT 
-                    r.role_id 
-                FROM 
-                    role r
-                WHERE 
-                    r.role_name = ?
-                """;
-
-        return jdbcTemplate.queryForObject(sql, Integer.class, roleName);
-    }
+    //  SAVE/CREATE USER/PROFILE
 
     public void saveUser(User user) {
 
@@ -139,7 +166,6 @@ public class UserRepo {
                 VALUES (?, ?, ?, ?, ?)
                 """;
 
-        int roleId = findRoleIdByName(user.getRole());
 
         jdbcTemplate.update(
                 sql,
@@ -147,30 +173,37 @@ public class UserRepo {
                 user.getPassword(),
                 user.getEmail(),
                 user.getHourlyRate(),
-                roleId);
+                user.getRole().getId());
 
     }
 
+    // EDIT USER/PROFILE
+
     public void editProfile(User user) {
         String sql = """
-                UPDATE profile p
+                UPDATE profile
                 SET 
-                    p.username = ?, 
-                    p.password = ?, 
-                    p.email = ?,
+                    username = ?, 
+                    password = ?, 
+                    email = ?,
+                    hourly_rate = ?,
                     role_id =?
                 WHERE 
                     profile_id = ?
                 """;
-        int roleId = findRoleIdByName(user.getRole());
+
         jdbcTemplate.update(
                 sql,
                 user.getUsername(),
                 user.getPassword(),
                 user.getEmail(),
-                user.getId(),
-                roleId);
+                user.getHourlyRate(),
+                user.getRole().getId(),
+                
+                user.getId());
     }
+
+    // DELETE USER/PROFILE
 
     public void deleteProfile(int profileId) {
         String sql = """
@@ -180,3 +213,4 @@ public class UserRepo {
         jdbcTemplate.update(sql, profileId);
     }
 }
+

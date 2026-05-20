@@ -1,5 +1,6 @@
 package com.example.verdandi.controller;
 
+import com.example.verdandi.model.Role;
 import com.example.verdandi.model.User;
 import com.example.verdandi.repository.UserRepo;
 import com.example.verdandi.service.ProjectService;
@@ -29,7 +30,7 @@ public class UserController {
     @PostMapping("/register")
     public String register(@ModelAttribute User user) {
         userService.saveUser(user);
-        return "redirect:/auth/login";
+        return "redirect:/auth/show_users";
     }
 
     @GetMapping("/login")
@@ -60,19 +61,22 @@ public class UserController {
 
         User user = userService.findUserById(profileId);
 
+
         model.addAttribute("user", user);
+        model.addAttribute("roles", userService.getRoles());
 
         return "auth/edit_profile";
     }
 
     @PostMapping("/editProfile")
     public String editProfile(@ModelAttribute User profile, HttpSession session) {
+
         userService.editProfile(profile);
 
-        User updatedUser = userService.findUserByEmail(profile.getEmail());
+        User updatedUser = userService.findUserById(profile.getId());
 
         session.setAttribute("user", updatedUser);
-        return "redirect:/profile_details";
+        return "redirect:/auth/show_users";
 
     }
 
@@ -100,6 +104,22 @@ public class UserController {
     @GetMapping("/logout")
     public String logout(HttpSession session) {
         session.invalidate();
-        return "redirect:/";
+        return "redirect:/auth/login";
     }
+
+    @GetMapping("/show_users")
+    public String showUsers(HttpSession session, Model model) {
+
+//        User user = (User) session.getAttribute("user");
+
+        model.addAttribute("getUsers", userService.getUsers());
+        return "/auth/list_profiles";
+    }
+
+    @PostMapping("/{profileId}/delete")
+    public String deleteUser (@PathVariable int profileId){
+        userService.deleteUser(profileId);
+        return "redirect:/auth/show_users";
+    }
+
 }
