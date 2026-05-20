@@ -1,5 +1,6 @@
 package com.example.verdandi.controller;
 
+import com.example.verdandi.model.Role;
 import com.example.verdandi.model.User;
 import com.example.verdandi.repository.UserRepo;
 import com.example.verdandi.service.ProjectService;
@@ -15,9 +16,11 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
+    private final UserRepo userRepo;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, UserRepo userRepo) {
         this.userService = userService;
+        this.userRepo = userRepo;
     }
 
     @GetMapping("/register")
@@ -59,8 +62,10 @@ public class UserController {
     public String showEditProfile(Model model, @PathVariable int profileId) {
 
         User user = userService.findUserById(profileId);
+        user.setRole(new Role());
 
         model.addAttribute("user", user);
+        model.addAttribute("roles", userRepo.getRoles());
 
         return "auth/edit_profile";
     }
