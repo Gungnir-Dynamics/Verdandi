@@ -1,9 +1,7 @@
 package com.example.verdandi.controller;
 
-import com.example.verdandi.model.Role;
+
 import com.example.verdandi.model.User;
-import com.example.verdandi.repository.UserRepo;
-import com.example.verdandi.service.ProjectService;
 import com.example.verdandi.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
