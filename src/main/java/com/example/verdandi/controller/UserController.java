@@ -60,7 +60,7 @@ public class UserController {
     public String showEditProfile(Model model, @PathVariable int profileId) {
 
         User user = userService.findUserById(profileId);
-        user.setRole(new Role());
+
 
         model.addAttribute("user", user);
         model.addAttribute("roles", userService.getRoles());
