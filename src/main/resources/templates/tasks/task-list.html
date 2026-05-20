@@ -7,7 +7,8 @@
 <body>
 <div>
     <h1>Mine Projekter</h1>
-    <p><a href="/">← Tilbage</a></p>
+    <p><a th:href="@{/projects/{projectId}/subprojects(projectId=${projectId})}">
+        ← Tilbage</a></p>
 
     <table th:if="${tasks != null and !tasks.isEmpty()}">
         <thead>
