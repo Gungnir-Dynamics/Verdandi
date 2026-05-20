@@ -29,6 +29,7 @@
         .btn-primary { background-color: #3498db; color: white; }
         .btn-warning { background-color: #f39c12; color: white; }
         .btn-danger { background-color: #e74c3c; color: white; }
+        .btn-success { background-color: #27ae60; color: white; }
         .btn-primary:hover { background-color: #2980b9; }
         .btn-warning:hover { background-color: #e67e22; }
         .btn-danger:hover { background-color: #c0392b; }
@@ -105,11 +106,18 @@
             <td th:text="${project.numberOfEmployees}"></td>
             <td>
                 <div class="actions">
+
                     <!-- Sub-projects -->
                     <a th:href="@{/projects/{projectId}/subprojects(projectId=${project.id})}"
                        class="btn btn-primary" style="padding: 8px 14px; font-size: 14px;">
                         View Sub-Projects
                     </a>
+
+                    <a th:href="@{/projects/{projectId}/assignments(projectId=${project.id})}"
+                       class="btn btn-success" style="padding: 8px 14px; font-size: 14px;">
+                        Manage Users
+                    </a>
+
                     <!-- Edit -->
                     <a th:href="@{/projects/{id}/edit(id=${project.id})}"
                        class="btn btn-warning" style="padding: 8px 14px; font-size: 14px;">

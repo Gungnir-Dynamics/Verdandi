@@ -11,22 +11,19 @@
         <a th:href="@{/projects}">Back to projects</a>
     </div>
 
-    <div class="nav-links">
+
+    <div class="nav-links" th:if="${session.user != null and session.user.isAdmin()}">
         <a th:href="@{/auth/show_users}">See Users</a>
     </div>
 
+    <a th:if="${session.user == null}" th:href="@{/auth/login}" class="login-btn">Login</a>
 
-    <div class="nav-right">
+    <span th:if="${session.user != null}">
+            <strong th:text="${session.user.username}"></strong>
+            <span th:text="'(' + ${session.user.role.roleName} + ')'"></span>
+        </span>
 
-
-
-        <a th:if="${session.user == null}" th:href="@{/auth/login}" class="login-btn">Login</a>
-
-        <a th:if="${session.user != null}" th:href="@{/auth/logout}" class="login-btn">Log ud</a>
-<!--        <form th:if="${session.user != null}" th:action="@{/auth/logout}" method="post">-->
-<!--        <button type="submit" class="logout-btn">Log ud</button>-->
-<!--        </form>-->
-
+    <a th:if="${session.user != null}" th:href="@{/auth/logout}" class="login-btn">Log ud</a>
     </div>
 </nav>
 

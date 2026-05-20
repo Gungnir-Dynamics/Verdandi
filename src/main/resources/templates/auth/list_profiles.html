@@ -9,6 +9,10 @@
 
 <h1>All Users</h1>
 
+<a th:href="@{/auth/register}">
+    Create User
+</a>
+
 <table border="1">
     <thead>
     <tr>
@@ -27,7 +31,7 @@
         <td th:text="${user.username}"></td>
         <td th:text="${user.email}"></td>
         <td th:text="${user.hourlyRate}"></td>
-        <td th:text="${user.role}"></td>
+        <td th:text="${user.role.roleName}"></td>
 
         <td>
             <a th:href="@{/auth/edit/profile/{id}(id=${user.id})}">
