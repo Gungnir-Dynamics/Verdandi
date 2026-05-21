@@ -30,14 +30,14 @@
     <br/>
 
     <label>Role:</label>
-    <form th:object="${user}">
+
         <select th:field="*{role.id}">
             <option th:each="role : ${roles}"
                     th:value="${role.id}"
                     th:text="${role.roleName}">
             </option>
         </select>
-    </form>
+
 
     <br/>
 

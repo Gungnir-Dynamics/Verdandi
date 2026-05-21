@@ -1,6 +1,7 @@
 package com.example.verdandi.controller;
 
 
+import com.example.verdandi.model.Role;
 import com.example.verdandi.model.User;
 import com.example.verdandi.service.UserService;
 import jakarta.servlet.http.HttpSession;
@@ -21,12 +22,18 @@ public class UserController {
 
     @GetMapping("/register")
     public String registerPage(Model model) {
+
         model.addAttribute("user", new User());
+        model.addAttribute("role", new Role());
+
+        model.addAttribute("roles", userService.getRoles());
+
         return "auth/register";
     }
 
     @PostMapping("/register")
     public String register(@ModelAttribute User user) {
+
         userService.saveUser(user);
         return "redirect:/auth/show_users";
     }
