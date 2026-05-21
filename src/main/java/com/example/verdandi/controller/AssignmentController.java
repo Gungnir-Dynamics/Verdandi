@@ -31,7 +31,7 @@ public class AssignmentController {
 
         User user = (User) session.getAttribute("user");
 
-        Project project = projectService.getSingleProject(projectId);
+        Project project = projectService.getSingleProject(projectId, user);
 
         model.addAttribute("users", userService.getUsersForProject(projectId));
         model.addAttribute("projectId", projectId);
@@ -46,7 +46,7 @@ public class AssignmentController {
         try {
             assignmentService.assignUserToProject(email, projectId, user);
         } catch (ValidationException e) {
-            model.addAttribute("project", projectService.getSingleProject(projectId));
+            model.addAttribute("project", projectService.getSingleProject(projectId, user));
             model.addAttribute("users", userService.getUsersForProject(projectId));
             model.addAttribute("errorMessage", e.getMessage());
             return "project/assignment_form";

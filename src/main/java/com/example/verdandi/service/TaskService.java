@@ -4,6 +4,7 @@ import com.example.verdandi.exception.DatabaseOperationException;
 import com.example.verdandi.exception.ResourceNotFoundException;
 import com.example.verdandi.exception.ValidationException;
 import com.example.verdandi.model.Task;
+import com.example.verdandi.model.User;
 import com.example.verdandi.repository.TaskRepo;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
@@ -20,8 +21,8 @@ public class TaskService {
         this.subProjectService = subProjectService;
     }
 
-    public void validateTaskBelongsToSubProject(int projectId, int subprojectId, int taskId) {
-        subProjectService.validateSubProjectBelongsToProject(projectId, subprojectId);
+    public void validateTaskBelongsToSubProject(int projectId, int subprojectId, int taskId, User user) {
+        subProjectService.validateSubProjectBelongsToProject(projectId, subprojectId, user);
 
         try {
             if (!taskRepo.taskBelongsToSubproject(subprojectId, taskId)) {
@@ -34,8 +35,8 @@ public class TaskService {
         }
     }
 
-    public List<Task> getTasksBySubproject(int projectId, int subprojectId) {
-        subProjectService.validateSubProjectBelongsToProject(projectId, subprojectId);
+    public List<Task> getTasksBySubproject(int projectId, int subprojectId, User user) {
+        subProjectService.validateSubProjectBelongsToProject(projectId, subprojectId, user);
         try {
             return taskRepo.getTasks(subprojectId);
         } catch (DataAccessException ex) {
@@ -62,8 +63,8 @@ public class TaskService {
         }
     }
 
-    public void createTask(int projectId, int subprojectId, Task task) {
-        subProjectService.validateSubProjectBelongsToProject(projectId, subprojectId);
+    public void createTask(int projectId, int subprojectId, Task task, User user) {
+        subProjectService.validateSubProjectBelongsToProject(projectId, subprojectId, user);
         validateTaskData(task);
 
         try {
@@ -73,8 +74,8 @@ public class TaskService {
         }
     }
 
-    public Task getSingleTask(int projectId, int subprojectId, int taskId) {
-        validateTaskBelongsToSubProject(projectId, subprojectId, taskId);
+    public Task getSingleTask(int projectId, int subprojectId, int taskId, User user) {
+        validateTaskBelongsToSubProject(projectId, subprojectId, taskId, user);
 
         try {
             return taskRepo.getSingleTask(taskId);
@@ -83,8 +84,8 @@ public class TaskService {
         }
     }
 
-    public void updateTask(int projectId, int subprojectId, int taskId, Task updatedTask) {
-        validateTaskBelongsToSubProject(projectId, subprojectId, taskId);
+    public void updateTask(int projectId, int subprojectId, int taskId, Task updatedTask, User user) {
+        validateTaskBelongsToSubProject(projectId, subprojectId, taskId, user);
         validateTaskData(updatedTask);
 
         try {
@@ -94,8 +95,8 @@ public class TaskService {
         }
     }
 
-    public void deleteTask(int projectId, int subprojectId, int taskId) {
-        validateTaskBelongsToSubProject(projectId, subprojectId, taskId);
+    public void deleteTask(int projectId, int subprojectId, int taskId, User user) {
+        validateTaskBelongsToSubProject(projectId, subprojectId, taskId, user);
 
         try {
             taskRepo.deleteTask(taskId);

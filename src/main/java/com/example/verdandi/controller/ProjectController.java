@@ -58,9 +58,10 @@ public class ProjectController {
 
     @GetMapping("/{projectId}/edit")
     public String showEditForm(@PathVariable int projectId,
-                               Model model) {
+                               Model model, HttpSession session) {
+        User user = (User) session.getAttribute("user");
 
-        Project project = projectService.getSingleProject(projectId);
+        Project project = projectService.getSingleProject(projectId, user);
 
         if (!model.containsAttribute("project")) {
             model.addAttribute("project", project);
@@ -73,10 +74,11 @@ public class ProjectController {
     public String updateProject(@PathVariable int projectId,
                              @ModelAttribute Project project,
                              RedirectAttributes redirectAttributes,
-                                Model model) {
-
+                                Model model,
+                                HttpSession session) {
+        User user = (User) session.getAttribute("user");
         try {
-            projectService.updateProject(projectId, project);
+            projectService.updateProject(projectId, project, user);
             redirectAttributes.addFlashAttribute("successMessage", "Project was updated successfully");
             return "redirect:/projects";
 
@@ -88,12 +90,11 @@ public class ProjectController {
         }
     }
 
-
-
     @PostMapping("{projectId}/delete")
-    public String deleteProject (@PathVariable int projectId, RedirectAttributes redirectAttributes) {
+    public String deleteProject (@PathVariable int projectId, RedirectAttributes redirectAttributes, HttpSession session) {
+        User user = (User) session.getAttribute("user");
         try {
-            projectService.deleteProject(projectId);
+            projectService.deleteProject(projectId, user);
             redirectAttributes.addFlashAttribute("successMessage", "Project was deleted successfully");
             return "redirect:/projects";
         } catch (ValidationException e) {

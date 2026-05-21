@@ -3,8 +3,10 @@ package com.example.verdandi.controller;
 
 import com.example.verdandi.exception.ValidationException;
 import com.example.verdandi.model.SubProject;
+import com.example.verdandi.model.User;
 import com.example.verdandi.service.ProjectService;
 import com.example.verdandi.service.SubProjectService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -24,12 +26,15 @@ public class SubProjectController {
 
     @GetMapping("")
     public String getMySubProjects(@PathVariable int projectId,
-                                   Model model) {
+                                   Model model,
+                                   HttpSession session) {
 
-        List<SubProject> getSubProjects = subProjectService.getSubProjects(projectId);
+        User user = (User) session.getAttribute("user");
+
+        List<SubProject> getSubProjects = subProjectService.getSubProjects(projectId, user);
         model.addAttribute("mySubProjects", getSubProjects);
         model.addAttribute("projectId", projectId);
-        model.addAttribute("project", projectService.getSingleProject(projectId));
+        model.addAttribute("project", projectService.getSingleProject(projectId, user));
         return "subproject/sub_projects";
     }
 
@@ -46,11 +51,14 @@ public class SubProjectController {
     @PostMapping("/create")
     public String saveSubProject(@PathVariable int projectId,
                                  @ModelAttribute SubProject subProject,
-                              Model model) {
+                              Model model,
+                                 HttpSession session) {
+
+        User user = (User) session.getAttribute("user");
 
         try {
 
-            subProjectService.saveSubProject(subProject, projectId);
+            subProjectService.saveSubProject(subProject, projectId, user);
 
             return "redirect:/projects/" + projectId + "/subprojects";
 
@@ -66,9 +74,12 @@ public class SubProjectController {
     @GetMapping("/{subprojectId}/edit")
     public String editSubProject(@PathVariable int subprojectId,
                                  @PathVariable int projectId,
-                                 Model model) {
+                                 Model model,
+                                 HttpSession session) {
 
-        model.addAttribute("subproject", subProjectService.findSubProjectById(projectId, subprojectId));
+        User user = (User) session.getAttribute("user");
+
+        model.addAttribute("subproject", subProjectService.findSubProjectById(projectId, subprojectId, user));
 
         model.addAttribute("projectId", projectId);
 
@@ -79,13 +90,14 @@ public class SubProjectController {
     public String updateSubProject(@PathVariable int projectId,
                                    @PathVariable int subprojectId,
                                    @ModelAttribute SubProject subProject,
-                                   Model model) {
-
+                                   Model model,
+                                   HttpSession session) {
+        User user = (User) session.getAttribute("user");
         try {
 
             subProject.setId(subprojectId);
             subProject.setProjectId(projectId);
-            subProjectService.updateSubProject(projectId, subprojectId, subProject);
+            subProjectService.updateSubProject(projectId, subprojectId, subProject, user);
 
             return "redirect:/projects/" + projectId + "/subprojects";
 
@@ -103,9 +115,12 @@ public class SubProjectController {
 
     @PostMapping("/{subprojectId}/delete")
     public String deleteSubProject(@PathVariable int subprojectId,
-                                   @PathVariable int projectId) {
+                                   @PathVariable int projectId,
+                                   HttpSession session) {
 
-        subProjectService.deleteSubproject(projectId, subprojectId);
+        User user = (User) session.getAttribute("user");
+
+        subProjectService.deleteSubproject(projectId, subprojectId, user);
 
         return "redirect:/projects/" + projectId + "/subprojects";
 

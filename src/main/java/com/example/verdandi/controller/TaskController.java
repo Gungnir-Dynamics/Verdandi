@@ -2,8 +2,10 @@ package com.example.verdandi.controller;
 
 import com.example.verdandi.exception.ValidationException;
 import com.example.verdandi.model.Task;
+import com.example.verdandi.model.User;
 import com.example.verdandi.service.SubProjectService;
 import com.example.verdandi.service.TaskService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -22,11 +24,14 @@ public class TaskController {
     @GetMapping("")
     public String showTasks(@PathVariable int subprojectId,
                             @PathVariable int projectId,
-                            Model model) {
-        model.addAttribute("tasks", taskService.getTasksBySubproject(projectId, subprojectId));
+                            Model model,
+                            HttpSession session) {
+        User user = (User) session.getAttribute("user");
+
+        model.addAttribute("tasks", taskService.getTasksBySubproject(projectId, subprojectId, user));
         model.addAttribute("projectId", projectId);
         model.addAttribute("subprojectId", subprojectId);
-        model.addAttribute("subproject", subProjectService.findSubProjectById(projectId, subprojectId));
+        model.addAttribute("subproject", subProjectService.findSubProjectById(projectId, subprojectId, user));
         return "tasks/task-list";
     }
 
@@ -47,10 +52,13 @@ public class TaskController {
     public String createTask(@PathVariable int projectId,
                              @PathVariable int subprojectId,
                              @ModelAttribute Task task,
-                             Model model) {
+                             Model model,
+                             HttpSession session) {
+
+        User user = (User) session.getAttribute("user");
 
         try {
-            taskService.createTask(projectId, subprojectId, task);
+            taskService.createTask(projectId, subprojectId, task, user);
 
             return "redirect:/projects/" + projectId + "/subprojects/" + subprojectId + "/tasks";
 
@@ -68,9 +76,12 @@ public class TaskController {
     public String showEditForm(@PathVariable int projectId,
                                @PathVariable int subprojectId,
                                @PathVariable int taskId,
-                               Model model) {
+                               Model model,
+                               HttpSession session) {
 
-        Task task = taskService.getSingleTask(projectId, subprojectId, taskId);
+        User user = (User) session.getAttribute("user");
+
+        Task task = taskService.getSingleTask(projectId, subprojectId, taskId, user);
 
         model.addAttribute("task", task);
 
@@ -86,10 +97,13 @@ public class TaskController {
                              @PathVariable int subprojectId,
                              @PathVariable int taskId,
                              @ModelAttribute Task task,
-                             Model model) {
+                             Model model,
+                             HttpSession session) {
+
+        User user = (User) session.getAttribute("user");
 
         try {
-            taskService.updateTask(projectId, subprojectId, taskId, task);
+            taskService.updateTask(projectId, subprojectId, taskId, task, user);
 
             return "redirect:/projects/" + projectId + "/subprojects/" + subprojectId + "/tasks";
         } catch (ValidationException e) {
@@ -107,9 +121,12 @@ public class TaskController {
     @PostMapping("/{taskId}/delete")
     public String deleteTask(@PathVariable int projectId,
                              @PathVariable int subprojectId,
-                             @PathVariable int taskId) {
+                             @PathVariable int taskId,
+                             HttpSession session) {
 
-        taskService.deleteTask(projectId, subprojectId, taskId);
+        User user = (User) session.getAttribute("user");
+
+        taskService.deleteTask(projectId, subprojectId, taskId, user);
         return "redirect:/projects/" + projectId + "/subprojects/" + subprojectId + "/tasks";
     }
 }

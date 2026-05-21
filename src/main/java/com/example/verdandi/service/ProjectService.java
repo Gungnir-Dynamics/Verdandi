@@ -55,20 +55,8 @@ public class ProjectService {
         }
     }
 
-    public void validateProjectExists(int projectId) {
-        try {
-            if (!projectRepo.projectExists(projectId)) {
-                throw new ResourceNotFoundException(
-                        "The project with ID " + projectId + " does not exist "
-                );
-            }
-        } catch (DataAccessException ex) {
-            throw new DatabaseOperationException("The project data could not be loaded. Please try again later", ex);
-        }
-    }
-
-    public Project getSingleProject(int projectId) {
-        validateProjectExists(projectId);
+    public Project getSingleProject(int projectId, User user) {
+        validateProjectAccess(projectId, user);
         try {
             Project project = projectRepo.getSingleProject(projectId);
             setPriceAndEndDateForProject(project);
@@ -124,9 +112,9 @@ public class ProjectService {
         }
     }
 
-    public void updateProject(int projectId, Project updateProject) {
+    public void updateProject(int projectId, Project updateProject, User user) {
         validateProjectData(updateProject);
-        validateProjectExists(projectId);
+        validateProjectAccess(projectId, user);
 
         try {
             projectRepo.updateProject(projectId, updateProject);
@@ -136,8 +124,8 @@ public class ProjectService {
 
     }
 
-    public void deleteProject(int projectId) {
-        validateProjectExists(projectId);
+    public void deleteProject(int projectId, User user) {
+        validateProjectAccess(projectId, user);
         try {
             projectRepo.deleteProject(projectId);
         } catch (DataAccessException ex) {
@@ -194,7 +182,23 @@ public class ProjectService {
                 .doubleValue();
     }
 
+    public void validateProjectExists(int projectId) {
+        try {
+            if (!projectRepo.projectExists(projectId)) {
+                throw new ResourceNotFoundException(
+                        "The project with ID " + projectId + " does not exist "
+                );
+            }
+        } catch (DataAccessException ex) {
+            throw new DatabaseOperationException("The project data could not be loaded. Please try again later", ex);
+        }
+    }
+
     public void validateUserHasAccessToProject(int projectId, User user) {
+
+        if (user == null) {
+            throw new AccessDeniedException("You do not have access to this project");
+        }
 
         if (user.isAdmin()) {
             return;

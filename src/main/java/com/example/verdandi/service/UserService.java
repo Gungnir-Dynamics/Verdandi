@@ -6,7 +6,6 @@ import com.example.verdandi.model.User;
 import com.example.verdandi.repository.UserRepo;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -93,7 +92,6 @@ public class UserService {
        return repository.findUserById(profileId);
     }
 
-    @Transactional
     public void saveUser(User user) {
         validateUser(user);
         repository.saveUser(user);
