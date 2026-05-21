@@ -2,29 +2,28 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Tasks</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tasks - Verdandi</title>
+    <link rel="stylesheet" th:href="@{/styles.css}">
 </head>
 <body>
 
 <div th:replace="navigationbar/navbar :: navbar"></div>
 
-<div>
-    <h1>Mine Projekter</h1>
-    <p><a th:href="@{/projects/{projectId}/subprojects(projectId=${projectId})}">
-        ← Tilbage</a></p>
-
-    <div >
-        <h2 th:text="${subproject.name}"></h2>                    <!-- NYT TILFØJET -->
-        <p th:text="${subproject.description}"></p>
+<div class="container">
+    <div class="header">
+        <h1>Tasks - <span th:text="${subproject.name}"></span></h1>
+        <a th:href="@{|/projects/${projectId}/subprojects/${subprojectId}/tasks/create|}"
+           class="btn btn-primary">+ New Task</a>
     </div>
 
     <table th:if="${tasks != null and !tasks.isEmpty()}">
         <thead>
         <tr>
-            <th>Name</th>
+            <th>Task Name</th>
             <th>Description</th>
-            <th>Estimated hours</th>
-            <th>Handling</th>
+            <th>Estimated Hours</th>
+            <th style="width: 260px; text-align: right;">Actions</th>
         </tr>
         </thead>
         <tbody>
@@ -33,19 +32,35 @@
             <td th:text="${task.description}"></td>
             <td th:text="${task.estimatedHours}"></td>
             <td>
-                <a th:href="@{|/projects/${projectId}/subprojects/${subprojectId}/tasks/${task.id}/edit|}">Edit</a>
+                <div class="actions">
+                    <a th:href="@{|/projects/${projectId}/subprojects/${subprojectId}/tasks/${task.id}/edit|}"
+                       class="btn btn-warning btn-sm">Edit</a>
+
+                    <form th:action="@{|/projects/${projectId}/subprojects/${subprojectId}/tasks/${task.id}/delete|}"
+                          method="post" style="display: inline;">
+                        <button type="submit" class="btn btn-danger btn-sm"
+                                onclick="return confirm('Delete this task?')">
+                            Delete
+                        </button>
+                    </form>
+                </div>
             </td>
         </tr>
         </tbody>
     </table>
 
-    <!-- Hvis der ikke er nogen projekter -->
-    <div th:if="${tasks == null or tasks.isEmpty()}">
-        <h3>Du har ingen tasks endnu</h3>
-        <p>Opret din første task for at komme i gang.</p>
+    <div th:if="${tasks == null or tasks.isEmpty()}" class="no-items">
+        <h2>No tasks yet</h2>
+        <p>This subproject doesn't have any tasks.</p>
+        <a th:href="@{|/projects/${projectId}/subprojects/${subprojectId}/tasks/create|}"
+           class="btn btn-primary">+ Create First Task</a>
+    </div>
+
+    <div style="margin-top: 30px;">
+        <a th:href="@{/projects/{projectId}/subprojects(projectId=${projectId})}"
+           class="btn btn-secondary">← Back to Subprojects</a>
     </div>
 </div>
 
-<a th:href="@{|/projects/${projectId}/subprojects/${subprojectId}/tasks/create|}">Create new task</a>
 </body>
 </html>

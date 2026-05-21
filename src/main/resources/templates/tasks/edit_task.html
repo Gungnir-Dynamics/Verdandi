@@ -2,37 +2,51 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Edit Task</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Task - Verdandi</title>
+    <link rel="stylesheet" th:href="@{/styles.css}">
 </head>
 <body>
 
-<h1>Edit Task</h1>
+<div th:replace="navigationbar/navbar :: navbar"></div>
 
-<!-- Fejlbesked -->
-<div th:if="${errorMessage}">
-    <span th:text="${errorMessage}"></span>
+<div class="container">
+    <div class="header">
+        <h1>Edit Task</h1>
+    </div>
+
+    <div class="form-container">
+        <div th:if="${errorMessage}" class="error" th:text="${errorMessage}"></div>
+
+        <form th:action="@{|/projects/${projectId}/subprojects/${subprojectId}/tasks/${taskId}/edit|}"
+              th:object="${task}"
+              method="post">
+
+            <label for="name">Task Name</label>
+            <input type="text" id="name" th:field="*{name}" required />
+
+            <label for="description">Description</label>
+            <textarea id="description" th:field="*{description}"></textarea>
+
+            <label for="estimatedHours">Estimated Hours</label>
+            <input type="number" id="estimatedHours" th:field="*{estimatedHours}" min="0" />
+
+            <div style="margin-top: 35px; display: flex; gap: 12px;">
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+                <a th:href="@{|/projects/${projectId}/subprojects/${subprojectId}/tasks|}"
+                   class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+
+        <hr style="margin: 40px 0;">
+
+        <form th:action="@{|/projects/${projectId}/subprojects/${subprojectId}/tasks/${taskId}/delete|}"
+              method="post"
+              onsubmit="return confirm('Delete this task permanently?')">
+            <button type="submit" class="btn btn-danger">Delete Task</button>
+        </form>
+    </div>
 </div>
 
-<form th:action="@{|/projects/${projectId}/subprojects/${subprojectId}/tasks/${taskId}/edit|}"
-      th:object="${task}"
-      method="post">
-
-    <label for="name">Name</label>
-    <input id="name" type="text" th:field="*{name}">
-
-    <label for="description">Description</label>
-    <textarea id="description" th:field="*{description}"></textarea>
-
-    <label for="estimatedHours">Estimated hours</label>
-    <input id="estimatedHours" type="number" th:field="*{estimatedHours}">
-
-    <button type="submit">Save</button>
-</form>
-
-<a th:href="@{|/projects/${projectId}/subprojects/${subprojectId}/tasks|}">Cancel</a>
-
-<form th:action="@{|/projects/${projectId}/subprojects/${subprojectId}/tasks/${taskId}/delete|}" method="post">
-    <button type="submit">Delete</button>
-</form>
 </body>
 </html>
