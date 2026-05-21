@@ -2,38 +2,79 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Users - <span th:text="${projectName}"></span> - Verdandi</title>
+    <link rel="stylesheet" th:href="@{/styles.css}">
 </head>
 <body>
 
-<div>
-    <h2 th:text="${project.name}"></h2>
+<div th:replace="navigationbar/navbar :: navbar"></div>
 
-    <div th:if="${errorMessage}">
-        <p th:text="${errorMessage}"></p>
+<div class="container">
+    <div class="header">
+        <h1>Manage Users - <span th:text="${projectName}"></span></h1>
     </div>
 
-    <form th:action="@{/projects/{projectId}/assignments/add (projectId=${projectId})}" method="post">
-        <label for="email">Del med email</label>
-        <input id="email" type="email" name="email" required placeholder="Indtast email...">
-        <button type="submit">Del</button>
-    </form>
+    <div class="form-container">
 
-    <div>
-        <h2>Personer med adgang</h2>
+        <!-- Error message -->
+        <div th:if="${errorMessage}" class="error" th:text="${errorMessage}"></div>
 
-        <div th:each="user : ${users}">
-            <p th:text="${user.username}"></p>
+        <!-- Add new user -->
+        <h2>Add User to Project</h2>
+        <form th:action="@{/projects/{projectId}/assignments/add(projectId=${projectId})}" method="post">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email"
+                   placeholder="Enter user email" required />
 
-            <form th:action="@{/projects/{projectId}/assignments/delete(projectId=${projectId})}" method="post">
-                <input type="hidden" name="userIdToDelete" th:value="${user.id}">
-                <button type="submit">Remove</button>
-            </form>
+            <button type="submit" class="btn btn-success" style="margin-top: 12px;">
+                Add User
+            </button>
+        </form>
+
+        <hr style="margin: 40px 0;">
+
+        <!-- Currently assigned users -->
+        <h2>Currently Assigned Users</h2>
+
+        <table th:if="${users != null and !users.isEmpty()}">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th style="width: 140px; text-align: center;">Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="user : ${users}">
+                <td th:text="${user.username}"></td>
+                <td th:text="${user.email}"></td>
+                <td th:text="${user.role?.roleName}"></td>
+                <td style="text-align: center;">
+                    <form th:action="@{/projects/{projectId}/assignments/delete(projectId=${projectId})}"
+                          method="post" style="margin: 0;">
+                        <input type="hidden" name="userIdToDelete" th:value="${user.id}">
+                        <button type="submit" class="btn btn-danger btn-sm"
+                                onclick="return confirm('Remove this user from the project?')">
+                            Remove
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <!-- No users message -->
+        <div th:if="${users == null or users.isEmpty()}" class="no-items">
+            <p>No users have been assigned to this project yet.</p>
+        </div>
+
+        <div style="margin-top: 30px;">
+            <a href="/projects" class="btn btn-secondary">← Back to My Projects</a>
         </div>
     </div>
-
-    <a th:href="@{/projects}">Back to projects</a>
-
 </div>
+
 </body>
 </html>

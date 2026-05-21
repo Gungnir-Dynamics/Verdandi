@@ -1,138 +1,65 @@
 <!DOCTYPE html>
-<html lang="da" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My subprojects - Verdandi</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            background-color: #f8f9fa;
-        }
-
-        h1 {
-            color: #2c3e50;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-            background: white;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        th, td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-
-        th {
-            background-color: #34495e;
-            color: white;
-        }
-
-        tr:hover {
-            background-color: #f1f1f1;
-        }
-
-        .btn {
-            padding: 8px 12px;
-            text-decoration: none;
-            border-radius: 4px;
-            font-size: 14px;
-        }
-
-        .btn-info {
-            background-color: #3498db;
-            color: white;
-        }
-
-        .no-items {
-            text-align: center;
-            padding: 40px;
-            color: #7f8c8d;
-        }
-    </style>
+    <title>Subprojects - Verdandi</title>
+    <link rel="stylesheet" th:href="@{/styles.css}">
 </head>
 <body>
 
 <div th:replace="navigationbar/navbar :: navbar"></div>
 
-<div>
-    <h1>My Subprojects</h1>
-    <p><a th:href="@{/projects}" class="btn btn-info">← Tilbage til Projekter</a></p>
-
-    <div style="margin-bottom: 20px;">
-        <h2 th:text="${project.name}"></h2>
-        <p th:text="${project.description}"></p>
+<div class="container">
+    <div class="header">
+        <h1>Subprojects - <span th:text="${project.name}"></span></h1>
+        <a th:href="@{/projects/{projectId}/subprojects/create(projectId=${projectId})}"
+           class="btn btn-primary">+ New Subproject</a>
     </div>
-
 
     <table th:if="${mySubProjects != null and !mySubProjects.isEmpty()}">
         <thead>
         <tr>
             <th>ID</th>
-            <th>Subproject</th>
-            <th>Project ID</th>
-            <th>Estimated hours</th>
-            <th>Handling</th>
+            <th>Subproject Name</th>
+            <th>Description</th>
+            <th>Estimated Hours</th>
+            <th style="width: 380px; text-align: right;">Actions</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="sub : ${mySubProjects}">
             <td th:text="${sub.id}"></td>
             <td th:text="${sub.name}"></td>
-            <td th:text="${sub.projectId}"></td>
+            <td th:text="${sub.description}"></td>
             <td th:text="${sub.estimatedHours}"></td>
             <td>
-                <a th:href="@{/subproject/{id}(id=${sub.id})}"
-                   class="btn btn-info">Se detaljer</a>
+                <div class="actions">
+                    <a th:href="@{/projects/{projectId}/subprojects/{subprojectId}/tasks(projectId=${sub.projectId}, subprojectId=${sub.id})}"
+                       class="btn btn-primary btn-sm">View Tasks</a>
 
+                    <a th:href="@{/projects/{projectId}/subprojects/{subprojectId}/edit(projectId=${sub.projectId}, subprojectId=${sub.id})}"
+                       class="btn btn-warning btn-sm">Edit</a>
 
-                <a th:href="@{/projects/{projectId}/subprojects/{subprojectId}/edit(
-            projectId=${sub.projectId},
-            subprojectId=${sub.id})}"
-                   class="btn btn-info">
-                    Edit
-                </a>
-
-                <a th:href="@{/projects/{projectId}/subprojects/{subprojectId}/tasks(projectId=${sub.projectId}, subprojectId=${sub.id})}"
-                   class="btn btn-info">
-                    Tasks
-                </a>
-
-                <form th:action="@{/projects/{projectId}/subprojects/{subprojectId}/delete(
-            projectId=${sub.projectId},
-            subprojectId=${sub.id})}"
-                      method="post"
-                      style="display:inline;">
-
-                    <button type="submit"
-                            class="btn"
-                            style="background-color:#e74c3c; color:white;"
-                            onclick="return confirm('Er du sikker på at du vil slette dette underprojekt?');">
-                        Delete
-                    </button>
-                </form>
+                    <form th:action="@{/projects/{projectId}/subprojects/{subprojectId}/delete(projectId=${sub.projectId}, subprojectId=${sub.id})}"
+                          method="post" style="display: inline;">
+                        <button type="submit" class="btn btn-danger btn-sm"
+                                onclick="return confirm('Delete this subproject and all its tasks?')">
+                            Delete
+                        </button>
+                    </form>
+                </div>
             </td>
         </tr>
         </tbody>
     </table>
-    <p style="margin-top: 20px;">
-        <a th:href="@{/projects/{projectId}/subprojects/create(projectId=${projectId})}"
-           class="btn btn-info">
-            + Add subproject
-        </a>
-    </p>
 
-    <!-- Hvis der ikke er nogen underprojekter -->
-    <div class="no-items" th:if="${mySubProjects == null or mySubProjects.isEmpty()}">
-        <h3>No existing subprojects</h3>
-        <p>Add subproject.</p>
+    <div th:if="${mySubProjects == null or mySubProjects.isEmpty()}" class="no-items">
+        <h2>No subprojects yet</h2>
+        <a th:href="@{/projects/{projectId}/subprojects/create(projectId=${projectId})}"
+           class="btn btn-primary">+ Create First Subproject</a>
     </div>
 </div>
+
 </body>
 </html>
