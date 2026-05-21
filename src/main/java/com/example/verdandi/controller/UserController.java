@@ -77,7 +77,7 @@ public class UserController {
     @PostMapping("/editProfile")
     public String editProfile(@ModelAttribute User profile, HttpSession session) {
 
-
+        userService.editProfile(profile);
 
         return "redirect:/auth/show_users";
 
