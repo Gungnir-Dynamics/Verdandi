@@ -46,6 +46,7 @@ public class AssignmentController {
         try {
             assignmentService.assignUserToProject(email, projectId, user);
         } catch (ValidationException e) {
+            model.addAttribute("project", projectService.getSingleProject(projectId));
             model.addAttribute("users", userService.getUsersForProject(projectId));
             model.addAttribute("errorMessage", e.getMessage());
             return "project/assignment_form";

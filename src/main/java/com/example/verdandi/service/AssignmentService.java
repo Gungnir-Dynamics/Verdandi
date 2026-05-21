@@ -27,11 +27,9 @@ public class AssignmentService {
     public void assignUserToProject(String email, int projectId, User user) {
 
         projectService.validateProjectAccess(projectId, user);
-        User userToAdd;
+        User userToAdd = userService.findUserByEmail(email);
 
-        try {
-            userToAdd = userService.findUserByEmail(email);
-        }catch (EmptyResultDataAccessException e){
+        if (userToAdd == null) {
             throw new ValidationException("No user was found with the provided email");
         }
 
