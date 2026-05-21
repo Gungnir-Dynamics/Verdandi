@@ -82,6 +82,7 @@ public class UserController {
         User updatedUser = userService.findUserById(profile.getId());
 
         session.setAttribute("user", updatedUser);
+
         return "redirect:/auth/show_users";
 
     }
