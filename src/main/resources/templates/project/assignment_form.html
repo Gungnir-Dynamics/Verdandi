@@ -50,7 +50,7 @@
             <tr th:each="user : ${users}">
                 <td th:text="${user.username}"></td>
                 <td th:text="${user.email}"></td>
-                <td th:text="${user.role?.roleName}"></td>
+                <td th:text="${user.role.roleName}"></td>
                 <td style="text-align: center;">
                     <form th:action="@{/projects/{projectId}/assignments/delete(projectId=${projectId})}"
                           method="post" style="margin: 0;">
