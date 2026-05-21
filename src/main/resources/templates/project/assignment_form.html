@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Users - <span th:text="${projectName}"></span> - Verdandi</title>
+    <title>Manage Users - Verdandi</title>
     <link rel="stylesheet" th:href="@{/styles.css}">
 </head>
 <body>
@@ -12,7 +12,7 @@
 
 <div class="container">
     <div class="header">
-        <h1>Manage Users - <span th:text="${projectName}"></span></h1>
+        <h1>Manage Users - <span th:text="${project.name}"></span></h1>
     </div>
 
     <div class="form-container">
@@ -20,21 +20,21 @@
         <!-- Error message -->
         <div th:if="${errorMessage}" class="error" th:text="${errorMessage}"></div>
 
-        <!-- Add new user -->
-        <h2>Add User to Project</h2>
-        <form th:action="@{/projects/{projectId}/assignments/add(projectId=${projectId})}" method="post">
+        <!-- Add User Section -->
+        <h2>Add New User</h2>
+        <form th:action="@{/projects/{projectId}/assignments/add(projectId=${projectId})}" method="post" style="max-width: 500px;">
             <label for="email">Email Address</label>
             <input type="email" id="email" name="email"
-                   placeholder="Enter user email" required />
+                   placeholder="Enter user email address" required />
 
-            <button type="submit" class="btn btn-success" style="margin-top: 12px;">
-                Add User
+            <button type="submit" class="btn btn-success" style="margin-top: 16px;">
+                Add User to Project
             </button>
         </form>
 
-        <hr style="margin: 40px 0;">
+        <hr style="margin: 50px 0;">
 
-        <!-- Currently assigned users -->
+        <!-- Assigned Users -->
         <h2>Currently Assigned Users</h2>
 
         <table th:if="${users != null and !users.isEmpty()}">
@@ -43,7 +43,7 @@
                 <th>Name</th>
                 <th>Email</th>
                 <th>Role</th>
-                <th style="width: 140px; text-align: center;">Action</th>
+                <th style="width: 130px; text-align: center;">Action</th>
             </tr>
             </thead>
             <tbody>
@@ -65,12 +65,13 @@
             </tbody>
         </table>
 
-        <!-- No users message -->
+        <!-- No users -->
         <div th:if="${users == null or users.isEmpty()}" class="no-items">
-            <p>No users have been assigned to this project yet.</p>
+            <p>No users assigned to this project yet.</p>
         </div>
 
-        <div style="margin-top: 30px;">
+        <!-- Back button -->
+        <div style="margin-top: 50px;">
             <a href="/projects" class="btn btn-secondary">← Back to My Projects</a>
         </div>
     </div>

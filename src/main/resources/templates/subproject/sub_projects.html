@@ -54,6 +54,10 @@
         </tbody>
     </table>
 
+    <div >
+        <a href="/projects" class="btn btn-secondary">← Back to Projects</a>
+    </div>
+
     <div th:if="${mySubProjects == null or mySubProjects.isEmpty()}" class="no-items">
         <h2>No subprojects yet</h2>
         <a th:href="@{/projects/{projectId}/subprojects/create(projectId=${projectId})}"
