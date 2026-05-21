@@ -84,7 +84,7 @@ public class UserService {
         return false;
     }
 
-    // ( SKAL MÅSKE LAVES OM TIL PRIVATE)
+    // (SKAL MÅSKE LAVES OM TIL PRIVATE)
     //TIDELIGERE OPGAVE LIGGER DEN I CONTROLLER
     public boolean isLoggedIn(HttpSession session) {
         return session.getAttribute("user") != null;
