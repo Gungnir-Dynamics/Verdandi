@@ -4,80 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Projects - Verdandi</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            background-color: #f8f9fa;
-        }
-        h1 { color: #2c3e50; }
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-        }
-        .btn {
-            padding: 10px 18px;
-            text-decoration: none;
-            border-radius: 6px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            border: none;
-        }
-        .btn-primary { background-color: #3498db; color: white; }
-        .btn-warning { background-color: #f39c12; color: white; }
-        .btn-danger { background-color: #e74c3c; color: white; }
-        .btn-success { background-color: #27ae60; color: white; }
-        .btn-primary:hover { background-color: #2980b9; }
-        .btn-warning:hover { background-color: #e67e22; }
-        .btn-danger:hover { background-color: #c0392b; }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background: white;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        th, td {
-            padding: 14px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-        th {
-            background-color: #34495e;
-            color: white;
-        }
-        tr:hover {
-            background-color: #f1f1f1;
-        }
-        .actions {
-            display: flex;
-            gap: 8px;
-            justify-content: flex-end;
-        }
-        .success { color: green; background: #d4edda; padding: 10px; border-radius: 4px; }
-        .error { color: red; background: #f8d7da; padding: 10px; border-radius: 4px; }
-        .no-projects {
-            text-align: center;
-            padding: 60px;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-    </style>
+    <link rel="stylesheet" th:href="@{/styles.css}">
 </head>
 <body>
 
 <div th:replace="navigationbar/navbar :: navbar"></div>
 
-<div>
+<div class="container">
     <div class="header">
         <h1>My Projects</h1>
         <a href="/projects/create" class="btn btn-primary">+ New Project</a>
     </div>
 
-    <!-- Success / Error messages -->
+    <!-- Messages -->
     <div th:if="${successMessage}" class="success" th:text="${successMessage}"></div>
     <div th:if="${errorMessage}" class="error" th:text="${errorMessage}"></div>
 
@@ -90,39 +29,29 @@
             <th>Deadline</th>
             <th>End Date</th>
             <th>Price</th>
-            <th>Number Of Workers</th>
-            <th style="width: 320px; text-align: right;">Actions</th>
+            <th>Number of Workers</th>
+            <th style="width: 460px; text-align: right;">Actions</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="project : ${myProjects}">
             <td th:text="${project.name}"></td>
-
             <td th:text="${project.estimatedHours}"></td>
-            <td th:text="${project.creationDate}"></td>
-            <td th:text="${project.deadline}"></td>
-            <td th:text="${project.estimatedEndDate}"></td>
-            <td th:text="${project.price} + ' DKK'"></td>
+            <td class="date" th:text="${project.creationDate}"></td>
+            <td class="date" th:text="${project.deadline}"></td>
+            <td class="date" th:text="${project.estimatedEndDate}"></td>
+            <td class="price" th:text="${project.price} + ' DKK'"></td>
             <td th:text="${project.numberOfEmployees}"></td>
             <td>
                 <div class="actions">
-
-                    <!-- Sub-projects -->
                     <a th:href="@{/projects/{projectId}/subprojects(projectId=${project.id})}"
-                       class="btn btn-primary" style="padding: 8px 14px; font-size: 14px;">
-                        View Sub-Projects
-                    </a>
+                       class="btn btn-primary btn-sm">View Sub-Projects</a>
 
                     <a th:href="@{/projects/{projectId}/assignments(projectId=${project.id})}"
-                       class="btn btn-success" style="padding: 8px 14px; font-size: 14px;">
-                        Manage Users
-                    </a>
+                       class="btn btn-success btn-sm">Manage Users</a>
 
-                    <!-- Edit -->
                     <a th:href="@{/projects/{id}/edit(id=${project.id})}"
-                       class="btn btn-warning" style="padding: 8px 14px; font-size: 14px;">
-                        Edit
-                    </a>
+                       class="btn btn-warning btn-sm">Edit</a>
                 </div>
             </td>
         </tr>
@@ -130,12 +59,11 @@
     </table>
 
     <!-- No projects -->
-    <div class="no-projects" th:if="${myProjects == null or myProjects.isEmpty()}">
-        <h3>You don't have any projects yet</h3>
-        <a href="/projects/create" class="btn btn-primary" style="font-size: 18px; padding: 14px 28px;">
-            + Create Your First Project
-        </a>
+    <div class="no-items" th:if="${myProjects == null or myProjects.isEmpty()}">
+        <h2>You don't have any projects yet</h2>
+        <a href="/projects/create" class="btn btn-primary">+ Create Your First Project</a>
     </div>
 </div>
+
 </body>
 </html>

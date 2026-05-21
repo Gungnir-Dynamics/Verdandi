@@ -1,84 +1,41 @@
 <!DOCTYPE html>
-<html lang="da" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Opret Nyt Projekt - Verdandi</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            background-color: #f8f9fa;
-        }
-        h1 { color: #2c3e50; }
-        .form-container {
-            max-width: 700px;
-            background: white;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            margin-top: 20px;
-        }
-        label {
-            display: block;
-            margin: 15px 0 5px;
-            font-weight: bold;
-            color: #34495e;
-        }
-        input[type="text"], input[type="date"], textarea {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-        textarea { min-height: 120px; resize: vertical; }
-
-        .btn {
-            padding: 10px 20px;
-            text-decoration: none;
-            border-radius: 4px;
-            font-size: 16px;
-            cursor: pointer;
-            border: none;
-        }
-        .btn-primary { background-color: #3498db; color: white; }
-        .btn-secondary { background-color: #95a5a6; color: white; }
-        .buttons { margin-top: 25px; display: flex; gap: 10px; }
-
-        .error { color: #e74c3c; background: #f8d7da; padding: 10px; border-radius: 4px; }
-        .success { color: #155724; background: #d4edda; padding: 10px; border-radius: 4px; }
-    </style>
+    <title>Create New Project - Verdandi</title>
+    <link rel="stylesheet" th:href="@{/styles.css}">
 </head>
 <body>
-<div>
-    <h1>Opret Nyt Projekt</h1>
-    <p><a href="/projects" class="btn btn-secondary">← Tilbage til projekter</a></p>
 
-    <!-- Fejlbesked -->
-    <div th:if="${errorMessage}" class="error">
-        <span th:text="${errorMessage}"></span>
+<div th:replace="navigationbar/navbar :: navbar"></div>
+
+<div class="container">
+    <div class="header">
+        <h1>Create New Project</h1>
     </div>
 
     <div class="form-container">
-        <form th:action="@{/projects/create}" method="post">
+        <div th:if="${errorMessage}" class="error" th:text="${errorMessage}"></div>
 
-            <label for="name">Projektnavn *</label>
-            <input type="text" id="name" name="name" th:value="${project.name}" required />
+        <form th:action="@{/projects/create}" method="post" th:object="${project}">
 
-            <label for="description">Beskrivelse</label>
-            <textarea id="description" name="description" th:text="${project.description}"></textarea>
+            <label for="name">Project Name *</label>
+            <input type="text" id="name" th:field="*{name}" required />
+
+            <label for="description">Description</label>
+            <textarea id="description" th:field="*{description}"></textarea>
 
             <label for="deadline">Deadline</label>
-            <input type="date" id="deadline" name="deadline"
-                   th:value="${project.deadline != null ? project.deadline : ''}" />
+            <input type="date" id="deadline" th:field="*{deadline}" />
 
-            <div class="buttons">
-                <button type="submit" class="btn btn-primary">Opret Projekt</button>
-                <a href="/projects" class="btn btn-secondary">Annuller</a>
+            <div style="margin-top: 30px; display: flex; gap: 12px;">
+                <button type="submit" class="btn btn-primary">Create Project</button>
+                <a href="/projects" class="btn btn-secondary">Cancel</a>
             </div>
         </form>
     </div>
 </div>
+
 </body>
 </html>
