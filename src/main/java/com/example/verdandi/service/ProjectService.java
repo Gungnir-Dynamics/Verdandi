@@ -10,6 +10,7 @@ import com.example.verdandi.repository.AssignmentRepo;
 import com.example.verdandi.repository.ProjectRepo;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -111,11 +112,13 @@ public class ProjectService {
         }
     }
 
-    public void saveProject(Project project) {
+    @Transactional
+    public void saveProject(Project project, User user) {
         validateProjectData(project);
 
         try {
-            projectRepo.createProject(project);
+            int projectId = projectRepo.createProject(project);
+            assignmentRepo.addUserToProject(user.getId(), projectId);
         } catch (DataAccessException ex) {
             throw new DatabaseOperationException("Failed to create project", ex);
         }
