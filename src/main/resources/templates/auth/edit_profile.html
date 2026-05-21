@@ -1,53 +1,54 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Edit Profile</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile - Verdandi</title>
+    <link rel="stylesheet" th:href="@{/styles.css}">
 </head>
 <body>
 
-<h1>Edit Profile</h1>
+<div th:replace="navigationbar/navbar :: navbar"></div>
 
-<form th:action="@{/auth/editProfile}" method="post" th:object="${user}">
+<div class="container">
+    <div class="header">
+        <h1>Edit Profile</h1>
+    </div>
 
-    <input type="hidden" th:field="*{id}" />
+    <div class="form-container">
+        <div th:if="${errorMessage}" class="error" th:text="${errorMessage}"></div>
 
-    <label>Username:</label>
-    <input type="text" th:field="*{username}"/>
+        <form th:action="@{/auth/editProfile}" method="post" th:object="${user}">
 
-    <br/>
+            <input type="hidden" th:field="*{id}" />
 
-    <label>Email:</label>
-    <input type="text" th:field="*{email}"/>
+            <label for="username">Username</label>
+            <input type="text" id="username" th:field="*{username}" required />
 
-    <br/>
+            <label for="email">Email</label>
+            <input type="email" id="email" th:field="*{email}" required />
 
-    <label>Password:</label>
-    <input type="text" th:field="*{password}" />
+            <label for="password">Password</label>
+            <input type="password" id="password" th:field="*{password}" />
 
-    <br>
+            <label for="hourlyRate">Hourly Rate (DKK)</label>
+            <input type="number" id="hourlyRate" th:field="*{hourlyRate}" min="0" required />
 
-    <label>HourlyRate:</label>
-    <input type="number" th:field="*{hourlyRate}" />
-    <br>
+            <label for="role">Role</label>
+            <select id="role" th:field="*{role.id}">
+                <option th:each="role : ${roles}"
+                        th:value="${role.id}"
+                        th:text="${role.roleName}">
+                </option>
+            </select>
 
-    <label>Role:</label>
-        <select th:field="*{role.id}">
-            <option th:each="role : ${roles}"
-                    th:value="${role.id}"
-                    th:text="${role.roleName}">
-            </option>
-        </select>
-
-    <br/>
-
-    <button type="submit">Save</button>
-</form>
-
-
-
-
-<a href="/auth/show_users">Back</a>
+            <div style="margin-top: 35px; display: flex; gap: 12px;">
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+                <a href="/auth/show_users" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
 
 </body>
 </html>
-

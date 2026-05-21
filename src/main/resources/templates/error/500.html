@@ -2,22 +2,15 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title th:text="${status} + ' - ' + ${error}">500 - Internal Server Error</title>
+    <title>Server error</title>
 </head>
 <body>
-<div>
-    <h1 th:text="${status} + ' - ' + ${error}">500 - Internal Server Error</h1>
+<h1>500 - Internal server error</h1>
 
-    <div>
-        <p><strong>Error:</strong> <span th:text="${error}">Internal Server Error</span></p>
-        <p><strong>Message:</strong> <span th:text="${message}">Something went wrong.</span></p>
-    </div>
+<p>Status: <span th:text="${status}">500</span></p>
+<p>Error: <span th:text="${error}">Internal Server Error</span></p>
+<p th:text="${message}">An unexpected error occurred. Please try again later.</p>
 
-    <p>An error occurred while processing your request.</p>
-
-    <div>
-        <a th:href="@{/}">Back to projects</a>
-    </div>
-</div>
+<a th:href="@{/projects}">Back to projects</a>
 </body>
 </html>

@@ -1,5 +1,6 @@
 package com.example.verdandi.repository;
 
+import com.example.verdandi.exception.ValidationException;
 import com.example.verdandi.model.Role;
 import com.example.verdandi.model.User;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -123,12 +124,10 @@ public class UserRepo {
                     r.role_id = p.role_id
                 WHERE p.email = ?
                 """;
+
         try {
-
             return jdbcTemplate.queryForObject(sql, rowMapper, email);
-
-        } catch (EmptyResultDataAccessException exception) {
-
+        } catch (EmptyResultDataAccessException e) {
             return null;
         }
     }
@@ -204,7 +203,7 @@ public class UserRepo {
                 user.getEmail(),
                 user.getHourlyRate(),
                 user.getRole().getId(),
-                
+
                 user.getId());
     }
 

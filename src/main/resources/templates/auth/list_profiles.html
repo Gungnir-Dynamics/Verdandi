@@ -1,52 +1,61 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>All Users</title>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Users - Verdandi</title>
+    <link rel="stylesheet" th:href="@{/styles.css}">
 </head>
-
 <body>
 
-<h1>All Users</h1>
+<div th:replace="navigationbar/navbar :: navbar"></div>
+<div class="container">
+    <div class="header">
+        <h1>All Users</h1>
+        <a th:href="@{/auth/register}" class="btn btn-primary">+ Create New User</a>
+    </div>
 
-<table border="1">
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Username</th>
-        <th>Email</th>
-        <th>Hourly Rate</th>
-        <th>Role</th>
-        <th>Actions</th>
-    </tr>
-    </thead>
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Hourly Rate</th>
+            <th>Role</th>
+            <th style="width: 200px; text-align: right;">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user : ${getUsers}">
+            <td th:text="${user.id}"></td>
+            <td th:text="${user.username}"></td>
+            <td th:text="${user.email}"></td>
+            <td th:text="${user.hourlyRate} + ' DKK'"></td>
+            <td th:text="${user.role?.roleName}"></td>
+            <td>
+                <div class="actions">
+                    <a th:href="@{/auth/edit/profile/{id}(id=${user.id})}"
+                       class="btn btn-warning btn-sm">Edit</a>
 
-    <tbody>
-    <tr th:each="user : ${getUsers}">
-        <td th:text="${user.id}"></td>
-        <td th:text="${user.username}"></td>
-        <td th:text="${user.email}"></td>
-        <td th:text="${user.hourlyRate}"></td>
-        <td th:text="${user.role}"></td>
+                    <form th:action="@{/auth/{id}/delete(id=${user.id})}"
+                          method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-danger btn-sm"
+                                onclick="return confirm('Delete this user permanently?')">
+                            Delete
+                        </button>
+                    </form>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
 
-        <td>
-            <a th:href="@{/auth/edit/profile/{id}(id=${user.id})}">
-                Edit
-            </a>
+    <div >
+        <a href="/projects" class="btn btn-secondary">← Back to Projects</a>
+    </div>
 
-            <form th:action="@{/auth/{id}/delete(id=${user.id})}"
-                  method="post"
-                  style="display:inline;"
-                  onsubmit="return confirm('You are about to delete a user \n\n Do you want to continue?')">
+</div>
 
-                <button type="submit">Delete</button>
-            </form>
-        </td>
-
-
-
-    </tbody>
-</table>
-<a href="/projects" class="btn btn-secondary">back to projects</a>
 </body>
 </html>

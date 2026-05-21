@@ -41,10 +41,11 @@ public class ProjectController {
     }
 
     @PostMapping("/create")
-    public String saveProject(@ModelAttribute Project project, RedirectAttributes redirectAttributes, Model model){
+    public String saveProject(@ModelAttribute Project project, RedirectAttributes redirectAttributes, Model model, HttpSession session){
 
+        User user = (User) session.getAttribute("user");
         try {
-            projectService.saveProject(project);
+            projectService.saveProject(project, user);
             redirectAttributes.addFlashAttribute("successMessage", "Project was created successfully");
             return "redirect:/projects";
 

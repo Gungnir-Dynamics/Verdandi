@@ -10,6 +10,7 @@ import com.example.verdandi.repository.AssignmentRepo;
 import com.example.verdandi.repository.ProjectRepo;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -36,16 +37,16 @@ public class ProjectService {
         }
 
         if (project.getName().trim().length() < 3) {
-            throw new ValidationException("Project name need to contain a minimum of 3 characters");
+            throw new ValidationException("The project name must contain at least 3 characters");
         }
 
         if (project.getName().trim().length() > 100) {
-            throw new ValidationException("Project name can not contain more then 100 characters ");
+            throw new ValidationException("The project name may not exceed 100 characters");
         }
 
 
         if (project.getDeadline() != null && project.getDeadline().isBefore(LocalDate.now())) {
-            throw new ValidationException("Deadline can not be before today's date");
+            throw new ValidationException("The deadline cannot be earlier than today");
         }
 
 
@@ -58,11 +59,11 @@ public class ProjectService {
         try {
             if (!projectRepo.projectExists(projectId)) {
                 throw new ResourceNotFoundException(
-                        "project " + projectId + " does not exist"
+                        "The project with ID " + projectId + " does not exist "
                 );
             }
         } catch (DataAccessException ex) {
-            throw new DatabaseOperationException("Failed to retrieve data for project", ex);
+            throw new DatabaseOperationException("The project data could not be loaded. Please try again later", ex);
         }
     }
 
@@ -73,7 +74,7 @@ public class ProjectService {
             setPriceAndEndDateForProject(project);
             return project;
         } catch (DataAccessException ex) {
-            throw new DatabaseOperationException("Failed to retrieve data for project", ex);
+            throw new DatabaseOperationException("The project data could not be loaded. Please try again later", ex);
         }
 
     }
@@ -92,7 +93,7 @@ public class ProjectService {
 
             } catch (DataAccessException ex) {
 
-                throw new DatabaseOperationException("Failed to retrieve data projects", ex);
+                throw new DatabaseOperationException("Projects could not be loaded. Please try again later", ex);
             }
         } else {
 
@@ -106,18 +107,20 @@ public class ProjectService {
 
             } catch (DataAccessException ex) {
 
-                throw new DatabaseOperationException("Failed to retrieve data projects", ex);
+                throw new DatabaseOperationException("Projects could not be loaded. Please try again later", ex);
             }
         }
     }
 
-    public void saveProject(Project project) {
+    @Transactional
+    public void saveProject(Project project, User user) {
         validateProjectData(project);
 
         try {
-            projectRepo.createProject(project);
+            int projectId = projectRepo.createProject(project);
+            assignmentRepo.addUserToProject(user.getId(), projectId);
         } catch (DataAccessException ex) {
-            throw new DatabaseOperationException("Failed to create project", ex);
+            throw new DatabaseOperationException("The project could not be created due to a system error", ex);
         }
     }
 

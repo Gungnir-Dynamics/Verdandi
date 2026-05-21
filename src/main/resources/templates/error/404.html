@@ -2,22 +2,15 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title th:text="${status} + ' - ' + ${error}">404 - Not Found</title>
+    <title>Page not found</title>
 </head>
 <body>
-<div>
-    <h1 th:text="${status} + ' - ' + ${error}">404 - Not Found</h1>
+<h1>404 - Page not found</h1>
 
-    <div>
-        <p><strong>Error:</strong> <span th:text="${error}">Not Found</span></p>
-        <p><strong>Message:</strong> <span th:text="${message}">The requested resource could not be found.</span></p>
-    </div>
+<p>Status: <span th:text="${status}">404</span></p>
+<p>Error: <span th:text="${error}">Not Found</span></p>
+<p th:text="${message}">The requested resource could not be found.</p>
 
-    <p>The page or resource you requested does not exist.</p>
-
-    <div>
-        <a th:href="@{/exprofiles}" class="button">Back to profiles</a>
-    </div>
-</div>
+<a th:href="@{/projects}">Back to projects</a>
 </body>
 </html>

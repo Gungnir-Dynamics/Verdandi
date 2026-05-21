@@ -5,7 +5,6 @@ import com.example.verdandi.exception.ResourceNotFoundException;
 import com.example.verdandi.exception.ValidationException;
 import com.example.verdandi.model.Task;
 import com.example.verdandi.repository.TaskRepo;
-import com.sun.jdi.connect.VMStartException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
@@ -31,7 +30,7 @@ public class TaskService {
                 );
             }
         } catch (DataAccessException ex) {
-            throw new DatabaseOperationException("Failed to retrieve tasks.", ex);
+            throw new DatabaseOperationException("Tasks could not be loaded. Please try again later", ex);
         }
     }
 
@@ -40,14 +39,14 @@ public class TaskService {
         try {
             return taskRepo.getTasks(subprojectId);
         } catch (DataAccessException ex) {
-            throw new DatabaseOperationException("Failed to retrieve tasks.", ex);
+            throw new DatabaseOperationException("Tasks could not be loaded. Please try again later", ex);
         }
     }
 
     private void validateTaskData(Task task) {
 
         if (task.getName() == null || task.getName().isBlank()) {
-            throw new ValidationException("Task name cannot be empty.");
+            throw new ValidationException("The task name cannot be empty");
         }
 
         if (task.getName().length() > 100) {

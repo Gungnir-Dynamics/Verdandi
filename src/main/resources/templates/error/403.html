@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Access denied</title>
+</head>
+<body>
+<h1>403 - Access denied</h1>
+
+<p>Status: <span th:text="${status}">403</span></p>
+<p>Error: <span th:text="${error}">Forbidden</span></p>
+<p th:text="${message}">You do not have permission to access this page.</p>
+
+<a th:href="@{/projects}">Back to projects</a>
+</body>
+</html>
