@@ -2,7 +2,6 @@ package com.example.verdandi.repository;
 
 import com.example.verdandi.model.Role;
 import com.example.verdandi.model.User;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;

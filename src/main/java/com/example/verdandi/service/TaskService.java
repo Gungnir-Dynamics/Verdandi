@@ -5,7 +5,6 @@ import com.example.verdandi.exception.ResourceNotFoundException;
 import com.example.verdandi.exception.ValidationException;
 import com.example.verdandi.model.Task;
 import com.example.verdandi.repository.TaskRepo;
-import com.sun.jdi.connect.VMStartException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 

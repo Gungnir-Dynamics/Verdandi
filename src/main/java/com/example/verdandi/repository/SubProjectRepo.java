@@ -1,6 +1,5 @@
 package com.example.verdandi.repository;
 
-import com.example.verdandi.model.Project;
 import com.example.verdandi.model.SubProject;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;

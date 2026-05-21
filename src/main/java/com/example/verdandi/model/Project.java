@@ -2,24 +2,18 @@ package com.example.verdandi.model;
 
 
 import org.springframework.format.annotation.DateTimeFormat;
-
 import java.time.LocalDate;
-import java.util.Date;
 
 public class Project {
 
 
-    // GROK FORSLAG TIL TEST AF PROJECTCONTROLLER
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate deadline;
-
-
 
     private int id;
     private String name;
     private String description;
     private int estimatedHours;
-//    private LocalDate deadline;
     private LocalDate creationDate;
     private double price;
     private LocalDate estimatedEndDate;
