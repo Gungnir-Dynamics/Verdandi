@@ -31,10 +31,11 @@ public class AssignmentController {
 
         User user = (User) session.getAttribute("user");
 
-        projectService.validateProjectAccess(projectId, user);
+        Project project = projectService.getSingleProject(projectId);
 
         model.addAttribute("users", userService.getUsersForProject(projectId));
         model.addAttribute("projectId", projectId);
+        model.addAttribute("project", project);
 
         return "project/assignment_form";
     }
