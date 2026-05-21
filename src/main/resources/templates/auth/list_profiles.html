@@ -32,7 +32,7 @@
             <td th:text="${user.username}"></td>
             <td th:text="${user.email}"></td>
             <td th:text="${user.hourlyRate} + ' DKK'"></td>
-            <td th:text="${user.role?.roleName}"></td>
+            <td th:text="${user.role.roleName}"></td>
             <td>
                 <div class="actions">
                     <a th:href="@{/auth/edit/profile/{id}(id=${user.id})}"
