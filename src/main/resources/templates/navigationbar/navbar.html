@@ -16,7 +16,6 @@
         <a th:href="@{/auth/show_users}">See Users</a>
     </div>
 
-    <a th:if="${session.user == null}" th:href="@{/auth/login}" class="login-btn">Login</a>
 
     <span th:if="${session.user != null}">
             <strong th:text="${session.user.username}"></strong>
