@@ -123,14 +123,8 @@ public class UserRepo {
                     r.role_id = p.role_id
                 WHERE p.email = ?
                 """;
-        try {
 
             return jdbcTemplate.queryForObject(sql, rowMapper, email);
-
-        } catch (EmptyResultDataAccessException exception) {
-
-            return null;
-        }
     }
 
     public User findUserById(int profileId) {

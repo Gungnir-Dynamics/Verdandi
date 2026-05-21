@@ -31,7 +31,7 @@ public class UserService {
         }
 
         if (user.getUsername().length() > 100) {
-            throw new ValidationException("Username cannot be more than 10 characters");
+            throw new ValidationException("The username may not exceed 100 characters");
         }
 
         if (user.getEmail() == null || user.getEmail().isBlank()) {
@@ -39,7 +39,7 @@ public class UserService {
         }
 
         if (!user.getEmail().matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
-            throw new ValidationException("Invalid email format");
+            throw new ValidationException("The email address is not valid. Please check the format and try again");
         }
 
         if (user.getPassword() == null || user.getPassword().isBlank()) {
@@ -61,7 +61,7 @@ public class UserService {
         User existingUser = repository.findUserByEmail(user.getEmail());
 
         if (existingUser != null && existingUser.getId() != user.getId()) {
-            throw new ValidationException("User with " + existingUser.getEmail() + " already exists");
+            throw new ValidationException("A user with this email already exists");
         }
     }
 

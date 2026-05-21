@@ -7,6 +7,7 @@
 <body>
 
 <div>
+    <h2 th:text="${project.name}"></h2>
 
     <div th:if="${errorMessage}">
         <p th:text="${errorMessage}"></p>
@@ -30,6 +31,8 @@
             </form>
         </div>
     </div>
+
+    <a th:href="@{/projects}">Back to projects</a>
 
 </div>
 </body>
