@@ -38,13 +38,6 @@
             </div>
         </form>
 
-        <hr style="margin: 40px 0;">
-
-        <form th:action="@{|/projects/${projectId}/subprojects/${subprojectId}/tasks/${taskId}/delete|}"
-              method="post"
-              onsubmit="return confirm('Delete this task permanently?')">
-            <button type="submit" class="btn btn-danger">Delete Task</button>
-        </form>
     </div>
 </div>
 
