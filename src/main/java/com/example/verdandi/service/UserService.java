@@ -1,5 +1,6 @@
 package com.example.verdandi.service;
 
+import com.example.verdandi.exception.AccessDeniedException;
 import com.example.verdandi.exception.ValidationException;
 import com.example.verdandi.model.Role;
 import com.example.verdandi.model.User;
@@ -92,24 +93,37 @@ public class UserService {
        return repository.findUserById(profileId);
     }
 
-    public void saveUser(User user) {
-        validateUser(user);
-        repository.saveUser(user);
+    public void saveUser(User user, User newUser) {
+        if (!user.isAdmin()) {
+            throw new AccessDeniedException("You do not have access to this action");
+        }
+        validateUser(newUser);
+        repository.saveUser(newUser);
     }
 
-    public void editProfile(User user) {
-        validateUser(user);
-        repository.editProfile(user);
+    public void editProfile(User user, User updatedUser) {
+        if (!user.isAdmin()) {
+            throw new AccessDeniedException("You do not have access to this action");
+        }
+        validateUser(updatedUser);
+        repository.editProfile(updatedUser);
     }
 
     public List<User> getUsersForProject(int projectId) {
         return repository.getUsersForProject(projectId);
     }
-    public List<User> getUsers(){
+
+    public List<User> getUsers(User user){
+        if (!user.isAdmin()) {
+            throw new AccessDeniedException("You do not have access to this action");
+        }
         return repository.getUsers();
     }
 
-    public void deleteUser (int profileId){
+    public void deleteUser (int profileId, User user){
+        if (!user.isAdmin()) {
+            throw new AccessDeniedException("You do not have access to this action");
+        }
         repository.deleteProfile(profileId);
     }
 }

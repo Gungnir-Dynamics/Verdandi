@@ -7,7 +7,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-
 @Controller
 @RequestMapping("/auth")
 public class UserController {
@@ -25,8 +24,9 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public String register(@ModelAttribute User user) {
-        userService.saveUser(user);
+    public String register(@ModelAttribute User newUser, HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        userService.saveUser(user, newUser);
         return "redirect:/auth/show_users";
     }
 
@@ -45,7 +45,7 @@ public class UserController {
         if (userService.login(email, password)) {
             session.setAttribute("user", userService.findUserByEmail(email));
 
-                return "redirect:/projects";
+            return "redirect:/projects";
 
         }
         // WRONG INPUT
@@ -66,13 +66,10 @@ public class UserController {
     }
 
     @PostMapping("/editProfile")
-    public String editProfile(@ModelAttribute User profile, HttpSession session) {
+    public String editProfile(@ModelAttribute User updatedUser, HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        userService.editProfile(user, updatedUser);
 
-        userService.editProfile(profile);
-
-        User updatedUser = userService.findUserById(profile.getId());
-
-        session.setAttribute("user", updatedUser);
         return "redirect:/auth/show_users";
 
     }
@@ -80,22 +77,6 @@ public class UserController {
     @GetMapping("/forgot-password")
     public String showForgotPassword() {
         return "auth/forgot-password";
-    }
-
-    @PostMapping("/forgot-password")
-    public String forgotPassword(@RequestParam String email,
-                                 @RequestParam String newPassword, Model model) {
-
-        User user = userService.findUserByEmail(email);
-
-        if (user == null) {
-            model.addAttribute("EmailNotFound", true);
-            return "auth/forgot-password";
-        }
-        user.setPassword(newPassword);
-        userService.editProfile(user);
-
-        return "redirect:/auth/login";
     }
 
     @GetMapping("/logout")
@@ -107,16 +88,16 @@ public class UserController {
     @GetMapping("/show_users")
     public String showUsers(HttpSession session, Model model) {
 
-//        User user = (User) session.getAttribute("user");
+        User user = (User) session.getAttribute("user");
 
-        model.addAttribute("getUsers", userService.getUsers());
+        model.addAttribute("getUsers", userService.getUsers(user));
         return "/auth/list_profiles";
     }
 
     @PostMapping("/{profileId}/delete")
-    public String deleteUser (@PathVariable int profileId){
-        userService.deleteUser(profileId);
+    public String deleteUser(@PathVariable int profileId, HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        userService.deleteUser(profileId, user);
         return "redirect:/auth/show_users";
     }
-
 }
